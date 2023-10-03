@@ -1,29 +1,28 @@
-import completed from './completed.png';
+import React, { useState } from "react";
+import LoginIMG from './LoginIMG.png';
 import styled from "styled-components";
 import { Link } from 'react-router-dom';
-
-
-const media = {
-    mobileWithImage: 'only screen and (max-width: 850px)',
-    mobile: 'only screen and (max-width: 390px)'
-};
+import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
 
 const LoginContainer = styled.div`
-  background: #E9E9E9;
+  background-color: #FAFAFA;
   display: flex;
   flex-direction: column;
   justify-content: center; /* 수평 가운데 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   height: 100vh;
+  
+  @media ${media.mobile}{
+    display: block;
+    background-color: #FFFFFF;
+  }
 `;
 
 const LoginBox = styled.div`
   display: flex;
   align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
   margin: 10px;
-  padding: 40px 80px;
+  padding: 5px 80px;
   
   @media ${media.mobileWithImage} {
     padding: 20px;
@@ -42,7 +41,7 @@ const LoginImageBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 400px;
+  max-width: 512px;
   height: inherit;
 `;
 
@@ -53,19 +52,21 @@ const LoginImage = styled.img`
   transition: opacity 1s ease; /* 투명도 변경에 대한 트랜지션 설정 */
   
   @media ${media.mobileWithImage} {
-    opacity: 0; /* 미디어 쿼리 범위에서 이미지를 초기 상태로 설정 */
-    transition: opacity 1s ease; /* 트랜지션 설정 */
-    /*display: none;*/
-    height: 0;
+    //opacity: 0; /* 미디어 쿼리 범위에서 이미지를 초기 상태로 설정 */
+    //transition: opacity 1s ease; /* 트랜지션 설정 */
+    //height: 0;
+    display: none;
   }
 `;
 
 const AlignLeft = styled.div`
   align-self: flex-start;
+  padding: 8px;
 `;
 
-const TitleLeft = styled.div`
+const TitleCenterBox = styled.div`
   display: block;
+  justify-items: center;
 `;
 
 const HorizontalLine = styled.div`
@@ -85,102 +86,43 @@ const VerticalLine = styled.div`
 `;
 
 const InputSize = styled.input`
-  border: 1px solid #A8A8A8;
-  border-radius: 3px;
+  border: none;
+  border-bottom: 1px solid #000000;
   width: 100%;
   min-width: 288px;
-  height: 32px;
-  margin: 8px;
+  height: 40px;
+  margin: 16px;
+  font-size: 16px;
+  
+  &:focus{
+    outline: none;
+  }
+  
 `;
 
-const Margin8px = styled.div`
-  margin: 0.5rem;
-`;
-
-const Padding8px = styled.div`
-  padding: 0rem 0.5rem;
+const Margin16px = styled.div`
+  margin: 1rem;
 `;
 
 const LoginPageButton = styled.button`
-  background-color: #363636;
-  color: #fff;
+  font-size: 16px;
+  background-color: #000AFF;
+  color: #FFFFFF;
   width: 100%;
   padding: 8px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 32px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* 배경색 변화 시 부드러운 전환 효과 */
   margin: 0.5rem;
+  height: 44px;
   &:hover {
     background-color: #cccccc;
   }
 `;
 
-const TitleLg = styled.div`
-  font-size: 3rem;
-  font-weight: 600;
-  
-  @media ${media.mobile}{
-    font-size: 1.875rem;
-    font-weight: 600;
-  }
-`;
-
-const TitleMd = styled.div`
-  font-size: 2.25rem;
-  font-weight: 600;
-  @media ${media.mobile}{
-    font-size: 1.625rem;
-    font-weight: 600;
-  }
-`;
-
-const TitleSm = styled.div`
-  font-size: 1.5rem;
-  font-weight: 600;
-  @media ${media.mobile}{
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-`;
-
-const TextLg = styled.div`
-  font-size: 1.125rem;
-  font-weight: 600;
-  @media ${media.mobile}{
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-`;
-
-const TextMd = styled.div`
-  font-size: 1rem;
-  font-weight: normal;
-  @media ${media.mobile}{
-    font-size: 1.125rem;
-    font-weight: normal;
-  }
-`;
-
-const TextSm = styled.div`
-  font-size: 0.875rem;
-  font-weight: normal;
-  @media ${media.mobile}{
-    font-size: 1rem;
-    font-weight: normal;
-  }
-`;
-
-const Caption = styled.div`
-  font-size: 0.75rem;
-  font-weight: normal;
-  @media ${media.mobile}{
-    font-size: 0.875rem;
-    font-weight: normal;
-  }
-`;
-
-const StyledLink = styled(Link)`
+const StyledButtonLink = styled(Link)`
+  font-family: Georgia;
   text-decoration: none; /* 밑줄 제거 */
   color: inherit; /* 부모 요소의 색상 상속 */
   cursor: pointer; /* 포인터 커서 표시 */
@@ -188,28 +130,57 @@ const StyledLink = styled(Link)`
   display: inline-block; /* 또는 block로 설정 */
 `
 
+const StyledLink = styled(Link)`
+  font-family: Georgia;
+  text-decoration: none; /* 밑줄 제거 */
+  cursor: pointer; /* 포인터 커서 표시 */
+  color: #000AFF;
+`;
+
+const WhiteBoxContainer = styled.div`
+    padding: 16px 64px 64px 64px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 4px 2px #E9E9E9;
+  
+    @media ${media.mobile}{
+      box-shadow: none;
+    }
+`;
+
+const HorizontalBox = styled.div`
+  padding: 8px;
+  margin: 0px 8px 8px 8px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
 
 function LoginPage() {
   return (
     <LoginContainer>
-        <TitleLeft>
-          <Margin8px><TitleLg>Login </TitleLg></Margin8px>
-        <LoginBox>
-          <LoginForm>
-            <AlignLeft><TextMd>아이디</TextMd></AlignLeft>
-            <InputSize />
-            <AlignLeft><TextMd>비밀번호</TextMd></AlignLeft>
-            <InputSize />
-            <LoginPageButton><TextMd>로그인</TextMd></LoginPageButton>
-            <HorizontalLine></HorizontalLine>
-            <LoginPageButton><TextMd><StyledLink to="/SignInPage">회원가입</StyledLink></TextMd></LoginPageButton>
-        </LoginForm>
-            <VerticalLine></VerticalLine>
-        <LoginImageBox>
-            <LoginImage src={completed}/>
-          </LoginImageBox>
-      </LoginBox>
-      </TitleLeft>
+        <WhiteBoxContainer>
+            <TitleCenterBox>
+                <Margin16px><TitleLg>LOGIN</TitleLg></Margin16px>
+            </TitleCenterBox>
+            <LoginBox>
+                  <LoginForm>
+                    <AlignLeft><TextMd>Email</TextMd></AlignLeft>
+                    <InputSize />
+                    <AlignLeft><TextMd>Password</TextMd></AlignLeft>
+                    <InputSize />
+                      <HorizontalBox><TextLg>Forget Password?</TextLg><StyledLink><TextLg>Here</TextLg></StyledLink></HorizontalBox>
+                    <LoginPageButton><StyledButtonLink>LOGIN</StyledButtonLink></LoginPageButton>
+                      <HorizontalBox><TextLg>Don't you have an account?</TextLg><StyledLink to="/SignInPage"><TextLg>Sign In</TextLg></StyledLink></HorizontalBox>
+                </LoginForm>
+                <LoginImageBox>
+                    <LoginImage src={LoginIMG}/>
+                 </LoginImageBox>
+            </LoginBox>
+      </WhiteBoxContainer>
     </LoginContainer>
   );
 }

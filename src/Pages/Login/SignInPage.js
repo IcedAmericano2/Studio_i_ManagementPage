@@ -1,11 +1,8 @@
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from 'axios';
-import React, { useState } from "react";
-import {useNavigate} from "react-router-dom";
-
-const media = {
-    mobile: 'only screen and (max-width: 390px)'
-};
+import { useNavigate } from "react-router-dom";
+import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
 
 const SignInContainer = styled.div`
   background: #E9E9E9;
@@ -14,6 +11,11 @@ const SignInContainer = styled.div`
   justify-content: center; /* 수평 가운데 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   height: 100vh;
+
+  @media ${media.mobile}{
+    display: block;
+    background-color: #FFFFFF;
+  }
 `;
 
 const TitleLeft = styled.div`
@@ -24,7 +26,6 @@ const SignInBox = styled.div`
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border: 1px solid #ccc;
   margin: 10px;
   padding: 160px 320px;
 
@@ -105,23 +106,18 @@ const BtnWithInput = styled.button`
   }
 `;
 
-const TitleLg = styled.div`
-  font-size: 3rem;
-  font-weight: 600;
+const WhiteBoxContainer = styled.div`
+    padding: 16px 64px 64px 64px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 4px 2px #E9E9E9;
   
-  @media ${media.mobile}{
-    font-size: 1.875rem;
-    font-weight: 600;
-  }
-`;
-
-const TextMd = styled.div`
-  font-size: 1rem;
-  font-weight: normal;
-  @media ${media.mobile}{
-    font-size: 1.125rem;
-    font-weight: normal;
-  }
+    @media ${media.mobile}{
+      box-shadow: none;
+    }
 `;
 
 const healthCheckTest =()=> {
@@ -170,6 +166,7 @@ function SignInPage(){
 
     return(
         <SignInContainer>
+            <WhiteBoxContainer>
             <TitleLeft>
             <Margin8px>
                 <TitleLg>Sign In</TitleLg>
@@ -210,6 +207,7 @@ function SignInPage(){
                 </SignInForm>
             </SignInBox>
             </TitleLeft>
+            </WhiteBoxContainer>
         </SignInContainer>
     );
 }
