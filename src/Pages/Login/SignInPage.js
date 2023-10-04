@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
 
-
 const SignInContainer = styled.div`
   background: #FAFAFA;
   display: flex;
@@ -142,7 +141,7 @@ const HorizontalBox = styled.div`
 `;
 
 function SignInPage(){
-   // const navigate = useNavigate();
+   const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -166,7 +165,7 @@ function SignInPage(){
             .then((response) => {
                 console.log({ message: response.data });
                 alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.")
-
+                navigate('/LoginPage');
                 //이전 페이지로 이동
             })
             .catch((error) => {
