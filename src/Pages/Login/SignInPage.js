@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
 
+
 const SignInContainer = styled.div`
-  background: #E9E9E9;
+  background: #FAFAFA;
   display: flex;
   flex-direction: column;
   justify-content: center; /* 수평 가운데 정렬 */
@@ -18,21 +19,22 @@ const SignInContainer = styled.div`
   }
 `;
 
-const TitleLeft = styled.div`
-  display: block;
-`;
-
 const SignInBox = styled.div`
   display: flex;
   align-items: center;
   background-color: #ffffff;
   margin: 10px;
-  padding: 160px 320px;
+  //padding: 160px 320px;
 
   @media ${media.mobile} {
     padding: 20px;
     display: inherit;
   }
+`;
+
+const TitleCenterBox = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const SignInForm = styled.div`
@@ -44,6 +46,7 @@ const SignInForm = styled.div`
 
 const SubInputForm = styled.div`
   align-items: flex-start;
+  padding: 0.5rem;
 `;
 
 const SubInputFormWithButton = styled.div`
@@ -51,8 +54,8 @@ const SubInputFormWithButton = styled.div`
   width: auto;
 `;
 
-const Margin8px = styled.div`
-  margin: 0.5rem;
+const Margin16px = styled.div`
+  margin: 1rem;
 `;
 
 const HorizontalLine = styled.div`
@@ -62,43 +65,55 @@ const HorizontalLine = styled.div`
 `;
 
 const InputSize = styled.input`
-  border: 1px solid #A8A8A8;
-  border-radius: 3px;
+  border: none;
+  border-bottom: 1px solid #000000;
   width: 288px;
   height: 32px;
   margin: 8px 0px;
+
+  &:focus{
+    outline: none;
+  }
 `;
 
 const InputSizeWithBtn = styled.input`
-  border: 1px solid #A8A8A8;
-  border-radius: 3px;
+  border: none;
+  border-bottom: 1px solid #000000;
   width: 192px;
   height: 32px;
   margin: 8px 4px 8px 0px;
+
+  &:focus{
+    outline: none;
+  }
 `;
 
 const SignInPageButton = styled.button`
-  background-color: #363636;
-  color: #fff;
+  font-family: Georgia;
+  background-color: #000AFF;
+  color: #FFFFFF;
   width: 100%;
   padding: 8px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 32px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* 배경색 변화 시 부드러운 전환 효과 */
   margin: 0.5rem;
+  height: 48px;
   &:hover {
     background-color: #cccccc;
+    color: black;
   }
 `;
 
 const BtnWithInput = styled.button`
-  background-color: #363636;
+  font-family: Georgia;
+  background-color: #000AFF;
   color: #fff;
   width: 90px;
   padding: 8px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 32px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* 배경색 변화 시 부드러운 전환 효과 */
   &:hover {
@@ -107,7 +122,7 @@ const BtnWithInput = styled.button`
 `;
 
 const WhiteBoxContainer = styled.div`
-    padding: 16px 64px 64px 64px; 
+    padding: 32px 256px 32px 256px; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -120,16 +135,11 @@ const WhiteBoxContainer = styled.div`
     }
 `;
 
-const healthCheckTest =()=> {
-    // Axios를 사용하여 Spring Boot API에 GET 요청을 보냅니다.
-    axios.get('http://localhost:8081/user/health_check')
-        .then(response => {
-            console.log({message: response.data})
-        })
-        .catch(error => {
-            console.error('API 요청 중 오류 발생:', error);
-        });
-}
+const HorizontalBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
 
 function SignInPage(){
    // const navigate = useNavigate();
@@ -139,6 +149,7 @@ function SignInPage(){
         pwd: "",
         name: "",
         phoneNumber: "",
+        verificationCode: "",
     });
 
     const handleChange = (e) => {
@@ -151,62 +162,116 @@ function SignInPage(){
 
     const handleSubmit = () => {
         // Send a POST request to your endpoint with formData.
-        axios.post('http://localhost:8081/user/join', formData)
+        axios.post('http://localhost:8081/user/register', formData)
             .then((response) => {
                 console.log({ message: response.data });
                 alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.")
 
                 //이전 페이지로 이동
-                //navigate(-1);
             })
             .catch((error) => {
                 console.error('API 요청 중 오류 발생:', error);
             });
     };
 
+    //-----------------------Email Verification-----------------------
+
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(600); // 10분 = 600초
+    const [isVerified, setIsVerified] = useState(false);
+
+    const handleSendCode = () => {
+        setIsCodeSent(true);
+        startTimer();
+    }
+
+    const startTimer = () => {
+        setIsTimerRunning(true);
+    };
+
+    useEffect(() => {
+        let timer;
+
+        if (isTimerRunning && timeLeft > 0) {
+            timer = setInterval(() => {
+                setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
+            }, 1000);
+        } else if (timeLeft === 0) {
+            setIsTimerRunning(false);
+            clearInterval(timer);
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, [isTimerRunning, timeLeft]);
+
+    const handleVerifiyCode = () => {
+        if (formData.verificationCode === '올바른인증코드') {
+            console.log("일치");
+            setIsVerified(true);
+        } else {
+            setIsVerified(false);
+            console.log("불일치");
+        }
+    }
+
     return(
         <SignInContainer>
-            <WhiteBoxContainer>
-            <TitleLeft>
-            <Margin8px>
-                <TitleLg>Sign In</TitleLg>
-            </Margin8px>
+            <WhiteBoxContainer class="WhiteBoxContainer">
+                <TitleCenterBox class="TitleCenterBox">
+                    <Margin16px><TitleLg>Sign In</TitleLg></Margin16px>
+                </TitleCenterBox>
             <SignInBox className="SignInBox">
                 <SignInForm className="SignInForm">
-                    <SubInputForm className="SubInputForm">
-                        <TextMd>메일주소</TextMd>
+                    <SubInputForm className="SubInputFormWithButton">
+                        <TextMd>Email</TextMd>
                         <InputSizeWithBtn   name="email"
                                             value={formData.email}
                                             onChange={handleChange} />
-                        <BtnWithInput>인증</BtnWithInput>
+                        <BtnWithInput onClick={handleSendCode}>Send</BtnWithInput>
                     </SubInputForm>
-                    <SubInputForm className="SubInputFormWithButton">
-                        <TextMd>비밀번호</TextMd>
+                    {isCodeSent && (
+                    <SubInputForm>
+                        <HorizontalBox>
+                            <TextMd>Email Verification Code</TextMd>
+                            {isTimerRunning && !isVerified && (
+                                <TextMd>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</TextMd>
+                            )}
+                        </HorizontalBox>
+                        <InputSizeWithBtn   name="verificationCode"
+                                            value={formData.verificationCode}
+                                            onChange={handleChange} />
+                        <BtnWithInput onClick={handleVerifiyCode}>Verify</BtnWithInput>
+                    </SubInputForm>
+                        )}
+                    <SubInputForm className="SubInputForm">
+                        <TextMd>Password</TextMd>
                         <InputSize   name="pwd"
                                      value={formData.pwd}
                                      onChange={handleChange} />
                     </SubInputForm>
                     <SubInputForm className="SubInputForm">
-                        <TextMd>비밀번호 확인</TextMd>
+                        <TextMd>Confirm Password</TextMd>
                         <InputSize />
                     </SubInputForm>
                     <SubInputForm className="SubInputForm">
-                        <TextMd>이름</TextMd>
+                        <TextMd>Name</TextMd>
                         <InputSize   name="name"
                                      value={formData.name}
                                      onChange={handleChange}/>
                     </SubInputForm>
                     <SubInputForm className="SubInputForm">
-                        <TextMd>전화번호</TextMd>
+                        <TextMd>Phone</TextMd>
                         <InputSize   name="phoneNumber"
                                      value={formData.phoneNumber}
                                      onChange={handleChange} />
                     </SubInputForm>
-                <HorizontalLine></HorizontalLine>
-                <SignInPageButton onClick={() => handleSubmit()}>회원가입</SignInPageButton>
+                <SignInPageButton onClick={() => handleSubmit()}>Sign In</SignInPageButton>
                 </SignInForm>
             </SignInBox>
-            </TitleLeft>
+
             </WhiteBoxContainer>
         </SignInContainer>
     );
