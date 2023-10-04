@@ -3,6 +3,10 @@ import LoginIMG from './LoginIMG.png';
 import styled from "styled-components";
 import { Link } from 'react-router-dom';
 import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
+import axios from "axios";
+import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+
 
 const LoginContainer = styled.div`
   background-color: #FAFAFA;
@@ -105,6 +109,7 @@ const Margin16px = styled.div`
 `;
 
 const LoginPageButton = styled.button`
+  font-family: Georgia;
   font-size: 16px;
   background-color: #000AFF;
   color: #FFFFFF;
@@ -159,8 +164,57 @@ const HorizontalBox = styled.div`
   width: 100%;
 `;
 
+
+
+
 function LoginPage() {
-  return (
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        email: "",
+        pwd: ""
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+    const healthCheckTest =()=> {
+        // Axios를 사용하여 Spring Boot API에 GET 요청을 보냅니다.
+        axios.get('http://localhost:8081/user/login', formData)
+            .then(response => {
+                console.log({message: response.data})
+
+            })
+            .catch(error => {
+                console.error('API 요청 중 오류 발생:', error);
+            });
+    }
+
+    const handleLogin = () => {
+        axios.post('http://localhost:8081/user/login', formData)
+            .then((response) => {
+                const accessToken = response.data.accessToken;
+                //console.log(accessToken);
+                const tokenPayload = jwt_decode(accessToken);
+                // console.log(tokenPayload);
+                // console.log(tokenPayload.username);
+
+                localStorage.setItem('login-token', accessToken);
+                alert("로그인 성공");
+                navigate('/');
+
+            })
+            .catch((error) => {
+                alert("로그인 실패");
+                console.error('API 요청 중 오류 발생:', error);
+            });
+    }
+
+    return (
     <LoginContainer>
         <WhiteBoxContainer>
             <TitleCenterBox>
@@ -169,11 +223,15 @@ function LoginPage() {
             <LoginBox>
                   <LoginForm>
                     <AlignLeft><TextMd>Email</TextMd></AlignLeft>
-                    <InputSize />
+                    <InputSize  name="email"
+                                value={formData.email}
+                                onChange={handleChange}/>
                     <AlignLeft><TextMd>Password</TextMd></AlignLeft>
-                    <InputSize />
+                    <InputSize name="pwd"
+                               value={formData.pwd}
+                               onChange={handleChange}/>
                       <HorizontalBox><TextLg>Forget Password?</TextLg><StyledLink><TextLg>Here</TextLg></StyledLink></HorizontalBox>
-                    <LoginPageButton><StyledButtonLink>LOGIN</StyledButtonLink></LoginPageButton>
+                    <LoginPageButton onClick={() => handleLogin()}>LOGIN</LoginPageButton>
                       <HorizontalBox><TextLg>Don't you have an account?</TextLg><StyledLink to="/SignInPage"><TextLg>Sign In</TextLg></StyledLink></HorizontalBox>
                 </LoginForm>
                 <LoginImageBox>
