@@ -5,6 +5,7 @@ import Button from './Button';
 import SearchBar from '../SearchBar';
 import { Link } from 'react-router-dom';
 import { CgMenuGridO } from "react-icons/cg";
+import { useEffect, useState } from 'react';
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -61,11 +62,28 @@ const StyledLink = styled(Link)`
   text-decoration: none; /* 밑줄 제거 */
   color: inherit; /* 부모 요소의 색상 상속 */
   cursor: pointer; /* 포인터 커서 표시 */
-  width: 100%;
   display: inline-block; /* 또는 block로 설정 */
 `;
 
 const Header = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // 로컬 스토리지에서 토큰을 가져옵니다.
+        const token = localStorage.getItem('login-token');
+
+        if (token) {
+            // 토큰이 존재하면 로그인 상태로 설정
+            setIsLoggedIn(true);
+        }
+    }, []);
+
+    function handleLogout() {
+        localStorage.removeItem('login-token');
+        setIsLoggedIn(false);
+        alert("로그아웃 완료");
+    }
+
     return (
         <>
             <HeaderBlock>
@@ -78,9 +96,16 @@ const Header = () => {
                     <SearchBar />
                     </div>
                     <div className="right">
-                        <Button>
-                            <StyledLink to="/LoginPage">로그인</StyledLink>
-                        </Button>
+                        {isLoggedIn ? (<StyledLink to="/"><Button onClick={handleLogout}>
+                            로그아웃
+                        </Button></StyledLink>) : (
+                            <StyledLink to="/LoginPage">
+                            <Button>
+                                로그인
+                            </Button>
+                            </StyledLink>
+                        )}
+
                     </div>
                 </Wrapper>
             </HeaderBlock>
