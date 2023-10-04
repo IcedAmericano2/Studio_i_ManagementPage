@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Responsive from './responsive';
-import Button from './Button';
-import SearchBar from '../SearchBar';
 import Header from "./header";
 
 const HeaderBlock = styled.div`
