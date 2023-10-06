@@ -18,7 +18,7 @@ const Title = styled.div`
 `;
 
 const DashboardBody = styled.div`
-  width: 100%;
+  width: 125%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -35,7 +35,7 @@ const Panel = styled.div`
 
 const Left = styled.div`
   padding: 20px;
-  border-radius: 40px 0 0 40px;
+
   background-color: white;
   flex-basis: 50%;
   height: ${(props) => (props.expanded ? "700px" : "300px")};
@@ -44,6 +44,15 @@ const Left = styled.div`
 
 const Line = styled.div`
   height: 50px;
+`;
+
+const Button = styled.button`
+  width: 40px;
+  background-color: white;
+`;
+
+const Arc = styled.div`
+  display: flex;
 `;
 
 // const Right = styled.div`
@@ -61,20 +70,20 @@ const NewPanel = styled.button`
   border-radius: 40px;
   transition: height 0.3s ease-in-out; /* transition 추가 */
 `;
-const ExpandButton = styled.button`
-  margin-top: 10px;
-  cursor: pointer;
-  border-radius: 50%;
-  border: none;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  background-color: #f1f1f1;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  margin-top: 20px;
-`;
+// const ExpandButton = styled.button`
+//   margin-top: 10px;
+//   cursor: pointer;
+//   border-radius: 50%;
+//   border: none;
+//   width: 60px;
+//   height: 60px;
+//   display: flex;
+//   background-color: #f1f1f1;
+//   justify-content: center;
+//   align-items: center;
+//   margin: 0 auto;
+//   margin-top: 20px;
+// `;
 
 const Dashboard = () => {
   const [expanded, setExpanded] = useState(false);
@@ -84,7 +93,10 @@ const Dashboard = () => {
   };
   return (
     <DashboardBox>
-      <Title>Dashboard</Title>
+      <Arc>
+        <Title>Dashboard</Title>
+        <Button>완료</Button>
+      </Arc>
       <DashboardBody>
         <Panel>
           <Left>
@@ -98,9 +110,6 @@ const Dashboard = () => {
         </Panel>
         {expanded && <NewPanel />}
       </DashboardBody>
-      <ExpandButton onClick={toggleExpansion}>
-        {expanded ? "접기" : "더보기"}
-      </ExpandButton>
     </DashboardBox>
   );
 };
