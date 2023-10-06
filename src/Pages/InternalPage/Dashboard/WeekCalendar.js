@@ -78,7 +78,6 @@ const ScheduleItem = styled.p`
   border-radius: 8px;
 `;
 
-// Main component
 function WeekCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);

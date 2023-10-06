@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  margin-top: -60px;
+  margin-top: -50px;
 `;
 const Subtitle = styled.text`
   font-size: 1.5rem;
