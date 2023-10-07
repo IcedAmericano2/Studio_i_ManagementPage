@@ -117,7 +117,7 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 10px;
   background-color: #ffffff;
-  margin-top: -30px;
+
   margin-left: -15px;
 `;
 
@@ -165,7 +165,6 @@ const Item = styled.li`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
   text-decoration: ${(props) => (props.completed ? "line-through" : "none")};
-  color: ${(props) => (props.urgent ? "#aaa" : "inherit")};
 `;
 
 const Checkbox = styled.input.attrs({ type: "checkbox" })``;
@@ -173,6 +172,7 @@ const Checkbox = styled.input.attrs({ type: "checkbox" })``;
 const UrgencyLabel = styled.span`
   margin-right: 10px;
   font-weight: bold;
+  color: red;
 `;
 
 const DeleteButton = styled.button`

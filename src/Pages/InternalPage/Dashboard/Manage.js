@@ -8,7 +8,7 @@ const TotalContainer = styled.div`
   align-items: center;
   height: 100vh;
   flex-direction: column;
-  background-color: #f7f7f7; // 새로운 배경색
+  background-color: #f7f7f7;
 `;
 
 const ManageContainer = styled.div`
@@ -71,10 +71,9 @@ function Manage() {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Validate dates
     if (start > end) {
       alert("시작 날짜는 종료 날짜보다 이전이어야 합니다.");
-      return; // Exit early without saving the event
+      return;
     }
 
     const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");

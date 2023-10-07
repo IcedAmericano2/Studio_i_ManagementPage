@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const RightDashboardBox = styled.div`
-  border-radius: 0 40px 40px 0;
   border-left: 1px dotted black;
   background-color: white;
   flex-basis: 50%;
@@ -54,9 +53,8 @@ const Text = styled.text`
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
-  width: ;
+  padding-left: 1rem;
 `;
-
 const GoButton = styled.div`
   cursor: pointer;
   font-weight: 600;

@@ -1,4 +1,3 @@
-// OngoingProject.js
 import React, { useState } from "react";
 import styled from "styled-components";
 import Project from "./Project";
@@ -19,6 +18,18 @@ const Title = styled.text`
   font-size: 1.5rem;
   background-color: #b47e7e;
   padding: 5px;
+`;
+const DeleteButton = styled.button`
+  background-color: white;
+  border: 1px solid white;
+  color: red;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
 `;
 
 const StyledTable = styled.table`
@@ -41,19 +52,35 @@ const StyledTable = styled.table`
 
 function OngoingProject() {
   const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-  const [isProjectVisible, setProjectVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleAddProject = () => {
-    setProjectVisible(true);
+    navigate("/Project"); // 새로운 프로젝트 추가 페이지로 이동
   };
 
-  const handleProjectClose = () => {
-    setProjectVisible(false);
+  const handleRowClick = (projectId) => {
+    navigate(`/Manage/${projectId}`);
   };
 
-  const handleRowClick = () => {
-    navigate("/Manage");
+  // const handleEditClick = (event, project) => {
+  //   event.stopPropagation();
+  // };
+  // const handleSaveChanges = (updatedProject) => {
+  //   const projectIndex = storedProjects.findIndex(
+  //     (p) => p.id === updatedProject.id
+  //   );
+  //   storedProjects[projectIndex] = updatedProject;
+  //   localStorage.setItem("projects", JSON.stringify(storedProjects));
+  // };
+  const handleDeleteClick = (event, projectId) => {
+    event.stopPropagation();
+    const confirmation = window.confirm("정말 삭제하겠습니까?");
+    if (confirmation) {
+      const updatedProjects = storedProjects.filter(
+        (project) => project.id !== projectId
+      );
+      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    }
   };
 
   return (
@@ -64,8 +91,6 @@ function OngoingProject() {
           +
         </button>
       </Container>
-
-      {isProjectVisible && <Project onClose={handleProjectClose} />}
 
       <StyledTable>
         <thead>
@@ -78,13 +103,16 @@ function OngoingProject() {
         </thead>
         <tbody>
           {storedProjects.map((project) => (
-            <tr key={project.id} onClick={handleRowClick}>
-              {" "}
-              {/* 수정 */}
+            <tr key={project.id} onClick={() => handleRowClick(project.id)}>
               <td>{project.id}</td>
               <td>{project.date}</td>
               <td>{project.name}</td>
               <td>{project.description}</td>
+              <td>
+                <DeleteButton onClick={(e) => handleDeleteClick(e, project.id)}>
+                  X
+                </DeleteButton>
+              </td>
             </tr>
           ))}
         </tbody>

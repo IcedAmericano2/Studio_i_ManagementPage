@@ -8,23 +8,22 @@ import PlanNoticeMainpage from "./Pages/NoticeBoardPage/PlanNoticePage/PlanNotic
 import LoginPage from "./Pages/Login/LoginPage";
 import SignInPage from "./Pages/Login/SignInPage";
 import ProjectMain from "./Pages/ProjectPage/ProjectMain";
+import Project from "./Pages/ProjectPage/Project";
 import Manage from "./Pages/InternalPage/Dashboard/Manage";
-
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route path="/" element={<ProjectMain />} />
-        <Route path="/Manage" element={<InternalMainpage />} />
+        <Route path="/Manage/:id" element={<InternalMainpage />} />
         <Route path="/EditMain" element={<EditNoticeMainpage />} />
         <Route path="/MakingMain" element={<MakingNoticeMainpage />} />
         <Route path="/PlanMain" element={<PlanNoticeMainpage />} />
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/SignInPage" element={<SignInPage />} />
         <Route path="/manage" element={<Manage />} />
-
+        <Route path="/project" element={<Project />} />
       </Routes>
     </BrowserRouter>
   );
