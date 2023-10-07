@@ -1,24 +1,23 @@
-import React from "react";
-import {useNavigate} from "react-router-dom";
+import React, {useState} from "react";
+import styled from "styled-components";
 import Body from "../../../Components/common/Body";
-import BoardPage from "../../../Components/common/BoardPage";
+import BoardPage from "../common/BoardPage";
 
-// PlanNoticeMainpage.js
-
-const PlanNoticeMainpage = () => {
+const EditNoticeMainpage = () => {
     const subTitle = "기획";
-    const buttonContent ="글쓰기";
-    const tableData = [
-        { id: 122, category: '질문', title: 'ㅁㅇㄻadfafasdㄹㅇㅁㄴㄻㄴㄹㅇㄴ',  date: 30,  username: '김김김' },
-        { id: 2, category: '강의', title: 30,  date: 30,  username: '이이이' },
-        { id: 3, category: '기타', title: 30,  date: 30,  username: '박박박' },
-    ];
+    const writingButtonContent = "글쓰기";
+    const [tableData, setTableData] = useState([
+        //데이터만 각각에 맞게 넣으면 끝. table를 공통컴포넌트로 설정해놓음.
+        {id: 122, category: '기획부분', title: 'ㅇㅇㅇㅇ', date: 30, username: '홍길동'},
+        {id: 1, category: '질문', title: 'ㅁㅇㄻadfafasdㄹㅇㅁㄴㄻㄴㄹㅇㄴ', date: 30, username: '김김김'},
+        {id: 2, category: '강의', title: 30, date: 30, username: '이이이'},
+        {id: 3, category: '기타', title: 30, date: 30, username: '박박박'},
+    ]);
 
     return (
         <Body>
-            <BoardPage subTitle={subTitle} tableData={tableData} buttonContent = {buttonContent} showTable={true}/>
+            <BoardPage subTitle={subTitle} tableData={tableData} writingButtonContent={writingButtonContent}/>
         </Body>
     );
 };
-
-export default PlanNoticeMainpage;
+export default EditNoticeMainpage;

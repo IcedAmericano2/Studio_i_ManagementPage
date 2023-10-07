@@ -9,7 +9,6 @@ import LoginPage from "./Pages/Login/LoginPage";
 import SignInPage from "./Pages/Login/SignInPage";
 import ProjectMain from "./Pages/ProjectPage/ProjectMain";
 import Manage from "./Pages/InternalPage/Dashboard/Manage";
-import WritingMainPage from "./Pages/WritingPage/WritingMainPage";
 
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/SignInPage" element={<SignInPage />} />
         <Route path="/manage" element={<Manage />} />
-        <Route path="/WritingMain" element={<WritingMainPage />} />
 
       </Routes>
     </BrowserRouter>

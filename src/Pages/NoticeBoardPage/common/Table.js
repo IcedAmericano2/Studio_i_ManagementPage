@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const TableContainer = styled.div`
   width: 98%;
-  height: 70rem;
-  border-bottom: 2px solid gray;
+  height: 28rem;
   margin: 0 auto;
   padding-bottom: 1rem;
 `;
@@ -12,6 +11,14 @@ const TableStyled = styled.table`
   width: 100%;
   border-collapse: collapse;
 `;
+
+const TableRow = styled.tr`
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
 const TableHeader1 = styled.th`
   padding: 8px;
   background-color: #f2f2f2;
@@ -69,7 +76,13 @@ const TableCellCenter = styled.td`
   text-align: center;
 `;
 
-const Table = ({ tableData  }) => {
+const Table = ({  tableData, onRowClick }) => {
+
+    // Table의 열을 클릭했을 때 호출될 함수
+    const sendDataBoard = (rowId) => {
+        console.log("selectedRowId:", rowId);
+        onRowClick(rowId);
+    };
     return (
         <TableContainer>
             <TableStyled>
@@ -84,13 +97,16 @@ const Table = ({ tableData  }) => {
                 </thead>
                 <tbody>
                 {tableData.map((row) => (
-                    <tr key={row.id}>
+                    <TableRow
+                        key={row.id}
+                        onClick={() => sendDataBoard(row.id)}
+                    >
                         <TableCellCenter>{row.id}</TableCellCenter>
                         <TableCellCenter>{row.category}</TableCellCenter>
                         <TableCell>{row.title}</TableCell>
                         <TableCellCenter>{row.date}</TableCellCenter>
                         <TableCellCenter>{row.username}</TableCellCenter>
-                    </tr>
+                    </TableRow>
                 ))}
                 </tbody>
             </TableStyled>
