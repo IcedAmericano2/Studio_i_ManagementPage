@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Project({ onClose }) {
+function Project() {
   const [startDate, setStartDate] = useState(
     new Date().toISOString().substr(0, 10)
   );
@@ -9,8 +10,10 @@ function Project({ onClose }) {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
+  const navigate = useNavigate();
 
   const handleSave = () => {
+    // Save project data to localStorage
     const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
     const newProject = {
       id: storedProjects.length + 1,
@@ -22,9 +25,7 @@ function Project({ onClose }) {
       "projects",
       JSON.stringify([...storedProjects, newProject])
     );
-
-    
-    onClose();
+    navigate("/");
   };
 
   return (
@@ -66,7 +67,7 @@ function Project({ onClose }) {
       <button className="check" onClick={handleSave}>
         Save
       </button>
-      <button className="check" onClick={onClose}>
+      <button className="check" onClick={() => navigate("/manage")}>
         Cancel
       </button>
     </div>
