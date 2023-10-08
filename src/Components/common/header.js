@@ -4,7 +4,8 @@ import Responsive from './responsive';
 import Button from './Button';
 import SearchBar from '../SearchBar';
 import { Link } from 'react-router-dom';
-import { CgMenuGridO } from "react-icons/cg";
+import { CgMenu } from "react-icons/cg";
+
 import { useEffect, useState } from 'react';
 
 const HeaderBlock = styled.div`
@@ -90,7 +91,7 @@ const Header = () => {
                 <Wrapper>
                     <div className="logo">STUDIO I</div>
                     <div className="menu">
-                    <CgMenuGridO className="MenuIcon" size="2rem" />
+                    <CgMenu className="MenuIcon" size="2rem" />
                     </div>
                     <div className="search">
                     <SearchBar />
