@@ -8,13 +8,13 @@ export const media = {
 
 export const TitleLg = styled.div`
   font-size: 5rem;
-  font-weight: 600;
-  font-family: Georgia;
+  font-weight: 900;
+  
   
   @media ${media.mobile}{
     font-size: 1.875rem;
     font-weight: 600;
-    font-family: Georgia;
+    
   }
 `;
 
@@ -40,7 +40,7 @@ export const TitleSm = styled.div`
 export const TextLg = styled.div`
   font-size: 1.125rem;
   font-weight: 600;
-  font-family: Georgia;
+  
   
   @media ${media.mobile}{
     font-size: 1.125rem;
@@ -51,7 +51,7 @@ export const TextLg = styled.div`
 export const TextMd = styled.div`
   font-size: 1rem;
   font-weight: normal;
-  font-family: Georgia;
+  
   
   @media ${media.mobile}{
     font-size: 1.125rem;

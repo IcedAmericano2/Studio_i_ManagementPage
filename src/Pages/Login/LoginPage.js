@@ -96,8 +96,6 @@ const InputSize = styled.input`
   min-width: 288px;
   height: 40px;
   margin: 16px;
-  font-size: 16px;
-  
   &:focus{
     outline: none;
   }
@@ -109,8 +107,6 @@ const Margin16px = styled.div`
 `;
 
 const LoginPageButton = styled.button`
-  font-family: Georgia;
-  font-size: 16px;
   background-color: #000AFF;
   color: #FFFFFF;
   width: 100%;
@@ -127,7 +123,6 @@ const LoginPageButton = styled.button`
 `;
 
 const StyledButtonLink = styled(Link)`
-  font-family: Georgia;
   text-decoration: none; /* 밑줄 제거 */
   color: inherit; /* 부모 요소의 색상 상속 */
   cursor: pointer; /* 포인터 커서 표시 */
@@ -136,7 +131,6 @@ const StyledButtonLink = styled(Link)`
 `
 
 const StyledLink = styled(Link)`
-  font-family: Georgia;
   text-decoration: none; /* 밑줄 제거 */
   cursor: pointer; /* 포인터 커서 표시 */
   color: #000AFF;
