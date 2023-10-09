@@ -1,6 +1,62 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
+const TotalContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #f7f7f7;
+`;
+
+const ProjectContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const StyledInput = styled.input`
+  padding: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const StyledTextArea = styled.textarea`
+  width: 120%;
+  min-height: 100px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const StyledButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: -20px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+`;
 function Project() {
   const [startDate, setStartDate] = useState(
     new Date().toISOString().substr(0, 10)
@@ -10,67 +66,94 @@ function Project() {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
+  const [teamLeader, setTeamLeader] = useState("a"); // Default value for dropdown
+  const [teamMembers, setTeamMembers] = useState("");
+
   const navigate = useNavigate();
 
   const handleSave = () => {
-    // Save project data to localStorage
     const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
     const newProject = {
       id: storedProjects.length + 1,
       date: `${startDate} ~ ${endDate}`,
       name: projectName,
       description: projectDetails,
+      leader: teamLeader,
+      members: teamMembers,
     };
     localStorage.setItem(
       "projects",
       JSON.stringify([...storedProjects, newProject])
     );
-    navigate("/");
+
+    navigate("/"); // Redirect to the main page after saving.
   };
 
   return (
-    <div className="total">
-      <h2>프로젝트</h2>
-      <div>
-        <label>시작&nbsp;&nbsp;날짜&nbsp;&nbsp;: </label>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>종료&nbsp;&nbsp;날짜&nbsp;&nbsp;: </label>
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>프로젝트명&nbsp;: </label>
-        <input
-          type="text"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-        />
-      </div>
-      <div>
+    <TotalContainer>
+      <h2>Create Project</h2>
+      <ProjectContainer>
         <div>
-          <label className="details">프로젝트 세부 내용:</label>
+          <label>시작&nbsp;&nbsp;날짜&nbsp;&nbsp;: </label>
+          <StyledInput
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
         </div>
-        <textarea
-          value={projectDetails}
-          onChange={(e) => setProjectDetails(e.target.value)}
-        ></textarea>
-      </div>
-      <button className="check" onClick={handleSave}>
-        Save
-      </button>
-      <button className="check" onClick={() => navigate("/manage")}>
-        Cancel
-      </button>
-    </div>
+        <div>
+          <label>종료&nbsp;&nbsp;날짜&nbsp;&nbsp;: </label>
+          <StyledInput
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>프로젝트명&nbsp;: </label>
+          <StyledInput
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>팀장&nbsp;: </label>
+          <select
+            value={teamLeader}
+            onChange={(e) => setTeamLeader(e.target.value)}
+          >
+            {/* your options here */}
+          </select>
+        </div>
+        <div>
+          <label>팀원&nbsp;: </label>
+          <StyledInput
+            type="text"
+            value={teamMembers}
+            placeholder="팀원 입력 (comma separated)"
+            onChange={(e) => setTeamMembers(e.target.value)}
+          />
+        </div>
+        <div>
+          <div>
+            <label className="details">프로젝트 세부 내용:</label>
+          </div>
+          <StyledTextArea
+            value={projectDetails}
+            onChange={(e) => setProjectDetails(e.target.value)}
+          ></StyledTextArea>
+        </div>
+        <div>
+          <StyledButton className="check" onClick={handleSave}>
+            Save
+          </StyledButton>
+          <StyledButton className="check" onClick={() => navigate("/")}>
+            Cancel
+          </StyledButton>
+        </div>
+      </ProjectContainer>
+    </TotalContainer>
   );
 }
 
