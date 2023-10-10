@@ -5,10 +5,10 @@ import {useNavigate} from "react-router-dom";
 import Table from "./Table";
 import WritingPage from "../../WritingPage/WritingPage";
 import ViewWritingPage from "../../WritingPage/ViewWritingPage";
-import eventBus from '../../AboutUs/EventBus';
+
 
 const MainBody = styled.div`
-  //max-width : 1184px;   
+  //max-width : 1184px; 
   //이거 가운데로 놓기 ~
   display: flex;
   align-items: center;
@@ -67,31 +67,19 @@ const WritingButton = styled.button`
 
 
 
-const BoardPage = ({subTitle, tableData, writingButtonContent, projectId}) => {
+const BoardPage = ({subTitle, tableData, writingButtonContent}) => {
     const navigate = useNavigate();
     const [showTable, setShowTable] = useState(true);
     const [showWritingPage, setShowWritingPage] = useState(false);
     const [showViewWritingPage, setShowViewWritingPage] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState("");
-    const [selectedProjectId, setSelectedProjectId] = useState("");
 
-    useEffect(() => {
-        // 컴포넌트가 마운트되면 customEvent 이벤트를 구독
-        const eventListener = (projectId) => {
-            setSelectedProjectId(projectId);
-        };
-        eventBus.on('customEvent', eventListener);
-        // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리
-        return () => {
-            eventBus.removeListener('customEvent', eventListener);
-        };
-    }, []);
-    const goToHomePage = () => {
+    const goToMainPage = () => {
         navigate("/");
     };
 
     const goToProjectPage = () => {
-        navigate(`/manage/${projectId}`);
+        navigate("/manage");
     };
 
     const goToWritingPage = () => {
@@ -112,11 +100,11 @@ const BoardPage = ({subTitle, tableData, writingButtonContent, projectId}) => {
             <MainBody>
                 <DashboardDiv>
                     <BoardTitleDiv>
-                        <Title onClick={goToHomePage}>
-                            HOME
+                        <Title onClick={goToMainPage}>
+                            Dashboard
                         </Title>
                         <SubTitle onClick={goToProjectPage}>
-                            >Project
+                            >Socoa
                         </SubTitle>
                         <SubTitle>
                             >{subTitle}

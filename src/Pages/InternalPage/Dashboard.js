@@ -18,7 +18,7 @@ const Title = styled.div`
 `;
 
 const DashboardBody = styled.div`
-  width: 100%;
+  width: 125%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
