@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Project from "./Project";
 import { useNavigate } from "react-router-dom";
-import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
+import {
+  media,
+  TitleLg,
+  TitleMd,
+  TitleSm,
+  TextLg,
+  TextMd,
+  TextSm,
+} from "../../Components/common/Font";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -27,7 +35,18 @@ const DeleteButton = styled.button`
     background-color: #f5f5f5;
   }
 `;
+const CompleteButton = styled.button`
+  background-color: white;
+  border: 1px solid white;
+  color: green;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: background-color 0.3s;
 
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
 const StyledTable = styled.table`
   width: 100%;
   margin-top: 20px;
@@ -43,7 +62,7 @@ const StyledTable = styled.table`
   th:last-child {
     display: flex;
   }
-  
+
   tbody tr {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
   }
@@ -55,14 +74,14 @@ const StyledTable = styled.table`
 
 const LabelArea = styled.div`
   width: 128px;
-  background: #EB3225;
+  background: #eb3225;
   border-radius: 32px;
   text-align: center;
   color: white;
 `;
 
 const CreateButton = styled.button`
-  background-color: #EB3225;
+  background-color: #eb3225;
   border-radius: 32px;
   border: none;
   outline: none;
@@ -74,7 +93,6 @@ const CreateButton = styled.button`
     background-color: #363636;
   }
 `;
-
 
 function OngoingProject() {
   const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
@@ -88,16 +106,6 @@ function OngoingProject() {
     navigate(`/Manage/${projectId}`);
   };
 
-  // const handleEditClick = (event, project) => {
-  //   event.stopPropagation();
-  // };
-  // const handleSaveChanges = (updatedProject) => {
-  //   const projectIndex = storedProjects.findIndex(
-  //     (p) => p.id === updatedProject.id
-  //   );
-  //   storedProjects[projectIndex] = updatedProject;
-  //   localStorage.setItem("projects", JSON.stringify(storedProjects));
-  // };
   const handleDeleteClick = (event, projectId) => {
     event.stopPropagation();
     const confirmation = window.confirm("정말 삭제하겠습니까?");
@@ -108,26 +116,49 @@ function OngoingProject() {
       localStorage.setItem("projects", JSON.stringify(updatedProjects));
     }
   };
+  const handleCompleteClick = (event, project) => {
+    event.stopPropagation();
+    const confirmation = window.confirm("이 프로젝트를 완료하였습니까?");
+    if (confirmation) {
+      const updatedProjects = storedProjects.filter((p) => p.id !== project.id);
+      const completedProjects = JSON.parse(
+        localStorage.getItem("completedProjects") || "[]"
+      );
+      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+      localStorage.setItem(
+        "completedProjects",
+        JSON.stringify([...completedProjects, project])
+      );
+    }
+  };
 
   return (
     <AppContainer>
       <Container>
         <LabelArea>
-        <TitleSm>진행 중</TitleSm>
+          <TitleSm>진행 중</TitleSm>
         </LabelArea>
       </Container>
 
       <StyledTable>
         <thead>
           <tr>
-            <th><TextMd>번호</TextMd></th>
-            <th><TextMd>기한</TextMd></th>
-            <th><TextMd>프로젝트명</TextMd></th>
-            <th><TextMd>프로젝트 소개</TextMd></th>
+            <th>
+              <TextMd>번호</TextMd>
+            </th>
+            <th>
+              <TextMd>기한</TextMd>
+            </th>
+            <th>
+              <TextMd>프로젝트명</TextMd>
+            </th>
+            <th>
+              <TextMd>프로젝트 소개</TextMd>
+            </th>
             <th>
               <CreateButton type="button" onClick={handleAddProject}>
                 <TextLg>생성</TextLg>
-                </CreateButton>
+              </CreateButton>
             </th>
           </tr>
         </thead>
@@ -140,8 +171,13 @@ function OngoingProject() {
               <td>{project.description}</td>
               <td>
                 <DeleteButton onClick={(e) => handleDeleteClick(e, project.id)}>
-                  X
+                  삭제
                 </DeleteButton>
+                <CompleteButton
+                  onClick={(e) => handleCompleteClick(e, project)}
+                >
+                  완료
+                </CompleteButton>
               </td>
             </tr>
           ))}

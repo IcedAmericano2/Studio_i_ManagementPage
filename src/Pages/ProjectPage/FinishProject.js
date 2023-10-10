@@ -1,6 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
+import {
+  media,
+  TitleLg,
+  TitleMd,
+  TitleSm,
+  TextLg,
+  TextMd,
+  TextSm,
+} from "../../Components/common/Font";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -11,12 +19,6 @@ const AppContainer = styled.div`
 
 const Container = styled.div`
   text-align: left;
-`;
-
-const Title = styled.text`
-  font-size: 1.5rem;
-  background-color: green;
-  padding: 5px;
 `;
 
 const StyledTable = styled.table`
@@ -44,6 +46,51 @@ const StyledTable = styled.table`
   }
 `;
 
+const LabelArea = styled.div`
+  background-color: #363636;
+  border-radius: 32px;
+  width: 128px;
+  text-align: center;
+  color: white;
+`;
+const storedCompletedProjects = JSON.parse(
+  localStorage.getItem("completedProjects") || "[]"
+);
+
+function FinishProject() {
+  return (
+    <AppContainer>
+      <Container>
+        <LabelArea>
+          <TitleSm>완료</TitleSm>
+        </LabelArea>
+      </Container>
+
+      <StyledTable>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>기한</th>
+            <th>프로젝트명</th>
+            <th>프로젝트 소개</th>
+            <th>기타 정보</th>
+          </tr>
+        </thead>
+        <tbody>
+          {projectData.concat(storedCompletedProjects).map((project, index) => (
+            <tr key={project.id}>
+              <td>{index + 1}</td>
+              <td>{project.date}</td>
+              <td>{project.name}</td>
+              <td>{project.description}</td>
+              <td>{project.etc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </StyledTable>
+    </AppContainer>
+  );
+}
 const projectData = [
   {
     id: 1,
@@ -120,47 +167,5 @@ const projectData = [
     etc: "youtube link",
   },
 ];
-
-const LabelArea = styled.div`
-  background-color: #363636;
-  border-radius: 32px;
-  width: 128px;
-  text-align: center;
-  color: white;
-`;
-
-
-function FinishProject() {
-  return (
-    <AppContainer>
-      <Container>
-        <LabelArea><TitleSm>완료</TitleSm></LabelArea>
-      </Container>
-
-      <StyledTable>
-        <thead>
-          <tr>
-            <th>번호</th>
-            <th>기한</th>
-            <th>프로젝트명</th>
-            <th>프로젝트 소개</th>
-            <th>기타 정보</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projectData.map((project) => (
-            <tr key={project.id}>
-              <td>{project.id}</td>
-              <td>{project.date}</td>
-              <td>{project.name}</td>
-              <td>{project.description}</td>
-              <td>{project.etc}</td>
-            </tr>
-          ))}
-        </tbody>
-      </StyledTable>
-    </AppContainer>
-  );
-}
 
 export default FinishProject;
