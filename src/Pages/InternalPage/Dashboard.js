@@ -95,7 +95,6 @@ const Dashboard = () => {
     <DashboardBox>
       <Arc>
         <Title>Dashboard</Title>
-        <Button>완료</Button>
       </Arc>
       <DashboardBody>
         <Panel>
