@@ -1,8 +1,10 @@
-import  React from "react";
+import React from "react";
 import Body from "../../Components/common/Body";
 import FinishProject from "./FinishProject";
 import OngoingProject from "./OngoingProject";
 import styled from "styled-components";
+import {ProjectProvider} from "../AboutUs/Context"; // ProjectProvider import
+
 
 const MainBody = styled.div`
   /* max-width : 1184px; */
@@ -32,24 +34,26 @@ const Container = styled.div`
 `;
 
 const ProjectMain = () => {
-  const ProjectMainContent = () => {
-    return (
-      <>
-        <MainBody>
-          <Container>
-            <OngoingProject />
-            <FinishProject />
-          </Container>
-        </MainBody>
-      </>
-    );
-  };
+    const ProjectMainContent = () => {
+        return (
+            <>
+                <MainBody>
+                    <Container>
+                        <ProjectProvider>
+                            <OngoingProject/>
+                        </ProjectProvider>
+                        <FinishProject/>
+                    </Container>
+                </MainBody>
+            </>
+        );
+    };
 
-  return (
-    <Body>
-      <Title>DashBoard</Title>
-      <ProjectMainContent />
-    </Body>
-  );
+    return (
+        <Body>
+            <Title>DashBoard</Title>
+            <ProjectMainContent/>
+        </Body>
+    );
 };
 export default ProjectMain;

@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import Body from "../../../Components/common/Body";
 import BoardPage from "../common/BoardPage";
+import { ProjectProvider } from "../../AboutUs/Context";
 
 const EditNoticeMainpage = () => {
     const subTitle = "편집";
@@ -17,7 +18,9 @@ const EditNoticeMainpage = () => {
 
     return (
         <Body>
-            <BoardPage subTitle={subTitle} tableData={tableData} writingButtonContent={writingButtonContent}/>
+            <ProjectProvider>
+                <BoardPage subTitle={subTitle} tableData={tableData} writingButtonContent={writingButtonContent}/>
+            </ProjectProvider>
             {/* WritingPage 컴포넌트를 사용하고, onAddPost prop으로 handleAddPost 함수를 전달 */}
         </Body>
     );

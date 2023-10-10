@@ -2,7 +2,7 @@ import React, { useState, createContext } from "react";
 import styled from "styled-components";
 import Project from "./Project";
 import { useNavigate } from "react-router-dom";
-import eventBus from '../AboutUs/EventBus';
+import { useProject } from '../AboutUs/Context';
 
 const AppContainer = styled.div`
   text-align: center;
@@ -10,7 +10,6 @@ const AppContainer = styled.div`
   align-items: center;
   margin-top: 16px;
 `;
-const ProjectContext = createContext();
 
 const Container = styled.div`
   text-align: left;
@@ -55,6 +54,7 @@ const StyledTable = styled.table`
 function OngoingProject() {
   const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
   const navigate = useNavigate();
+  const { setProject } = useProject();
 
   const handleAddProject = () => {
     navigate("/Project"); // 새로운 프로젝트 추가 페이지로 이동
@@ -62,7 +62,7 @@ function OngoingProject() {
 
   const handleRowClick = (projectId) => {
     navigate(`/Manage/${projectId}`);
-    eventBus.emit('customEvent', projectId);
+    setProject(projectId);
   };
 
   // const handleEditClick = (event, project) => {
@@ -89,6 +89,7 @@ function OngoingProject() {
   return (
     <AppContainer>
       <Container>
+
         <Title>진행 중</Title>
         <button type="button" onClick={handleAddProject}>
           +
