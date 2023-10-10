@@ -25,7 +25,7 @@ const DeleteButton = styled.button`
   margin: 4px;
 
   &:hover {
-    background-color: #black;
+    background-color: black;
   }
 `;
 const CompleteButton = styled.button`
@@ -38,7 +38,7 @@ const CompleteButton = styled.button`
   margin: 4px;
 
   &:hover {
-    background-color: #black;
+    background-color: black;
   }
 `;
 const StyledTable = styled.table`

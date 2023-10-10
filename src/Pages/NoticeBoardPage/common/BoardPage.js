@@ -1,11 +1,10 @@
 // BoardPage.js
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import Table from "./Table";
 import WritingPage from "../../WritingPage/WritingPage";
 import ViewWritingPage from "../../WritingPage/ViewWritingPage";
-
 
 const MainBody = styled.div`
   //max-width : 1184px; 
@@ -67,19 +66,20 @@ const WritingButton = styled.button`
 
 
 
-const BoardPage = ({subTitle, tableData, writingButtonContent}) => {
+const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId }) => {
     const navigate = useNavigate();
     const [showTable, setShowTable] = useState(true);
     const [showWritingPage, setShowWritingPage] = useState(false);
     const [showViewWritingPage, setShowViewWritingPage] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState("");
 
-    const goToMainPage = () => {
+    const goToHomePage = () => {
         navigate("/");
     };
 
     const goToProjectPage = () => {
-        navigate("/manage");
+        console.log("자 project 눌렀다? : " + projectId);
+        navigate(`/manage/${projectId}`);
     };
 
     const goToWritingPage = () => {
@@ -100,11 +100,11 @@ const BoardPage = ({subTitle, tableData, writingButtonContent}) => {
             <MainBody>
                 <DashboardDiv>
                     <BoardTitleDiv>
-                        <Title onClick={goToMainPage}>
-                            Dashboard
+                        <Title onClick={goToHomePage}>
+                            HOME
                         </Title>
                         <SubTitle onClick={goToProjectPage}>
-                            >Socoa
+                            >Project
                         </SubTitle>
                         <SubTitle>
                             >{subTitle}
@@ -123,12 +123,6 @@ const BoardPage = ({subTitle, tableData, writingButtonContent}) => {
                             <ViewWritingPage selectedRowId = {selectedRowId}>
                             </ViewWritingPage>
                         ) : null }
-                        {/*{selectedItem !== null && (*/}
-                        {/*    <div>*/}
-                        {/*        <h2>{selectedPost.title}</h2>*/}
-                        {/*        <div dangerouslySetInnerHTML={{ __html: selectedPost.content  }} />*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
                     </DashboardBox>
                 </DashboardDiv>
             </MainBody>

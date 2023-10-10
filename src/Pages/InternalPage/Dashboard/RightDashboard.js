@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 const RightDashboardBox = styled.div`
   border-left: 1px dotted black;
@@ -62,19 +63,21 @@ const GoButton = styled.div`
   margin-left: auto;
 `;
 
-const RightDashboard = () => {
+const RightDashboard = ({projectId}) => {
+
+
   const navigate = useNavigate();
 
   const goToPlanPage = () => {
-    navigate("/PlanMain");
+    navigate(`/PlanMain/${projectId}`);
   };
 
   const goToMakingPage = () => {
-    navigate("/MakingMain");
+    navigate(`/MakingMain/${projectId}`);
   };
 
   const goToEditPage = () => {
-    navigate("/EditMain");
+    navigate(`/EditMain/${projectId}`);
   };
 
   return (

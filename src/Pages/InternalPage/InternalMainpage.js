@@ -5,6 +5,7 @@ import RecentArticle from "./RecentArticle";
 import RecentProject from "./RecentProject";
 import styled from "styled-components";
 import Body from "../../Components/common/Body";
+import { useParams } from 'react-router-dom';
 
 const MainBody = styled.div`
   /* max-width : 1184px; */
@@ -27,11 +28,12 @@ const Wrapper = styled.div`
 
 const InternalMainpage = () => {
   const InternalMainpageContent = () => {
+    const { projectId } = useParams();
     return (
       <>
         <MainBody>
           <Wrapper>
-            <Dashboard></Dashboard>
+            <Dashboard projectId={projectId}></Dashboard>
           </Wrapper>
           <Wrapper>
             <RecentArticle />

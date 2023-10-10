@@ -33,23 +33,24 @@ const Container = styled.div`
 `;
 
 const ProjectMain = () => {
-  const ProjectMainContent = () => {
-    return (
-      <>
-        <MainBody>
-          <Container>
-            <OngoingProject />
-            <FinishProject />
-          </Container>
-        </MainBody>
-      </>
-    );
-  };
+    const ProjectMainContent = () => {
+        return (
+            <>
+                <MainBody>
+                    <Container>
+                        <OngoingProject/>
+                        <FinishProject/>
+                    </Container>
+                </MainBody>
+            </>
+        );
+    };
 
-  return (
-    <Body>
-      <ProjectMainContent />
-    </Body>
-  );
+    return (
+        <Body>
+            <Title>DashBoard</Title>
+            <ProjectMainContent/>
+        </Body>
+    );
 };
 export default ProjectMain;
