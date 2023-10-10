@@ -80,7 +80,6 @@ const Table = ({  tableData, onRowClick }) => {
 
     // Table의 열을 클릭했을 때 호출될 함수
     const sendDataBoard = (rowId) => {
-        console.log("selectedRowId:", rowId);
         onRowClick(rowId);
     };
     return (

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 import styled from "styled-components";
 import Project from "./Project";
 import { useNavigate } from "react-router-dom";
+import eventBus from '../AboutUs/EventBus';
 
 const AppContainer = styled.div`
   text-align: center;
@@ -9,6 +10,7 @@ const AppContainer = styled.div`
   align-items: center;
   margin-top: 16px;
 `;
+const ProjectContext = createContext();
 
 const Container = styled.div`
   text-align: left;
@@ -60,6 +62,7 @@ function OngoingProject() {
 
   const handleRowClick = (projectId) => {
     navigate(`/Manage/${projectId}`);
+    eventBus.emit('customEvent', projectId);
   };
 
   // const handleEditClick = (event, project) => {
