@@ -16,27 +16,29 @@ const Container = styled.div`
 `;
 
 const DeleteButton = styled.button`
-  background-color: white;
-  border: 1px solid white;
-  color: red;
-  cursor: pointer;
-  padding: 5px 10px;
-  transition: background-color 0.3s;
+  background-color: #363636;
+  border-radius: 32px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 2px 16px;
+  margin: 4px;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: #black;
   }
 `;
 const CompleteButton = styled.button`
-  background-color: white;
-  border: 1px solid white;
-  color: green;
-  cursor: pointer;
-  padding: 5px 10px;
-  transition: background-color 0.3s;
+  background-color: #363636;
+  border-radius: 32px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 2px 16px;
+  margin: 4px;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: #black;
   }
 `;
 const StyledTable = styled.table`
