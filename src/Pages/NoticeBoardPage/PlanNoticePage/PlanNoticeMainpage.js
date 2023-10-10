@@ -2,8 +2,11 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import Body from "../../../Components/common/Body";
 import BoardPage from "../common/BoardPage";
+import {useParams} from "react-router-dom";
 
 const EditNoticeMainpage = () => {
+    const { projectId } = useParams();
+
     const subTitle = "기획";
     const writingButtonContent = "글쓰기";
     const [tableData, setTableData] = useState([
@@ -16,7 +19,7 @@ const EditNoticeMainpage = () => {
 
     return (
         <Body>
-            <BoardPage subTitle={subTitle} tableData={tableData} writingButtonContent={writingButtonContent}/>
+            <BoardPage subTitle={subTitle} tableData={tableData} writingButtonContent={writingButtonContent} projectId={projectId}/>
         </Body>
     );
 };

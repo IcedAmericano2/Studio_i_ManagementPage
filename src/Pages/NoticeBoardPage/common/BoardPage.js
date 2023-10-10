@@ -1,11 +1,10 @@
 // BoardPage.js
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import Table from "./Table";
 import WritingPage from "../../WritingPage/WritingPage";
 import ViewWritingPage from "../../WritingPage/ViewWritingPage";
-import { useProject } from '../../AboutUs/Context';
 
 const MainBody = styled.div`
   //max-width : 1184px;   
@@ -67,21 +66,20 @@ const WritingButton = styled.button`
 
 
 
-const BoardPage = ({ subTitle , tableData , writingButtonContent }) => {
+const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId }) => {
     const navigate = useNavigate();
     const [showTable, setShowTable] = useState(true);
     const [showWritingPage, setShowWritingPage] = useState(false);
     const [showViewWritingPage, setShowViewWritingPage] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState("");
-    const { projectIdData } = useProject();
 
     const goToHomePage = () => {
         navigate("/");
     };
 
     const goToProjectPage = () => {
-        console.log("자 project 눌렀다? : " + projectIdData);
-        navigate(`/manage/${projectIdData}`);
+        console.log("자 project 눌렀다? : " + projectId);
+        navigate(`/manage/${projectId}`);
     };
 
     const goToWritingPage = () => {

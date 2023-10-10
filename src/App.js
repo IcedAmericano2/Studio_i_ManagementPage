@@ -16,10 +16,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProjectMain />} />
-        <Route path="/Manage/:id" element={<InternalMainpage />} />
-        <Route path="/EditMain" element={<EditNoticeMainpage />} />
-        <Route path="/MakingMain" element={<MakingNoticeMainpage />} />
-        <Route path="/PlanMain" element={<PlanNoticeMainpage />} />
+        <Route path="/Manage/:projectId" element={<InternalMainpage />} />
+        <Route path="/EditMain/:projectId" element={<EditNoticeMainpage />} />
+        <Route path="/MakingMain/:projectId" element={<MakingNoticeMainpage />} />
+        <Route path="/PlanMain/:projectId" element={<PlanNoticeMainpage />} />
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/SignInPage" element={<SignInPage />} />
         <Route path="/manage" element={<Manage />} />

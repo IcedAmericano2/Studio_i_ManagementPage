@@ -3,8 +3,6 @@ import Body from "../../Components/common/Body";
 import FinishProject from "./FinishProject";
 import OngoingProject from "./OngoingProject";
 import styled from "styled-components";
-import {ProjectProvider} from "../AboutUs/Context"; // ProjectProvider import
-
 
 const MainBody = styled.div`
   /* max-width : 1184px; */
@@ -39,9 +37,7 @@ const ProjectMain = () => {
             <>
                 <MainBody>
                     <Container>
-                        <ProjectProvider>
-                            <OngoingProject/>
-                        </ProjectProvider>
+                        <OngoingProject/>
                         <FinishProject/>
                     </Container>
                 </MainBody>
