@@ -2,15 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Project from "./Project";
 import { useNavigate } from "react-router-dom";
-import {
-  media,
-  TitleLg,
-  TitleMd,
-  TitleSm,
-  TextLg,
-  TextMd,
-  TextSm,
-} from "../../Components/common/Font";
+import { TitleSm, TextLg, TextMd } from "../../Components/common/Font";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -105,6 +97,14 @@ function OngoingProject() {
   const handleRowClick = (projectId) => {
     navigate(`/Manage/${projectId}`);
   };
+  const renumberProjects = (projects) => {
+    return projects.map((project, index) => {
+      return {
+        ...project,
+        id: index + 1,
+      };
+    });
+  };
 
   const handleDeleteClick = (event, projectId) => {
     event.stopPropagation();
@@ -113,18 +113,21 @@ function OngoingProject() {
       const updatedProjects = storedProjects.filter(
         (project) => project.id !== projectId
       );
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+      const renumberedProjects = renumberProjects(updatedProjects);
+      localStorage.setItem("projects", JSON.stringify(renumberedProjects));
     }
   };
+
   const handleCompleteClick = (event, project) => {
     event.stopPropagation();
     const confirmation = window.confirm("이 프로젝트를 완료하였습니까?");
     if (confirmation) {
       const updatedProjects = storedProjects.filter((p) => p.id !== project.id);
+      const renumberedProjects = renumberProjects(updatedProjects);
       const completedProjects = JSON.parse(
         localStorage.getItem("completedProjects") || "[]"
       );
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+      localStorage.setItem("projects", JSON.stringify(renumberedProjects));
       localStorage.setItem(
         "completedProjects",
         JSON.stringify([...completedProjects, project])
