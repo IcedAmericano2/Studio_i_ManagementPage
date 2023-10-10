@@ -1,4 +1,4 @@
-import  React from "react";
+import React from "react";
 import Body from "../../Components/common/Body";
 import FinishProject from "./FinishProject";
 import OngoingProject from "./OngoingProject";
@@ -11,6 +11,7 @@ const MainBody = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background-color: #FAFAFA;
 `;
 
 const Title = styled.text`
@@ -28,7 +29,7 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  background-color: white;
+    background-color: #FAFAFA;
 `;
 
 const ProjectMain = () => {
@@ -47,7 +48,6 @@ const ProjectMain = () => {
 
   return (
     <Body>
-      <Title>DashBoard</Title>
       <ProjectMainContent />
     </Body>
   );

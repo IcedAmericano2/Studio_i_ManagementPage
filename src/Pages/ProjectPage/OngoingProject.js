@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Project from "./Project";
 import { useNavigate } from "react-router-dom";
+import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
 
 const AppContainer = styled.div`
   text-align: center;
@@ -14,11 +15,6 @@ const Container = styled.div`
   text-align: left;
 `;
 
-const Title = styled.text`
-  font-size: 1.5rem;
-  background-color: #b47e7e;
-  padding: 5px;
-`;
 const DeleteButton = styled.button`
   background-color: white;
   border: 1px solid white;
@@ -34,21 +30,51 @@ const DeleteButton = styled.button`
 
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: collapse;
   margin-top: 20px;
+  border-collapse: separate;
+  border-spacing: 0 16px;
 
   th,
   td {
     padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
     text-align: center;
   }
 
-  tr:hover {
+  th:last-child {
+    display: flex;
+  }
+  
+  tbody tr {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  tbody tr:hover {
     background-color: #f5f5f5;
   }
 `;
+
+const LabelArea = styled.div`
+  width: 128px;
+  background: #EB3225;
+  border-radius: 32px;
+  text-align: center;
+  color: white;
+`;
+
+const CreateButton = styled.button`
+  background-color: #EB3225;
+  border-radius: 32px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 2px 16px;
+  margin: 4px;
+
+  &:hover {
+    background-color: #363636;
+  }
+`;
+
 
 function OngoingProject() {
   const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
@@ -86,19 +112,23 @@ function OngoingProject() {
   return (
     <AppContainer>
       <Container>
-        <Title>진행 중</Title>
-        <button type="button" onClick={handleAddProject}>
-          +
-        </button>
+        <LabelArea>
+        <TitleSm>진행 중</TitleSm>
+        </LabelArea>
       </Container>
 
       <StyledTable>
         <thead>
           <tr>
-            <th>번호</th>
-            <th>기한</th>
-            <th>프로젝트명</th>
-            <th>프로젝트 소개</th>
+            <th><TextMd>번호</TextMd></th>
+            <th><TextMd>기한</TextMd></th>
+            <th><TextMd>프로젝트명</TextMd></th>
+            <th><TextMd>프로젝트 소개</TextMd></th>
+            <th>
+              <CreateButton type="button" onClick={handleAddProject}>
+                <TextLg>생성</TextLg>
+                </CreateButton>
+            </th>
           </tr>
         </thead>
         <tbody>

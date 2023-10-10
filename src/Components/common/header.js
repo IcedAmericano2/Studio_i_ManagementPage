@@ -87,12 +87,12 @@ const Header = () => {
 
     return (
         <>
-            <HeaderBlock>
-                <Wrapper>
-                    <div className="logo">STUDIO I</div>
+            <HeaderBlock className={"HeaderBlock"}>
+                <Wrapper className={"Wrapper"}>
                     <div className="menu">
-                    <CgMenu className="MenuIcon" size="2rem" />
+                        <CgMenu className="MenuIcon" size="2rem" />
                     </div>
+                    <div className="logo">STUDIO I</div>
                     <div className="search">
                     <SearchBar />
                     </div>

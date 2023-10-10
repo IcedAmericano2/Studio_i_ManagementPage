@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
 
 const AppContainer = styled.div`
   text-align: center;
@@ -20,18 +21,25 @@ const Title = styled.text`
 
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: collapse;
   margin-top: 20px;
+  border-collapse: separate;
+  border-spacing: 0 16px;
 
   th,
   td {
     padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
     text-align: center;
   }
 
-  tr:hover {
+  th:last-child {
+    display: flex;
+  }
+
+  tbody tr {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  tbody tr:hover {
     background-color: #f5f5f5;
   }
 `;
@@ -113,11 +121,20 @@ const projectData = [
   },
 ];
 
+const LabelArea = styled.div`
+  background-color: #363636;
+  border-radius: 32px;
+  width: 128px;
+  text-align: center;
+  color: white;
+`;
+
+
 function FinishProject() {
   return (
     <AppContainer>
       <Container>
-        <Title>완료된 프로젝트</Title>
+        <LabelArea><TitleSm>완료</TitleSm></LabelArea>
       </Container>
 
       <StyledTable>

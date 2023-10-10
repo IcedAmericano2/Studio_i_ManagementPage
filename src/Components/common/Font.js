@@ -6,7 +6,7 @@ export const media = {
 };
 
 
-export const TitleLg = styled.div`
+export const TitleLg = styled.span`
   font-size: 5rem;
   font-weight: 900;
   
@@ -18,7 +18,7 @@ export const TitleLg = styled.div`
   }
 `;
 
-export const TitleMd = styled.div`
+export const TitleMd = styled.span`
   font-size: 2.25rem;
   font-weight: 600;
   
@@ -28,7 +28,7 @@ export const TitleMd = styled.div`
   }
 `;
 
-export const TitleSm = styled.div`
+export const TitleSm = styled.span`
   font-size: 1.5rem;
   font-weight: 600;
   @media ${media.mobile}{
@@ -37,7 +37,7 @@ export const TitleSm = styled.div`
   }
 `;
 
-export const TextLg = styled.div`
+export const TextLg = styled.span`
   font-size: 1.125rem;
   font-weight: 600;
   
@@ -48,7 +48,7 @@ export const TextLg = styled.div`
   }
 `;
 
-export const TextMd = styled.div`
+export const TextMd = styled.span`
   font-size: 1rem;
   font-weight: normal;
   
@@ -59,7 +59,7 @@ export const TextMd = styled.div`
   }
 `;
 
-export const TextSm = styled.div`
+export const TextSm = styled.span`
   font-size: 0.875rem;
   font-weight: normal;
   @media ${media.mobile}{
@@ -68,7 +68,7 @@ export const TextSm = styled.div`
   }
 `;
 
-export const Caption = styled.div`
+export const Caption = styled.span`
   font-size: 0.75rem;
   font-weight: normal;
   @media ${media.mobile}{

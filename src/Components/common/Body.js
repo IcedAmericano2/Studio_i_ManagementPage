@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Responsive from './responsive';
 import Header from "./header";
+import NEWheader from "./NEWheader";
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -33,8 +34,9 @@ const Wrapper = styled(Responsive)`
  * 헤더가 fixed로 되어 있기 때문에 페이지의 콘텐츠가 4rem 아래에 나타나도록 해 주는 컴포넌트
  */
 const PageBody = styled.div`
+  padding-top: 4rem;
   display: flex;
-  background-color: #E9E9E9;
+  background-color: #FAFAFA;
 `;
 
 const SideDiv = styled.div`
@@ -82,7 +84,7 @@ const Body = function({children}) {
 
   return (
     <>
-        <Header />
+        <NEWheader />
         <PageBody>
             <SideDiv additionalWidth={additionalWidth}/>
             <RealBody mainWidth={mainWidth}>
