@@ -4,11 +4,12 @@ import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {useNavigate} from "react-router-dom"; // Quill Editor의 스타일을 불러옵니다.
+import axios from "axios";
 
 // WritingMainPage.js
 
 const FormContainer = styled.div`
-  max-height: 30rem; /* 댓글 컨테이너의 최대 높이 */
+  max-height: 26rem; /* 컨테이너의 최대 높이 */
   max-width: 70rem;
   padding-left: 1%;
   padding-right: 1%;
@@ -19,7 +20,7 @@ const CustomQuillEditor = styled(ReactQuill)`
   /* 퀼 에디터의 커스텀 스타일 */
 
   .ql-editor {
-    min-height: 28rem; /* 최소 높이 설정 */
+    min-height: 20rem; /* 최소 높이 설정 */
   }
 
   .ql-container {
@@ -70,11 +71,11 @@ const PostsButton = styled.button`
   }
 `;
 
-const WritingPage = () => {
+const WritingPage = ({ projectId }) => {
     const [editorHtml, setEditorHtml] = useState(""); // Quill Editor의 HTML 내용을 저장하는 상태
     const [title, setTitle] = useState(""); // 제목을 저장하는 상태
     const [savedPost, setSavedPost] = useState([]); // 저장된 게시글(post) 배열
-    const userNickname = "뉴트로지나"; // 더미 닉네임으로 초기화
+
 
     const navigate = useNavigate();
     const goToPreviousPage = () => {
@@ -82,34 +83,42 @@ const WritingPage = () => {
             window.location.reload();
         }, 100);
     };
-    // useEffect(() => {
-    //     console.log(showWritingMainPage)
-    //     if (showWritingMainPage) {
-    //         // showWritingMainPage가 true일 때 실행하고자 하는 작업 수행
-    //         setShowBoardPage(false);
-    //     }
-    // }, [showWritingMainPage]);
 
-    // 글쓰기 등록 함수
-    const addPost = () => {
+    const addPost = async () => {
         // 입력된 데이터를 객체로 만들어 저장
-        const newPost = {
-            id: Date.now(), // 고유한 ID 생성
+        // if (typeof projectId !== 'number') {
+        //     console.error('Invalid projectId:', projectId);
+        //     return;
+        // }else {
+        const intProjectId = Number(projectId);
+        // console.log("숫자" + intProjectId + typeof intProjectId !== 'number');
+
+        const postData = {
+            projectId: intProjectId,
             title: title,
             content: editorHtml,
-            date: new Date().toLocaleDateString(),
-            author: userNickname,
+            category: "PLANNING" // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
         };
 
-        // 이전 게시글을 유지하면서 새로운 게시글을 추가
-        setSavedPost([...savedPost, newPost]);
+        try {
+            // 백엔드 API 호출하여 게시글 작성
+            const response = await axios.post('/api/posts', postData);
+            console.log('API Response:', response);
+            console.log('Sending data:', postData);
+            if (response.data.success) {
+                alert('게시글이 성공적으로 작성되었습니다.');
 
-        // 부모 컴포넌트로 게시글 데이터 전달
-        // 입력 필드 초기화
-        setTitle('');
-        setEditorHtml('');
-
-
+                // 추가적인 로직 (예: 페이지 이동 또는 상태 초기화 등)
+                setTitle('');
+                setEditorHtml('');
+                // 네비게이션 이동 또는 페이지 새로고침 로직이 필요한 경우 추가
+            } else {
+                alert('게시글 작성 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error("Error creating post:", error);
+            alert('게시글 작성 중 오류가 발생했습니다.');
+        }
     };
 
     return (
