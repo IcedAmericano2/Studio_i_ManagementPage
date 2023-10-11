@@ -86,7 +86,7 @@ function Project() {
       JSON.stringify([...storedProjects, newProject])
     );
 
-    navigate("/"); // Redirect to the main page after saving.
+    navigate("/");
   };
 
   return (
@@ -122,9 +122,7 @@ function Project() {
           <select
             value={teamLeader}
             onChange={(e) => setTeamLeader(e.target.value)}
-          >
-            {/* your options here */}
-          </select>
+          ></select>
         </div>
         <div>
           <label>팀원&nbsp;: </label>

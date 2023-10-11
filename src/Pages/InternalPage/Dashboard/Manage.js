@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const TotalContainer = styled.div`
@@ -66,6 +66,7 @@ function Manage() {
   );
   const [eventText, setEventText] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const handleSave = () => {
     const start = new Date(startDate);
@@ -91,7 +92,7 @@ function Manage() {
       "events",
       JSON.stringify([...storedEvents, ...newEvents])
     );
-    navigate("/");
+    navigate(`/Manage/${id}`); // 경로 수정.
   };
 
   return (
@@ -123,7 +124,7 @@ function Manage() {
         </div>
         <div>
           <StyledButton onClick={handleSave}>Save</StyledButton>
-          <StyledButton onClick={() => navigate("/manage")}>
+          <StyledButton onClick={() => navigate(`/Manage/${id}`)}>
             Cancel
           </StyledButton>
         </div>
