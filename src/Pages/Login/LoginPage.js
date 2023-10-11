@@ -178,7 +178,7 @@ function LoginPage() {
     };
     const healthCheckTest =()=> {
         // Axios를 사용하여 Spring Boot API에 GET 요청을 보냅니다.
-        axios.get('http://localhost:8081/user/login', formData)
+        axios.get('http://15.164.100.22:8081/user-service/login', formData)
             .then(response => {
                 console.log({message: response.data})
 
@@ -189,7 +189,7 @@ function LoginPage() {
     }
 
     const handleLogin = () => {
-        axios.post('http://localhost:8081/user/login', formData)
+        axios.post('http://15.164.100.22:8081/user-service/login', formData)
             .then((response) => {
                 const accessToken = response.data.accessToken;
                 //console.log(accessToken);

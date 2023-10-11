@@ -161,7 +161,7 @@ function SignInPage(){
 
     const handleSubmit = () => {
         // Send a POST request to your endpoint with formData.
-        axios.post('http://localhost:8081/user/register', formData)
+        axios.post('http://15.164.100.22:8081/user-service/register', formData)
             .then((response) => {
                 console.log({ message: response.data });
                 alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.")
