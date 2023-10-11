@@ -43,9 +43,9 @@ const CompleteButton = styled.button`
 `;
 const StyledTable = styled.table`
   width: 100%;
-  margin-top: 20px;
   border-collapse: separate;
   border-spacing: 0 16px;
+  
 
   th,
   td {
@@ -58,6 +58,7 @@ const StyledTable = styled.table`
   }
 
   tbody tr {
+    background-color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
   }
 

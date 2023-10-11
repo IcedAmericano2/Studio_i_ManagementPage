@@ -48,7 +48,6 @@ const ProjectMain = () => {
 
     return (
         <Body>
-            <Title>DashBoard</Title>
             <ProjectMainContent/>
         </Body>
     );
