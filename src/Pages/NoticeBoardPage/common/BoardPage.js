@@ -61,6 +61,19 @@ const WritingButton = styled.button`
   height: 2rem;
   margin: 1%;
   font-size: 1rem;
+  border-radius: 1rem;
+  background-color: #FF1E1E;
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: background-color 0.3s;
+
+  /* 마우스를 가져다 대었을 때의 스타일 */
+
+  &:hover {
+    background-color: #FF7C7C;
+    color: white;
+    cursor: pointer;
 `;
 
 
@@ -78,7 +91,6 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId }) =
     };
 
     const goToProjectPage = () => {
-        console.log("자 project 눌렀다? : " + projectId);
         navigate(`/manage/${projectId}`);
     };
 
@@ -117,7 +129,7 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId }) =
                                 <WritingButton onClick={goToWritingPage}>{writingButtonContent}</WritingButton>
                             </>
                         ) :  showWritingPage ? (
-                            <WritingPage>
+                            <WritingPage projectId={projectId}>
                             </WritingPage>
                         ) : showViewWritingPage ? (
                             <ViewWritingPage selectedRowId = {selectedRowId}>
