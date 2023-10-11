@@ -37,15 +37,11 @@ const PlanNoticeManinpage = () => {
     }, []);
     return (
         <Body>
-            {tableData.length > 0 ? (
                 <BoardPage subTitle={subTitle}
                            tableData={tableData}
                            writingButtonContent={writingButtonContent}
                            projectId={projectId}
                            category={category}/>
-            ) : (
-                <p>게시글이 존재하지 않습니다.</p>
-            )}
         </Body>
     );
 };

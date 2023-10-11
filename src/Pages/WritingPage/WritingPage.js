@@ -3,7 +3,7 @@ import Body from "../../Components/common/Body";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {useNavigate} from "react-router-dom"; // Quill Editor의 스타일을 불러옵니다.
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 // WritingMainPage.js
@@ -85,13 +85,7 @@ const WritingPage = ({ projectId, category }) => {
     };
 
     const addPost = async () => {
-        // 입력된 데이터를 객체로 만들어 저장
-        // if (typeof projectId !== 'number') {
-        //     console.error('Invalid projectId:', projectId);
-        //     return;
-        // }else {
         const intProjectId = Number(projectId);
-        // console.log("숫자" + intProjectId + typeof intProjectId !== 'number');
 
         const postData = {
             projectId: intProjectId,
@@ -107,7 +101,9 @@ const WritingPage = ({ projectId, category }) => {
             console.log('Sending data:', postData);
             if (response.data.success) {
                 alert('게시글이 성공적으로 작성되었습니다.');
-
+                setTimeout(function () {
+                    window.location.reload();
+                }, 100);
                 // 추가적인 로직 (예: 페이지 이동 또는 상태 초기화 등)
                 setTitle('');
                 setEditorHtml('');

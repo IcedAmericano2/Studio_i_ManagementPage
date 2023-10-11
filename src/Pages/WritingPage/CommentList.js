@@ -3,15 +3,15 @@ import styled from "styled-components";
 
 const FormContainer = styled.div`
   border-radius: 5px;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.01rem;
   padding: 0.5rem;
   //background-color: #FC9EBD ;
 `;
 
 const Author = styled.div`
   font-weight: bold;
-  margin-bottom: 0.05rem;
-  font-size: 0.875rem;
+  margin-bottom: 0.07rem;
+  font-size: 0.75rem;
   background-color: #D79278;
   border-radius: 999px; /* 큰 값으로 설정하여 타원 모양 생성 */
   padding: 0.1rem 0.3rem; /* 내용 주변에 좀 더 공간을 주기 위한 패딩 설정 */
@@ -21,16 +21,17 @@ const Author = styled.div`
 
 const Content = styled.div`
   margin-bottom: 0.05rem;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 `;
 
 const Date = styled.div`
   color: #888;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 `;
 const CommentTitle = styled.h3`
   font-size: 1rem;
   color: #282c34;
+  margin-left: 0.5rem;
 `;
 
 const CommentList = ({ comments }) => {

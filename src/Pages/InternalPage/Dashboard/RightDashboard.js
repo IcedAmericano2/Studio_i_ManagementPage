@@ -64,8 +64,6 @@ const GoButton = styled.div`
 `;
 
 const RightDashboard = ({projectId}) => {
-
-
   const navigate = useNavigate();
 
   const goToPlanPage = () => {
@@ -88,6 +86,7 @@ const RightDashboard = ({projectId}) => {
           <GoButton onClick={goToPlanPage}>+</GoButton>
         </BoardTitleDiv>
         <BoardContentDiv>
+{/*3개까지 조회수가 높은 순으로 보이도록 하는 클래스 만들기.*/}
           <ContentDiv>
             <Text>aadfaadfafasdfasdfasdfasd</Text>
           </ContentDiv>
@@ -97,6 +96,7 @@ const RightDashboard = ({projectId}) => {
           <ContentDiv>
             <Text>aadfa</Text>
           </ContentDiv>
+
         </BoardContentDiv>
       </RightboardBody>
       <RightboardBody>

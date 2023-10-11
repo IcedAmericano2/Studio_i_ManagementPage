@@ -8,21 +8,20 @@ const FormContainer = styled.div`
   align-items: center; /* 요소를 세로 가운데 정렬 */
   border-top: 1px solid darkgray; /* 위쪽 선 스타일 */
   padding: 1% 5%; /* 위아래 여백 추가 */
-  /* 왼쪽 흐림 효과 */
 `;
 
 
 const CommentTextarea = styled.textarea`
-  width: 80%; /* 넓이를 80%로 조정 */
+  width: 80%; 
   padding: 0.1rem;
   margin-right: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  color: #999; /* 텍스트 색상을 회색으로 설정 */
-  max-height: 2rem;
-  min-height: 2rem;
+  color: #999; 
+  max-height: 1.7rem;
+  min-height: 1.7rem;
   resize: none;
-  font-size: 1.2rem;
+  font-size: 1rem;
   vertical-align: middle;
 
   &:focus {
@@ -36,8 +35,8 @@ const SubmitButton = styled.button`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 40px; // 이미지의 원본 크기에 맞게 조절
-  height: 30px;
+  width: 35px; // 이미지의 원본 크기에 맞게 조절
+  height: 28px;
   background-color: #FFF0DC;
   color: white;
   border: none;

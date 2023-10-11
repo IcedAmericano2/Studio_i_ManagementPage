@@ -132,7 +132,7 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId, cat
                             <WritingPage projectId={projectId} category={category}>
                             </WritingPage>
                         ) : showViewWritingPage ? (
-                            <ViewWritingPage selectedRowId = {selectedRowId}>
+                            <ViewWritingPage selectedRowId = {selectedRowId} projectId={projectId}>
                             </ViewWritingPage>
                         ) : null }
                     </DashboardBox>
