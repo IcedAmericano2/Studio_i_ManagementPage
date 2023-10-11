@@ -71,7 +71,7 @@ const PostsButton = styled.button`
   }
 `;
 
-const WritingPage = ({ projectId }) => {
+const WritingPage = ({ projectId, category }) => {
     const [editorHtml, setEditorHtml] = useState(""); // Quill Editor의 HTML 내용을 저장하는 상태
     const [title, setTitle] = useState(""); // 제목을 저장하는 상태
     const [savedPost, setSavedPost] = useState([]); // 저장된 게시글(post) 배열
@@ -97,7 +97,7 @@ const WritingPage = ({ projectId }) => {
             projectId: intProjectId,
             title: title,
             content: editorHtml,
-            category: "PLANNING" // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
+            category: category // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
         };
 
         try {

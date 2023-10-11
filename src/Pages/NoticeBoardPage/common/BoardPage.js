@@ -79,7 +79,7 @@ const WritingButton = styled.button`
 
 
 
-const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId }) => {
+const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId, category }) => {
     const navigate = useNavigate();
     const [showTable, setShowTable] = useState(true);
     const [showWritingPage, setShowWritingPage] = useState(false);
@@ -129,7 +129,7 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId }) =
                                 <WritingButton onClick={goToWritingPage}>{writingButtonContent}</WritingButton>
                             </>
                         ) :  showWritingPage ? (
-                            <WritingPage projectId={projectId}>
+                            <WritingPage projectId={projectId} category={category}>
                             </WritingPage>
                         ) : showViewWritingPage ? (
                             <ViewWritingPage selectedRowId = {selectedRowId}>
