@@ -85,7 +85,7 @@ const NewPanel = styled.button`
 //   margin-top: 20px;
 // `;
 
-const Dashboard = () => {
+const Dashboard = ({projectId}) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpansion = () => {
@@ -95,7 +95,6 @@ const Dashboard = () => {
     <DashboardBox>
       <Arc>
         <Title>Dashboard</Title>
-        <Button>완료</Button>
       </Arc>
       <DashboardBody>
         <Panel>
@@ -106,7 +105,7 @@ const Dashboard = () => {
             <CheckList />
           </Left>
           <Line />
-          <RightDashboard />
+          <RightDashboard projectId={projectId} />
         </Panel>
         {expanded && <NewPanel />}
       </DashboardBody>
