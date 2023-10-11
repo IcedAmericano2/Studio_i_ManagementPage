@@ -3,7 +3,7 @@ import Body from "../../Components/common/Body";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {useNavigate} from "react-router-dom"; // Quill Editor의 스타일을 불러옵니다.
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 // WritingMainPage.js
@@ -71,7 +71,7 @@ const PostsButton = styled.button`
   }
 `;
 
-const WritingPage = ({ projectId }) => {
+const WritingPage = ({ projectId, category }) => {
     const [editorHtml, setEditorHtml] = useState(""); // Quill Editor의 HTML 내용을 저장하는 상태
     const [title, setTitle] = useState(""); // 제목을 저장하는 상태
     const [savedPost, setSavedPost] = useState([]); // 저장된 게시글(post) 배열
@@ -85,19 +85,13 @@ const WritingPage = ({ projectId }) => {
     };
 
     const addPost = async () => {
-        // 입력된 데이터를 객체로 만들어 저장
-        // if (typeof projectId !== 'number') {
-        //     console.error('Invalid projectId:', projectId);
-        //     return;
-        // }else {
         const intProjectId = Number(projectId);
-        // console.log("숫자" + intProjectId + typeof intProjectId !== 'number');
 
         const postData = {
             projectId: intProjectId,
             title: title,
             content: editorHtml,
-            category: "PLANNING" // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
+            category: category // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
         };
 
         try {
@@ -107,7 +101,9 @@ const WritingPage = ({ projectId }) => {
             console.log('Sending data:', postData);
             if (response.data.success) {
                 alert('게시글이 성공적으로 작성되었습니다.');
-
+                setTimeout(function () {
+                    window.location.reload();
+                }, 100);
                 // 추가적인 로직 (예: 페이지 이동 또는 상태 초기화 등)
                 setTitle('');
                 setEditorHtml('');

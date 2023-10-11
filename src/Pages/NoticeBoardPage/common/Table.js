@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 const TableContainer = styled.div`
   width: 98%;
-  height: 28rem;
+  height: 25rem;
   margin: 0 auto;
   padding-bottom: 1rem;
+  overflow-y: auto;
 `;
 const TableStyled = styled.table`
   width: 100%;
@@ -64,11 +65,11 @@ const TableHeader5 = styled.th`
   min-width: 4rem;
 `;
 const TableCell = styled.td`
-  padding: 8px;
   border-bottom: 1px solid gray;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 `;
 const TableCellCenter = styled.td`
   padding: 8px;
@@ -80,7 +81,6 @@ const Table = ({  tableData, onRowClick }) => {
 
     // Table의 열을 클릭했을 때 호출될 함수
     const sendDataBoard = (rowId) => {
-        console.log("selectedRowId:", rowId);
         onRowClick(rowId);
     };
     return (
@@ -89,25 +89,30 @@ const Table = ({  tableData, onRowClick }) => {
                 <thead>
                 <tr>
                     <TableHeader1>번호</TableHeader1>
-                    <TableHeader2>카테고리</TableHeader2>
                     <TableHeader3>제목</TableHeader3>
                     <TableHeader4>작성일자</TableHeader4>
                     <TableHeader5>닉네임</TableHeader5>
                 </tr>
                 </thead>
                 <tbody>
-                {tableData.map((row) => (
-                    <TableRow
-                        key={row.id}
-                        onClick={() => sendDataBoard(row.id)}
-                    >
-                        <TableCellCenter>{row.id}</TableCellCenter>
-                        <TableCellCenter>{row.category}</TableCellCenter>
-                        <TableCell>{row.title}</TableCell>
-                        <TableCellCenter>{row.date}</TableCellCenter>
-                        <TableCellCenter>{row.username}</TableCellCenter>
+                {tableData.length === 0 ? (
+                    <TableRow>
+                        <TableCellCenter colSpan="5">게시글이 존재하지 않습니다</TableCellCenter>
                     </TableRow>
-                ))}
+                ) : (
+
+                    tableData.map((row) => (
+                        <TableRow
+                            key={row.id}
+                            onClick={() => sendDataBoard(row.id)}
+                        >
+                            <TableCellCenter>{row.id}</TableCellCenter>
+                            <TableCell>{row.title}</TableCell>
+                            <TableCellCenter>{row.startDate}</TableCellCenter>
+                            <TableCellCenter>{row.userName}</TableCellCenter>
+                        </TableRow>
+                    ))
+                )}
                 </tbody>
             </TableStyled>
         </TableContainer>
