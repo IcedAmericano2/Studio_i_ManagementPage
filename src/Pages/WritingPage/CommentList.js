@@ -101,6 +101,7 @@ const CommentList = ({ commentCount, comments, setComments}) => {
             <CommentTitle>댓글 {commentCount} 개</CommentTitle>
             {comments.map((comment, index) => (
                 <FormContainer key={index}>
+                    <Author>comment.</Author>
                     {editingCommentId === comment.id ? (
                         <CommentTextarea
                             value={editedContent}
