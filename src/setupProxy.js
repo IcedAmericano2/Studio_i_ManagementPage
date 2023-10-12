@@ -14,5 +14,12 @@ module.exports = function(app){
             target: 'http://user-service-address:port',
             changeOrigin: true
         })
+    )
+
+    app.use(
+        createProxyMiddleware('/LoginPage', {
+            target: 'http://15.164.100.22:8081',
+            changeOrigin: true
+        })
     );
 };
