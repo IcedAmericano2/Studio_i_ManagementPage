@@ -83,7 +83,14 @@ const WritingPage = ({ projectId, category }) => {
     };
 
     const addPost = async () => {
+        // HTML 태그 제거하기 위한 정규식
+        const strippedHtml = editorHtml.replace(/<[^>]+>/g, '');
 
+        // 제목 또는 에디터 내용이 비어있는지 확인
+        if (!title.trim() || !strippedHtml.trim()) {
+            alert('제목과 내용을 모두 입력해주세요.');
+            return; // 함수 실행 종료
+        }
 
         const postData = {
             projectId: projectId,
