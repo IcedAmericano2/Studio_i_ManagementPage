@@ -97,7 +97,6 @@ const AuthorAndDate = styled.p`
   color: gray;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 `;
 
 const Dot = styled.span`
@@ -148,7 +147,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
         content: "",
         author: "",
         date: "",
-        replyCount: 0,
+        commentCount: 0,
         category: ""
     });
 
@@ -209,7 +208,12 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
 
     };
     const deletePost = () => {
-        axios.delete(`/api/posts?projectId=${projectId}&postId=${selectedRowId}`)
+        axios.delete('/api/posts', {
+            data: {
+                projectId: projectId,
+                postId: selectedRowId
+            }
+        })
             .then(response => {
                 alert('게시글이 성공적으로 삭제되었습니다.');
                 // 게시글 삭제 후 페이지를 새로고침하거나 다른 페이지로 리다이렉트
@@ -241,7 +245,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                     content: postInfo.content,
                     author: "아무개", // API 응답에서 제공하지 않는 경우 수동으로 설정하십시오.
                     date: postInfo.createdAt,
-                    replyCount: postInfo.reply_cnt,
+                    commentCount: postInfo.reply_cnt,
                     category: postInfo.category
                 });
             })
@@ -261,13 +265,12 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                                 {selectedPost.author}
                                 <Dot>·</Dot>
                                 {selectedPost.date}
-                                <ReplyCount> 조회수 : {selectedPost.replyCount}</ReplyCount>
                             </AuthorAndDate>
                         </ViewTitleInput>
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
                         <Color>
                             <CommentForm onAddComment={addComment}/>
-                            <CommentList comments={comments}/>
+                            <CommentList comments={comments} commentCount={selectedPost.commentCount}/>
                         </Color>
                     </FormContainer>
                     <PostsButtonContainer>

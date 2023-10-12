@@ -34,11 +34,10 @@ const CommentTitle = styled.h3`
   margin-left: 0.5rem;
 `;
 
-const CommentList = ({ comments }) => {
-
+const CommentList = ({ comments, commentCount}) => {
     return (
         <>
-            <CommentTitle>댓글</CommentTitle>
+            <CommentTitle>댓글 {commentCount} 개</CommentTitle>
             {comments.map((comment, index) => (
                 <FormContainer key={index}>
                     <Author>{comment.author}</Author>
