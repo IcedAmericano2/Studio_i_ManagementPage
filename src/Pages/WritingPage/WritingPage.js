@@ -9,7 +9,7 @@ import axios from "axios";
 // WritingMainPage.js
 
 const FormContainer = styled.div`
-  max-height: 26rem; /* 컨테이너의 최대 높이 */
+  max-height: 30rem; /* 컨테이너의 최대 높이 */
   max-width: 70rem;
   padding-left: 1%;
   padding-right: 1%;
@@ -63,7 +63,6 @@ const PostsButton = styled.button`
   transition: background-color 0.3s;
 
   /* 마우스를 가져다 대었을 때의 스타일 */
-
   &:hover {
     background-color: #FF7C7C;
     color: white;
@@ -74,7 +73,6 @@ const PostsButton = styled.button`
 const WritingPage = ({ projectId, category }) => {
     const [editorHtml, setEditorHtml] = useState(""); // Quill Editor의 HTML 내용을 저장하는 상태
     const [title, setTitle] = useState(""); // 제목을 저장하는 상태
-    const [savedPost, setSavedPost] = useState([]); // 저장된 게시글(post) 배열
 
 
     const navigate = useNavigate();
@@ -85,10 +83,10 @@ const WritingPage = ({ projectId, category }) => {
     };
 
     const addPost = async () => {
-        const intProjectId = Number(projectId);
+
 
         const postData = {
-            projectId: intProjectId,
+            projectId: projectId,
             title: title,
             content: editorHtml,
             category: category // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
@@ -132,8 +130,8 @@ const WritingPage = ({ projectId, category }) => {
                     modules={{
                         toolbar: [
                             ['bold', 'italic', 'underline', 'strike'], // 텍스트 스타일
-                            [{'list': 'ordered'}, {'list': 'bullet'}],
-                            ['image', 'video'], // 이미지와 동영상 추가
+                            // [{'list': 'ordered'}, {'list': 'bullet'}],
+                            // ['image', 'video'], // 이미지와 동영상 추가
                             [{'font': []}], // 글꼴 선택
                             [{'size': ['small', false, 'large', 'huge']}], // 텍스트 크기
                             ['clean']
