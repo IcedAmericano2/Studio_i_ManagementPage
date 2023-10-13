@@ -47,7 +47,7 @@ const CommentTextarea = styled.textarea`
   padding: 0.1rem;
   border: 1px solid #ccc;
   border-radius: 2px;
-  color: #999;
+  color: #282c34;
   max-height: 1rem;
   min-height: 1rem;
   resize: none;
