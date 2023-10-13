@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import checkTodoApi from "./api";
+import checkTodoApi from "./checkTodoApi";
 
-function CheckList() {
+function CheckList({ projectId }) {
   const [items, setItems] = useState([]);
-  const projectId = 1; // 예시로 1을 사용.
 
   useEffect(() => {
+
     const fetchData = async () => {
       try {
         const response = await checkTodoApi.getProjectTodo(projectId);
-        setItems(response.data);
+        setItems(response.data.list);
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -20,29 +20,29 @@ function CheckList() {
 
   const handleCheck = async (id) => {
     const updatedItems = items.map((item) =>
-      item.id === id ? { ...item, completed: !item.completed } : item
+      item.todoIndex === id ? { ...item, checked: !item.checked } : item
     );
     setItems(updatedItems);
 
-    const itemToUpdate = updatedItems.find((item) => item.id === id);
+    const itemToUpdate = updatedItems.find((item) => item.todoIndex === id);
 
     try {
       await checkTodoApi.updateCheckTodo(id, {
-        todoContent: itemToUpdate.text,
-        todoEmergency: itemToUpdate.urgent,
-        completed: itemToUpdate.completed,
+        todoContent: itemToUpdate.todoContent,
+        todoEmergency: itemToUpdate.todoEmergency,
+        checked: itemToUpdate.checked,
       });
     } catch (error) {
       console.error("Error updating check status", error);
     }
   };
 
-  const handleDelete = async (id) => {
-    const filteredItems = items.filter((item) => item.id !== id);
+  const handleDelete = async (todoIndex) => {
+    const filteredItems = items.filter((item) => item.todoIndex !== todoIndex);
     setItems(filteredItems);
 
     try {
-      await checkTodoApi.deleteCheckTodo(id);
+      await checkTodoApi.deleteCheckTodo(todoIndex);
     } catch (error) {
       console.error("Error deleting item", error);
     }
@@ -50,14 +50,14 @@ function CheckList() {
 
   const handleAdd = async () => {
     const newId = items.length
-      ? Math.max(...items.map((item) => item.id)) + 1
+      ? Math.max(...items.map((item) => item.todoIndex)) + 1
       : 1;
     const finalText = isUrgent ? `${inputText}` : inputText;
     const newItem = {
-      id: newId,
-      text: finalText,
-      urgent: isUrgent,
-      completed: false,
+      todoIndex: newId,
+      todoContent: finalText,
+      todoEmergency: isUrgent,
+      checked: false,
     };
 
     if (isUrgent) {
@@ -85,8 +85,8 @@ function CheckList() {
   const [isUrgent, setIsUrgent] = useState(false);
 
   const sortedItems = [...items].sort((a, b) => {
-    if (a.completed && !b.completed) return 1;
-    if (!a.completed && b.completed) return -1;
+    if (a.checked  && !b.checked ) return 1;
+    if (!a.checked  && b.checked ) return -1;
     return 0;
   });
 
@@ -100,15 +100,15 @@ function CheckList() {
       </List>
       <ItemsList>
         {sortedItems.map((item) => (
-          <Item key={item.id} urgent={item.urgent} completed={item.completed}>
+          <Item>
             <Checkbox
               type="checkbox"
-              checked={item.completed}
-              onChange={() => handleCheck(item.id)}
+              checked={item.checked}
+              onChange={() => handleCheck(item.todoIndex)}
             />
-            {item.urgent ? <UrgencyLabel>[긴급]</UrgencyLabel> : null}
-            {item.text}
-            <DeleteButton onClick={() => handleDelete(item.id)}>x</DeleteButton>
+            {item.todoEmergency ? <UrgencyLabel>[긴급]</UrgencyLabel> : null}
+            {item.todoContent}
+            <DeleteButton onClick={() => handleDelete(item.todoIndex)}>x</DeleteButton>
           </Item>
         ))}
       </ItemsList>
@@ -146,7 +146,6 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 10px;
   background-color: #ffffff;
-
   margin-left: -15px;
 `;
 
