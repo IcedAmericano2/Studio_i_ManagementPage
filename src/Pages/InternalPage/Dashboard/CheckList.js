@@ -1,34 +1,54 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import checkTodoApi from "./api";
 
 function CheckList() {
-  const [items, setItems] = useState([
-    { id: 1, text: "첫 번째 일정", urgent: false, completed: false },
-  ]);
+  const [items, setItems] = useState([]);
+  const projectId = 1; // 예시로 1을 사용.
 
   useEffect(() => {
-    const savedItems = localStorage.getItem("checklistItems");
-    if (savedItems) {
-      setItems(JSON.parse(savedItems));
-    }
+    const fetchData = async () => {
+      try {
+        const response = await checkTodoApi.getProjectTodo(projectId);
+        setItems(response.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("checklistItems", JSON.stringify(items));
-  }, [items]);
-
-  const handleCheck = (id) => {
-    const newItems = items.map((item) =>
+  const handleCheck = async (id) => {
+    const updatedItems = items.map((item) =>
       item.id === id ? { ...item, completed: !item.completed } : item
     );
-    setItems(newItems);
-  };
-  const handleDelete = (id) => {
-    const newItems = items.filter((item) => item.id !== id);
-    setItems(newItems);
+    setItems(updatedItems);
+
+    const itemToUpdate = updatedItems.find((item) => item.id === id);
+
+    try {
+      await checkTodoApi.updateCheckTodo(id, {
+        todoContent: itemToUpdate.text,
+        todoEmergency: itemToUpdate.urgent,
+        completed: itemToUpdate.completed,
+      });
+    } catch (error) {
+      console.error("Error updating check status", error);
+    }
   };
 
-  const handleAdd = () => {
+  const handleDelete = async (id) => {
+    const filteredItems = items.filter((item) => item.id !== id);
+    setItems(filteredItems);
+
+    try {
+      await checkTodoApi.deleteCheckTodo(id);
+    } catch (error) {
+      console.error("Error deleting item", error);
+    }
+  };
+
+  const handleAdd = async () => {
     const newId = items.length
       ? Math.max(...items.map((item) => item.id)) + 1
       : 1;
@@ -44,6 +64,15 @@ function CheckList() {
       setItems([newItem, ...items]);
     } else {
       setItems([...items, newItem]);
+    }
+
+    try {
+      await checkTodoApi.createCheckTodo(projectId, {
+        todoContent: finalText,
+        todoEmergency: isUrgent,
+      });
+    } catch (error) {
+      console.error("Error adding new item", error);
     }
 
     setInputText("");

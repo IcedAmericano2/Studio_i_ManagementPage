@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import scheduleApi from "./scheduleApi";
 
 const List = styled.div`
   margin-top: -20px;
@@ -87,6 +88,20 @@ function WeekCalendar() {
   const [editingEvent, setEditingEvent] = useState(null);
 
   useEffect(() => {
+    // 가정: 현재 프로젝트 ID가 1이라고 가정합니다. 실제 프로젝트 ID에 맞게 변경해야 합니다.
+    const fetchEvents = async () => {
+      try {
+        const response = await scheduleApi.getScheduleList(1);
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Error fetching the schedules", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
     const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
     setEvents(storedEvents);
 
@@ -168,25 +183,38 @@ function WeekCalendar() {
     );
   };
 
-  const handleDeleteEvent = (date) => {
-    const newEvents = events.filter(
-      (e) => new Date(e.date).toDateString() !== date.toDateString()
+  const handleDeleteEvent = async (date) => {
+    const eventToDelete = events.find(
+      (e) => new Date(e.date).toDateString() === date.toDateString()
     );
-    setEvents(newEvents);
-    localStorage.setItem("events", JSON.stringify(newEvents));
-    setShowModal(false);
+
+    if (eventToDelete && eventToDelete.id) {
+      try {
+        await scheduleApi.deleteSchedule(eventToDelete.id);
+        setEvents(events.filter((e) => e.id !== eventToDelete.id));
+      } catch (error) {
+        console.error("Error deleting the schedule", error);
+      }
+    }
   };
 
-  const handleEditEventSave = (date, newText) => {
+  const handleEditEventSave = async (date, newText) => {
     const eventDate = new Date(date).toDateString();
-    const newEvents = events.map((e) =>
-      new Date(e.date).toDateString() === eventDate
-        ? { ...e, event: newText }
-        : e
+    const eventToUpdate = events.find(
+      (e) => new Date(e.date).toDateString() === eventDate
     );
-    setEvents(newEvents);
-    localStorage.setItem("events", JSON.stringify(newEvents));
-    setShowModal(false);
+
+    if (eventToUpdate && eventToUpdate.id) {
+      try {
+        const updatedData = { ...eventToUpdate, event: newText };
+        await scheduleApi.updateSchedule(eventToUpdate.id, updatedData);
+        setEvents(
+          events.map((e) => (e.id === eventToUpdate.id ? updatedData : e))
+        );
+      } catch (error) {
+        console.error("Error updating the schedule", error);
+      }
+    }
   };
 
   const days = ["일", "월", "화", "수", "목", "금", "토"];
