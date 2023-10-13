@@ -101,7 +101,7 @@ const CommentList = ({ commentCount, comments, setComments}) => {
             <CommentTitle>댓글 {commentCount} 개</CommentTitle>
             {comments.map((comment, index) => (
                 <FormContainer key={index}>
-                    <Author>comment.</Author>
+                    <Author>작성자</Author>
                     {editingCommentId === comment.id ? (
                         <CommentTextarea
                             value={editedContent}
@@ -114,14 +114,16 @@ const CommentList = ({ commentCount, comments, setComments}) => {
                         comment.updatedAt + "(수정됨)"
                         : comment.createdAt
                     }</Date>
-                    <ButtonContainer>
-                    <CommentButton onClick={() => deleteComment(comment.id)}>삭제</CommentButton>
-                    {editingCommentId === comment.id ? (
-                        <CommentButton onClick={() => finishEditing(comment.id)}>완료</CommentButton>
-                    ) : (
-                        <CommentButton onClick={() => startEditing(comment.id, comment.content)}>수정</CommentButton>
+                    {!comment.isNew && (
+                        <ButtonContainer>
+                            <CommentButton onClick={() => deleteComment(comment.id)}>삭제</CommentButton>
+                            {editingCommentId === comment.id ? (
+                                <CommentButton onClick={() => finishEditing(comment.id)}>완료</CommentButton>
+                            ) : (
+                                <CommentButton onClick={() => startEditing(comment.id, comment.content)}>수정</CommentButton>
+                            )}
+                        </ButtonContainer>
                     )}
-                    </ButtonContainer>
                 </FormContainer>
             ))}
         </>

@@ -132,7 +132,7 @@ const Content = styled.div`
     font-size: 0.75em;
   }
 `;
-const Color = styled.div`
+const CommentContainer = styled.div`
   background-color: #FFF0DC;
   min-height: 1rem;
 `;
@@ -222,7 +222,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
     };
     // 게시글 내용을 담을 객체 나중에 DB연결하면 내용 set해주기
     const handleAddComment = (newComment) => {
-        setComments((prevComments) => [...prevComments, newComment]);
+        setComments((prevComments) => [newComment, ...prevComments]);
     };
 
     useEffect(() => {
@@ -272,10 +272,10 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                             </AuthorAndDate>
                         </ViewTitleInput>
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
-                        <Color>
+                        <CommentContainer>
                             <CommentForm postId={selectedRowId} onAddComment={handleAddComment}/>
                             <CommentList comments={comments} commentCount={selectedPost.commentCount} setComments={setComments}/>
-                        </Color>
+                        </CommentContainer>
                     </FormContainer>
                     <PostsButtonContainer>
                         <PostsButton onClick={changePutView}>수정</PostsButton>

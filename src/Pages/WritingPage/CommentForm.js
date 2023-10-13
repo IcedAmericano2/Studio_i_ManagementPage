@@ -76,7 +76,8 @@ const CommentForm = ({onAddComment, postId}) => {
                 id: response.data.id,  // 서버에서 반환된 ID
                 content: content,
                 author: "현재 사용자 이름",  // 현재 로그인한 사용자 정보 등
-                createdAt: formatDate()  // 현재 시간
+                createdAt: formatDate(),  // 현재 시간
+                isNew: true
             };
 
             onAddComment(newComment);
