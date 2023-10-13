@@ -223,6 +223,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
     // 게시글 내용을 담을 객체 나중에 DB연결하면 내용 set해주기
     const handleAddComment = (newComment) => {
         setComments((prevComments) => [newComment, ...prevComments]);
+        setSelectedPost(prevPost => ({...prevPost, commentCount: prevPost.commentCount + 1}));
     };
 
     useEffect(() => {
@@ -273,7 +274,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                         </ViewTitleInput>
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
                         <CommentContainer>
-                            <CommentForm postId={selectedRowId} onAddComment={handleAddComment}/>
+                            <CommentForm postId={selectedRowId} onAddComment={handleAddComment} />
                             <CommentList comments={comments} commentCount={selectedPost.commentCount} setComments={setComments}/>
                         </CommentContainer>
                     </FormContainer>
