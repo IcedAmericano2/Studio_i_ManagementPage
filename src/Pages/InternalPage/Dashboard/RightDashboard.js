@@ -83,11 +83,11 @@ const RightDashboard = ({projectId}) => {
         // 데이터를 불러오는 함수
         const fetchPosts = async () => {
             try {
-                const planResponse = await axios.get(`/api/posts/recent?category=PLANNING`);
+                const planResponse = await axios.get(`/api/project/${projectId}/posts/recent?category=PLANNING`);
                 setPlanData(planResponse.data.list);
-                const productionResponse = await axios.get(`/api/posts/recent?category=PRODUCTION`);
+                const productionResponse = await axios.get(`/api/project/${projectId}/posts/recent?category=PRODUCTION`);
                 setProductionDate(productionResponse.data.list);
-                const editResponse = await axios.get(`/api/posts/recent?category=EDITING`);
+                const editResponse = await axios.get(`/api/project/${projectId}/posts/recent?category=EDITING`);
                 setEditData(editResponse.data.list);
             } catch (error) {
                 console.error("Error fetching recent posts:", error);

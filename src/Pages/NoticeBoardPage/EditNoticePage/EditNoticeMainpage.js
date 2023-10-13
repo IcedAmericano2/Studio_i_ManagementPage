@@ -9,7 +9,7 @@ const EditNoticeMainpage = () => {
     const { projectId } = useParams();
     const getPostsByCategory = async (category) => {
         try {
-            const response = await axios.get(`/api/posts/all?category=${category}`);
+            const response = await axios.get(`/api/project/${projectId}/posts/all?category=${category}`);
             return response.data; // 게시글 목록을 반환
         } catch (error) {
             console.error('게시글을 불러오는 중 오류가 발생했습니다.', error);
