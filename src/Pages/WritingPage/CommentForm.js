@@ -38,7 +38,7 @@ const SubmitButton = styled.button`
   background-position: center;
   width: 35px; // 이미지의 원본 크기에 맞게 조절
   height: 28px;
-  background-color: #FFF0DC;
+  background-color: #EEEEEE;
   color: white;
   border: none;
   padding: 0.5rem;
@@ -46,7 +46,7 @@ const SubmitButton = styled.button`
   vertical-align: middle;
   border-radius: 4px;
   &:hover {
-    background-color: #D79278;
+    background-color: gray;
     background-image: url(${CommentHoverIMG});
   }
 `;

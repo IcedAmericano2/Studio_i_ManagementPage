@@ -133,8 +133,8 @@ const Content = styled.div`
   }
 `;
 const CommentContainer = styled.div`
-  background-color: #FFF0DC;
-  min-height: 1rem;
+  background-color: #EEEEEE;
+  min-height: 13rem;
 `;
 const ViewWritingPage = ({selectedRowId, projectId}) => {
     const [editorHtml, setEditorHtml] = useState(""); // Quill Editor의 HTML 내용을 저장하는 상태
