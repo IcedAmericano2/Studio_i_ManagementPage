@@ -78,6 +78,7 @@ const ScheduleItem = styled.p`
   padding: 0px 8px;
   border-radius: 8px;
 `;
+
 function WeekCalendar({ projectId }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
@@ -158,14 +159,15 @@ function WeekCalendar({ projectId }) {
 
   const currentWeekDates = getWeekDates(currentDate);
   const findEventsForDate = (date) => {
-    const targetDateString = date.toDateString();
+    const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+
     return events.filter(e => {
-      const eventStartDateString = new Date(e.startDate).toDateString();
-      const eventEndDateString = new Date(e.endDate).toDateString();
-      return targetDateString >= eventStartDateString && targetDateString <= eventEndDateString;
+      const eventStartDate = new Date(new Date(e.startDate).getFullYear(), new Date(e.startDate).getMonth(), new Date(e.startDate).getDate()).getTime();
+      const eventEndDate = new Date(new Date(e.endDate).getFullYear(), new Date(e.endDate).getMonth(), new Date(e.endDate).getDate(), 23, 59, 59, 999).getTime();  // 23시 59분 59초 999밀리초로 설정
+
+      return targetDate >= eventStartDate && targetDate <= eventEndDate;
     });
   };
-
   const handleDeleteEvent = async (date) => {
     const targetDateString = date.toDateString();
     const eventToDelete = events.find(e => {
@@ -179,6 +181,7 @@ function WeekCalendar({ projectId }) {
         setEvents(prevEvents =>
             prevEvents.filter(e => e.scheduleId !== eventToDelete.scheduleId)
         );
+        setShowModal(false);
       } catch (error) {
         console.error("스케줄 삭제 중 오류 발생", error);
       }
@@ -201,6 +204,7 @@ function WeekCalendar({ projectId }) {
                 e.scheduleId === eventToUpdate.scheduleId ? updatedData : e
             )
         );
+        setShowModal(false);
       } catch (error) {
         console.error("스케줄 업데이트 중 오류 발생", error);
       }
