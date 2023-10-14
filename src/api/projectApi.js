@@ -6,7 +6,7 @@ const projectApi = {
     const response = await axios.get(`/api/project/${projectIndex}`);
     return response;
   },
-  // 프로젝트 수정
+  // 프로젝트 수정 (사용 안함)
   // data안에는 수정할 내용에 관한 정보가 들어있어야 함.
   updateProject: async (projectIndex, data) => {
     const response = await axios.put(`/api/project/${projectIndex}`, data);

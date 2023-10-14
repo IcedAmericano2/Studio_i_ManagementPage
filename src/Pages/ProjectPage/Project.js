@@ -73,15 +73,17 @@ function Project() {
   const navigate = useNavigate();
 
   const handleSave = async () => {
-    const newProject = {
-      date: `${startDate} ~ ${endDate}`,
-      name: projectName,
-      description: projectDetails,
-      leader: teamLeader,
-      members: teamMembers,
+      const newProject = {
+        name: projectName,
+        description: projectDetails,
+        startDate: `${startDate}`,
+        finishDate: `${endDate}`
+      // leader: teamLeader,
+      // members: teamMembers,
     };
     try {
       await projectApi.createProject(newProject);
+      alert("프로젝트를 생성하였습니다.");
       navigate("/");
     } catch (error) {
       console.error("Error: ", error);

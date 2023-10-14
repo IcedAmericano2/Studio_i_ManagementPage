@@ -96,7 +96,8 @@ function OngoingProject() {
     const fetchProjects = async () => {
       try {
         const response = await projectApi.getProjectList();
-        setProjects(response.data);
+        const checkedProjects = response.data.list.filter(item => item.checked === false);
+        setProjects(checkedProjects);
       } catch (error) {
         console.error("Error fetching the projects:", error);
       }
@@ -111,7 +112,17 @@ function OngoingProject() {
   const handleRowClick = (projectId) => {
     navigate(`/Manage/${projectId}`);
   };
-
+  const goToHome = () => {
+    // setTimeout(function () {
+    //   window.location.reload();
+    // }, 100);
+    navigate(`/`);
+  };
+  const refresh = () => {
+    setTimeout(function () {
+      window.location.reload();
+    }, 100);
+  };
   const renumberProjects = (projects) => {
     return projects.map((project, index) => {
       return {
@@ -128,10 +139,12 @@ function OngoingProject() {
 
     try {
       await projectApi.deleteProject(projectId);
-      const updatedProjects = projects.filter(
-        (project) => project.id !== projectId
-      );
-      setProjects(updatedProjects);
+      // const updatedProjects = projects.filter(
+      //   (project) => project.projectIndex !== projectId
+      // );
+      // setProjects(updatedProjects);
+      alert("프로젝트가 삭제 처리 되었습니다.");
+      refresh();
     } catch (error) {
       console.error("Error deleting the project:", error);
       alert("프로젝트 삭제에 실패했습니다."); // 에러 알림 메시지 추가
@@ -140,15 +153,18 @@ function OngoingProject() {
 
   const handleCompleteClick = async (projectId) => {
     try {
-      const updatedProject = projects.find(
-        (project) => project.id === projectId
-      );
-      updatedProject.status = "Completed";
-      await projectApi.updateProject(projectId, updatedProject);
-      const updatedProjects = projects.map((project) =>
-        project.id === projectId ? updatedProject : project
-      );
-      setProjects(updatedProjects);
+      // const updatedProject = projects.find(
+      //   (project) => project.projectIndex === projectId
+      // );
+      // updatedProject.status = "Completed";
+      await projectApi.getProject(projectId);
+      // const updatedProjects = projects.map((project) =>
+      //   project.projectIndex === projectId ? updatedProject : project
+      // );
+      alert("프로젝트가 완료 처리 되었습니다.");
+      goToHome();
+      // setProjects(updatedProjects);
+
     } catch (error) {
       console.error("Error marking the project as complete:", error);
       alert("프로젝트 완료 처리에 실패했습니다."); // 에러 알림 메시지 추가
@@ -187,17 +203,17 @@ function OngoingProject() {
         </thead>
         <tbody>
           {projects.map((project) => (
-            <tr key={project.id} onClick={() => handleRowClick(project.id)}>
-              <td>{project.id}</td>
-              <td>{project.date}</td>
+            <tr key={project.projectIndex} onClick={() => handleRowClick(project.projectIndex)}>
+              <td>{project.projectIndex}</td>
+              <td>{project.startDate}~{project.finishDate}</td>
               <td>{project.name}</td>
               <td>{project.description}</td>
               <td>
-                <DeleteButton onClick={(e) => handleDeleteClick(e, project.id)}>
+                <DeleteButton onClick={(e) => handleDeleteClick(e, project.projectIndex)}>
                   삭제
                 </DeleteButton>
                 <CompleteButton
-                  onClick={(e) => handleCompleteClick(e, project.id)}
+                  onClick={() => handleCompleteClick(project.projectIndex)}
                 >
                   완료
                 </CompleteButton>
