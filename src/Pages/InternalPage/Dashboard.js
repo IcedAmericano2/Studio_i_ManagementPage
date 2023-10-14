@@ -99,7 +99,7 @@ const Dashboard = ({projectId}) => {
       <DashboardBody>
         <Panel>
           <Left>
-            <WeekCalendar />
+            <WeekCalendar projectId={projectId}/>
             <Line />
             <Today />
             <CheckList projectId={projectId}/>

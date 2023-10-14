@@ -79,7 +79,7 @@ const ScheduleItem = styled.p`
   border-radius: 8px;
 `;
 
-function WeekCalendar() {
+function WeekCalendar({ projectId }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
@@ -88,17 +88,17 @@ function WeekCalendar() {
   const [editingEvent, setEditingEvent] = useState(null);
 
   useEffect(() => {
-    // 가정: 현재 프로젝트 ID가 1이라고 가정합니다. 실제 프로젝트 ID에 맞게 변경해야 합니다.
     const fetchEvents = async () => {
       try {
-        const response = await scheduleApi.getScheduleList(1);
-        setEvents(response.data);
+        const response = await scheduleApi.getScheduleList(projectId);
+        setEvents(response.data.list);
       } catch (error) {
         console.error("Error fetching the schedules", error);
       }
     };
 
     fetchEvents();
+
   }, []);
 
   useEffect(() => {
@@ -223,7 +223,7 @@ function WeekCalendar() {
     <div className="App">
       <List>
         <Title>Schedule</Title>
-        <ManageButton type="button" onClick={() => navigate("/manage")}>
+        <ManageButton type="button" onClick={() => navigate("/manage", { state: { projectId: projectId } })}>
           +
         </ManageButton>
       </List>

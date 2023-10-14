@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useLocation } from 'react-router-dom';
+import scheduleApi from "./scheduleApi";
 
 const TotalContainer = styled.div`
   display: flex;
@@ -57,6 +59,7 @@ const StyledButton = styled.button`
     margin-right: 10px;
   }
 `;
+//프로젝트의 시작날짜와 마지막 날짜 사이에 일정이 추가되어야 함.
 function Manage() {
   const [startDate, setStartDate] = useState(
     new Date().toISOString().substr(0, 10)
@@ -66,9 +69,10 @@ function Manage() {
   );
   const [eventText, setEventText] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
+  const location = useLocation();
+  const projectId = location.state.projectId;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
@@ -88,11 +92,25 @@ function Manage() {
       start.setDate(start.getDate() + 1);
     }
 
+    const eventData = {
+      content: eventText,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    try {
+      await scheduleApi.createSchedule(projectId, eventData);
+      alert("일정이 성공적으로 추가되었습니다.");
+    } catch (error) {
+      console.error("일정 추가 중 오류 발생:", error);
+      alert("일정 추가 중 오류가 발생했습니다.");
+      return;  // 에러 발생 시 이후 코드는 실행되지 않게 합니다.
+    }
     localStorage.setItem(
-      "events",
-      JSON.stringify([...storedEvents, ...newEvents])
+        "events",
+        JSON.stringify([...storedEvents, ...newEvents])
     );
-    navigate(`/Manage/${id}`); // 경로 수정.
+    navigate(`/Manage/${projectId}`);
   };
 
   return (
@@ -124,7 +142,7 @@ function Manage() {
         </div>
         <div>
           <StyledButton onClick={handleSave}>Save</StyledButton>
-          <StyledButton onClick={() => navigate(`/Manage/${id}`)}>
+          <StyledButton onClick={() => navigate(`/Manage/${projectId}`)}>
             Cancel
           </StyledButton>
         </div>
