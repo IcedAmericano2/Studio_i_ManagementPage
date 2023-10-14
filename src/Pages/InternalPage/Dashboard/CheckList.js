@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import checkTodoApi from "./checkTodoApi";
+import checkTodoApi from "../../../api/checkTodoApi";
 
 function CheckList({ projectId }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const response = await checkTodoApi.getProjectTodo(projectId);
@@ -86,8 +85,8 @@ function CheckList({ projectId }) {
   const [isUrgent, setIsUrgent] = useState(false);
 
   const sortedItems = [...items].sort((a, b) => {
-    if (a.checked  && !b.checked ) return 1;
-    if (!a.checked  && b.checked ) return -1;
+    if (a.checked && !b.checked) return 1;
+    if (!a.checked && b.checked) return -1;
     return 0;
   });
 
@@ -109,7 +108,9 @@ function CheckList({ projectId }) {
             />
             {item.todoEmergency ? <UrgencyLabel>[긴급]</UrgencyLabel> : null}
             {item.todoContent}
-            <DeleteButton onClick={() => handleDelete(item.todoIndex)}>x</DeleteButton>
+            <DeleteButton onClick={() => handleDelete(item.todoIndex)}>
+              x
+            </DeleteButton>
           </Item>
         ))}
       </ItemsList>

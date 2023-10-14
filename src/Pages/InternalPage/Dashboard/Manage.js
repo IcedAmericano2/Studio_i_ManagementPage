@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import scheduleApi from "./scheduleApi";
+import scheduleApi from "../../../api/scheduleApi";
 
 const TotalContainer = styled.div`
   display: flex;
