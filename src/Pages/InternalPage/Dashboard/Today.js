@@ -11,9 +11,28 @@ const Subtitle = styled.text`
 `;
 
 const ListItem = styled.div``;
-function Today({ projectId, events }) {
-  const todayDate = new Date().toISOString().substr(0, 10); // YYYY-MM-DD format
-  const todayEvents = events.filter((e) => e.startDate === todayDate);
+function Today({ projectId }) {
+  const [todayEvents, setTodayEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchTodayEvents = async () => {
+      try {
+        const kstToday = new Date().toLocaleDateString('en-CA', {timeZone: 'Asia/Seoul'});
+
+        const response = await scheduleApi.getScheduleList(projectId);
+
+        const filteredEvents = response.data.list.filter(
+            (e) => e.startDate === kstToday
+        );
+        setTodayEvents(filteredEvents);
+      } catch (error) {
+        console.error("오늘의 일정을 가져오는 중 오류 발생", error);
+      }
+    };
+
+    fetchTodayEvents();
+
+  }, [projectId]);
 
   return (
     <Container>

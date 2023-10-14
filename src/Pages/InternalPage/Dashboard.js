@@ -87,7 +87,6 @@ const NewPanel = styled.button`
 
 const Dashboard = ({projectId}) => {
   const [expanded, setExpanded] = useState(false);
-  const [events, setEvents] = useState([]);
 
   const toggleExpansion = () => {
     setExpanded(!expanded);
@@ -100,9 +99,9 @@ const Dashboard = ({projectId}) => {
       <DashboardBody>
         <Panel>
           <Left>
-            <WeekCalendar projectId={projectId} events={events} setEvents={setEvents}/>
+            <WeekCalendar projectId={projectId}/>
             <Line />
-            <Today projectId={projectId} events={events} />
+            <Today projectId={projectId}/>
             <CheckList projectId={projectId}/>
           </Left>
           <Line />
