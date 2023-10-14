@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import projectApi from "../../api/projectApi";
 
 const TotalContainer = styled.div`
   display: flex;
@@ -71,22 +72,21 @@ function Project() {
 
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
+  const handleSave = async () => {
     const newProject = {
-      id: storedProjects.length + 1,
       date: `${startDate} ~ ${endDate}`,
       name: projectName,
       description: projectDetails,
       leader: teamLeader,
       members: teamMembers,
     };
-    localStorage.setItem(
-      "projects",
-      JSON.stringify([...storedProjects, newProject])
-    );
-
-    navigate("/");
+    try {
+      await projectApi.createProject(newProject);
+      navigate("/");
+    } catch (error) {
+      console.error("Error: ", error);
+      alert("프로젝트 생성에 실패했습니다."); // 에러 알림 메시지
+    }
   };
 
   return (

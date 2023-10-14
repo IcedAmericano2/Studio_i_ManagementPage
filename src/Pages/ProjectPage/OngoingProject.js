@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Project from "./Project";
 import { useNavigate } from "react-router-dom";
 import { TitleSm, TextLg, TextMd } from "../../Components/common/Font";
+import projectApi from "../../api/projectApi";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -45,7 +45,6 @@ const StyledTable = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 16px;
-  
 
   th,
   td {
@@ -58,7 +57,7 @@ const StyledTable = styled.table`
   }
 
   tbody tr {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
   }
 
@@ -90,16 +89,29 @@ const CreateButton = styled.button`
 `;
 
 function OngoingProject() {
-  const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
+  const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
 
-  const handleAddProject = () => {
-    navigate("/Project"); // 새로운 프로젝트 추가 페이지로 이동
-  };
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await projectApi.getProjectList();
+        setProjects(response.data);
+      } catch (error) {
+        console.error("Error fetching the projects:", error);
+      }
+    };
 
+    fetchProjects();
+  }, []);
+
+  const handleAddProject = () => {
+    navigate("/Project");
+  };
   const handleRowClick = (projectId) => {
     navigate(`/Manage/${projectId}`);
   };
+
   const renumberProjects = (projects) => {
     return projects.map((project, index) => {
       return {
@@ -109,32 +121,37 @@ function OngoingProject() {
     });
   };
 
-  const handleDeleteClick = (event, projectId) => {
-    event.stopPropagation();
-    const confirmation = window.confirm("정말 삭제하겠습니까?");
-    if (confirmation) {
-      const updatedProjects = storedProjects.filter(
+  const handleDeleteClick = async (e, projectId) => {
+    e.stopPropagation();
+    const isConfirmed = window.confirm("프로젝트를 삭제하시겠습니까?");
+    if (!isConfirmed) return;
+
+    try {
+      await projectApi.deleteProject(projectId);
+      const updatedProjects = projects.filter(
         (project) => project.id !== projectId
       );
-      const renumberedProjects = renumberProjects(updatedProjects);
-      localStorage.setItem("projects", JSON.stringify(renumberedProjects));
+      setProjects(updatedProjects);
+    } catch (error) {
+      console.error("Error deleting the project:", error);
+      alert("프로젝트 삭제에 실패했습니다."); // 에러 알림 메시지 추가
     }
   };
 
-  const handleCompleteClick = (event, project) => {
-    event.stopPropagation();
-    const confirmation = window.confirm("이 프로젝트를 완료하였습니까?");
-    if (confirmation) {
-      const updatedProjects = storedProjects.filter((p) => p.id !== project.id);
-      const renumberedProjects = renumberProjects(updatedProjects);
-      const completedProjects = JSON.parse(
-        localStorage.getItem("completedProjects") || "[]"
+  const handleCompleteClick = async (projectId) => {
+    try {
+      const updatedProject = projects.find(
+        (project) => project.id === projectId
       );
-      localStorage.setItem("projects", JSON.stringify(renumberedProjects));
-      localStorage.setItem(
-        "completedProjects",
-        JSON.stringify([...completedProjects, project])
+      updatedProject.status = "Completed";
+      await projectApi.updateProject(projectId, updatedProject);
+      const updatedProjects = projects.map((project) =>
+        project.id === projectId ? updatedProject : project
       );
+      setProjects(updatedProjects);
+    } catch (error) {
+      console.error("Error marking the project as complete:", error);
+      alert("프로젝트 완료 처리에 실패했습니다."); // 에러 알림 메시지 추가
     }
   };
 
@@ -169,7 +186,7 @@ function OngoingProject() {
           </tr>
         </thead>
         <tbody>
-          {storedProjects.map((project) => (
+          {projects.map((project) => (
             <tr key={project.id} onClick={() => handleRowClick(project.id)}>
               <td>{project.id}</td>
               <td>{project.date}</td>
@@ -180,7 +197,7 @@ function OngoingProject() {
                   삭제
                 </DeleteButton>
                 <CompleteButton
-                  onClick={(e) => handleCompleteClick(e, project)}
+                  onClick={(e) => handleCompleteClick(e, project.id)}
                 >
                   완료
                 </CompleteButton>
