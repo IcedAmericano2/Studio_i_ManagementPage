@@ -98,28 +98,8 @@ function WeekCalendar({ projectId }) {
     };
 
     fetchEvents();
+  }, [projectId]); // projectId가 변경될 때마다 다시 fetch
 
-  }, []);
-
-  useEffect(() => {
-    const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    setEvents(storedEvents);
-
-    const updateDateAtMidnight = () => {
-      setCurrentDate(new Date());
-
-      const now = new Date();
-      const nextMidnight = new Date(now);
-      nextMidnight.setDate(now.getDate() + 1);
-      nextMidnight.setHours(0, 0, 0, 0);
-      const timeToNextMidnight = nextMidnight - now;
-
-      setTimeout(updateDateAtMidnight, timeToNextMidnight);
-    };
-
-    updateDateAtMidnight();
-    return () => clearTimeout(updateDateAtMidnight);
-  }, []);
   const getDayColor = (dayIndex) => {
     switch (dayIndex) {
       case 0:
@@ -223,7 +203,12 @@ function WeekCalendar({ projectId }) {
     <div className="App">
       <List>
         <Title>Schedule</Title>
-        <ManageButton type="button" onClick={() => navigate("/manage", { state: { projectId: projectId } })}>
+        <ManageButton
+          type="button"
+          onClick={() =>
+            navigate("/manage", { state: { projectId: projectId } })
+          }
+        >
           +
         </ManageButton>
       </List>

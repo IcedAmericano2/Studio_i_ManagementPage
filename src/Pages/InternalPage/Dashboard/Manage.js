@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import scheduleApi from "./scheduleApi";
 
 const TotalContainer = styled.div`
@@ -81,17 +81,6 @@ function Manage() {
       return;
     }
 
-    const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    const newEvents = [];
-
-    while (start <= end) {
-      newEvents.push({
-        date: start.toISOString().substr(0, 10),
-        event: eventText,
-      });
-      start.setDate(start.getDate() + 1);
-    }
-
     const eventData = {
       content: eventText,
       startDate: startDate,
@@ -101,16 +90,11 @@ function Manage() {
     try {
       await scheduleApi.createSchedule(projectId, eventData);
       alert("일정이 성공적으로 추가되었습니다.");
+      navigate(`/Manage/${projectId}`);
     } catch (error) {
       console.error("일정 추가 중 오류 발생:", error);
       alert("일정 추가 중 오류가 발생했습니다.");
-      return;  // 에러 발생 시 이후 코드는 실행되지 않게 합니다.
     }
-    localStorage.setItem(
-        "events",
-        JSON.stringify([...storedEvents, ...newEvents])
-    );
-    navigate(`/Manage/${projectId}`);
   };
 
   return (
