@@ -1,5 +1,6 @@
-import React from "react";
+import React , { useState, useEffect }from "react";
 import styled from "styled-components";
+import axios from 'axios';
 
 const FormContainer = styled.div`
   border-radius: 5px;
@@ -33,16 +34,96 @@ const CommentTitle = styled.h3`
   color: #282c34;
   margin-left: 0.5rem;
 `;
+const CommentButton = styled.div`
+  font-size: 0.5rem;
+  margin-right: 0.4rem;
+`;
+const ButtonContainer = styled.div`
+  font-size: 0.5rem;
+  display: flex;
+`;
+const CommentTextarea = styled.textarea`
+  width: 80%;
+  padding: 0.1rem;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  color: #282c34;
+  max-height: 1rem;
+  min-height: 1rem;
+  resize: none;
+  font-size: 0.5rem;
+  vertical-align: middle;
 
-const CommentList = ({ comments, commentCount}) => {
+  &:focus {
+    outline: 0.5px solid darkgray;
+  }
+`;
+
+const CommentList = ({ commentCount, comments, setComments}) => {
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editedContent, setEditedContent] = useState("");
+    const deleteComment = (commentId) => {
+        axios.delete(`/api/comment/${commentId}`)
+            .then(response => {
+                alert('댓글이 성공적으로 삭제되었습니다.');
+                // 댓글이 성공적으로 삭제되면 해당 댓글을 상태에서 제거하거나
+                const updatedComments = comments.filter(comment => comment.id !== commentId);
+                setComments(updatedComments);
+            })
+            .catch(error => {
+                console.error('Error deleting comment:', error);
+                alert('댓글 삭제 중 오류가 발생했습니다.');
+            });
+    };
+
+    const startEditing = (commentId, content) => {
+        setEditingCommentId(commentId);
+        setEditedContent(content);
+    };
+
+    const finishEditing = (commentId) => {
+        axios.put(`/api/comment/${commentId}`, { content: editedContent })
+            .then(response => {
+                alert('댓글이 성공적으로 수정되었습니다.');
+                const updatedComments = comments.map(comment =>
+                    comment.id === commentId ? {...comment, content: editedContent} : comment
+                );
+                setComments(updatedComments);
+                setEditingCommentId(null);
+            })
+            .catch(error => {
+                console.error('Error updating comment:', error);
+                alert('댓글 수정 중 오류가 발생했습니다.');
+            });
+    };
     return (
         <>
             <CommentTitle>댓글 {commentCount} 개</CommentTitle>
             {comments.map((comment, index) => (
                 <FormContainer key={index}>
-                    <Author>{comment.author}</Author>
-                    <Content>{comment.content}</Content>
-                    <Date>{comment.date}</Date>
+                    <Author>작성자</Author>
+                    {editingCommentId === comment.id ? (
+                        <CommentTextarea
+                            value={editedContent}
+                            onChange={(e) => setEditedContent(e.target.value)}
+                        />
+                    ) : (
+                        <Content>{comment.content}</Content>
+                    )}
+                    <Date>{comment.updatedAt ?
+                        comment.updatedAt + "(수정됨)"
+                        : comment.createdAt
+                    }</Date>
+                    {!comment.isNew && (
+                        <ButtonContainer>
+                            <CommentButton onClick={() => deleteComment(comment.id)}>삭제</CommentButton>
+                            {editingCommentId === comment.id ? (
+                                <CommentButton onClick={() => finishEditing(comment.id)}>완료</CommentButton>
+                            ) : (
+                                <CommentButton onClick={() => startEditing(comment.id, comment.content)}>수정</CommentButton>
+                            )}
+                        </ButtonContainer>
+                    )}
                 </FormContainer>
             ))}
         </>

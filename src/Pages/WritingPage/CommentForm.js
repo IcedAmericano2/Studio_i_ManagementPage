@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import CommentIMG from './CommentButton.png';
 import CommentHoverIMG from './CommentButtonHover.png';
+import axios from 'axios';
 
 const FormContainer = styled.div`
   align-items: center; /* 요소를 세로 가운데 정렬 */
@@ -50,24 +51,43 @@ const SubmitButton = styled.button`
   }
 `;
 
-const CommentForm = ({onAddComment}) => {
+const CommentForm = ({onAddComment, postId}) => {
     const [author, setAuthor] = useState("");
     const [content, setContent] = useState("");
 
-    const handleSubmit = () => {
-        // 새로운 댓글 객체 생성
-        const newComment = {
-            author,
-            content,
-            date: new Date().toLocaleDateString(),
-        };
+    const handleSubmit = async () => {
+        try {
+            // 서버에 댓글 추가 요청
+            const response = await axios.post(`/api/posts/${postId}/comment`, {
+                content: content
+            });
+            const formatDate = () => {
+                const date = new Date();
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;  // 월은 0부터 시작하므로 1을 더함
+                const day = date.getDate();
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                const seconds = date.getSeconds();
 
-        // 댓글 추가 콜백 호출
-        onAddComment(newComment);
+                return `${year}년 ${month}월 ${day}일 ${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            };
+            const newComment = {
+                id: response.data.id,  // 서버에서 반환된 ID
+                content: content,
+                author: "현재 사용자 이름",  // 현재 로그인한 사용자 정보 등
+                createdAt: formatDate(),  // 현재 시간
+                isNew: true
+            };
 
-        // 입력 필드 초기화
-        setAuthor("");
-        setContent("");
+            onAddComment(newComment);
+            alert("댓글이 성공적으로 추가되었습니다.");
+            setContent("");
+
+        } catch (error) {
+            console.error("댓글 추가 중 오류 발생:", error);
+            alert("댓글 추가 중 오류가 발생했습니다.");
+        }
     };
 
     return (

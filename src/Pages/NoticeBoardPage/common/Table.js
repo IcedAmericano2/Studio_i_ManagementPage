@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const TableContainer = styled.div`
   width: 98%;
-  height: 25rem;
+  height: 28rem;
   margin: 0 auto;
   padding-bottom: 1rem;
   overflow-y: auto;

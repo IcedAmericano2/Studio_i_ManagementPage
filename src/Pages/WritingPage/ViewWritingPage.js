@@ -13,7 +13,7 @@ import "react-quill/dist/quill.snow.css";
 
 /////////제목,내용/////////
 const FormContainer = styled.div`
-  max-height: 26rem; /* 댓글 컨테이너의 최대 높이 */
+  max-height: 30rem; /* 댓글 컨테이너의 최대 높이 */
   max-width: 70rem;
   padding-left: 1%;
   padding-right: 1%;
@@ -132,7 +132,7 @@ const Content = styled.div`
     font-size: 0.75em;
   }
 `;
-const Color = styled.div`
+const CommentContainer = styled.div`
   background-color: #FFF0DC;
   min-height: 1rem;
 `;
@@ -143,6 +143,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
     const [showViewWriting, setShowViewWriting] = useState(true);
     const [showPutWriting, setShowPutWriting] = useState(false);
     const [selectedPost, setSelectedPost] = useState({
+        commentId : "",
         title: "",
         content: "",
         author: "",
@@ -150,41 +151,28 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
         commentCount: 0,
         category: ""
     });
+    const [comments, setComments] = useState([]);
 
-    const navigate = useNavigate();
     const goToPreviousPage = () => {
         setTimeout(function () {
             window.location.reload();
         }, 100);
     };
 
-    const addComment = (newComment) => {
-        //이전에 저장된 데이터와 함께 새 데이터를 저장
-        setSavedComments([...comments, newComment]);
-    };
-    // 댓글 데이터 배열
-    const [comments, setSavedComments] = useState([
-        {
-            author: "작성자1",
-            content: "댓글 내용1",
-            date: "2023-9-15",
-        },
-        {
-            author: "작성자2",
-            content: "댓글 내용2",
-            date: "2023-8-04",
-        },
-        {
-            author: "작성자3",
-            content: "댓글 내용2",
-            date: "2013-12-21",
-        },
-    ]);
-    // // 글쓰기 등록 함수
+    // // 글쓰기 수정 함수
     const putWiring = () => {
+        // HTML 태그 제거하기 위한 정규식
+        const strippedHtml = editorHtml.replace(/<[^>]+>/g, '');
+
+        // 제목 또는 에디터 내용이 비어있는지 확인
+        if (!title.trim() || !strippedHtml.trim()) {
+            alert('제목과 내용을 모두 입력해주세요.');
+            return; // 함수 실행 종료
+        }
+
         const updatedPostData = {
-            projectId: projectId,  // 이미 props로 받고 있는 projectId 사용
-            postId: selectedRowId, // 이미 props로 받고 있는 selectedRowId 사용
+            projectId: projectId,
+            postId: selectedRowId,
             title: title,
             content: editorHtml,
             category: selectedPost.category // 이미 저장된 category 정보 사용
@@ -233,25 +221,42 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
         setShowPutWriting(true);
     };
     // 게시글 내용을 담을 객체 나중에 DB연결하면 내용 set해주기
+    const handleAddComment = (newComment) => {
+        setComments((prevComments) => [newComment, ...prevComments]);
+        setSelectedPost(prevPost => ({...prevPost, commentCount: prevPost.commentCount + 1}));
+    };
 
-    // rowId를 기반으로 해당 게시글 정보 가져오기
     useEffect(() => {
-        // 서버에서 데이터를 가져옵니다.
-        axios.get(`/api/posts?projectId=${projectId}&postId=${selectedRowId}`)
-            .then((response) => {
-                const postInfo = response.data.data;
+        const intPostId = Number(selectedRowId);
+        // 병렬로 API 호출을 수행하는 함수
+        const fetchData = async () => {
+            try {
+                const [postResponse, commentsResponse] = await Promise.all([
+                    axios.get(`/api/posts?projectId=${projectId}&postId=${selectedRowId}`),
+                    axios.get(`/api/posts/${selectedRowId}/comments`)
+                ]);
+                // postResponse 처리
+                const postInfo = postResponse.data.data;
                 setSelectedPost({
+                    commentId: postInfo.id,
                     title: postInfo.title,
                     content: postInfo.content,
-                    author: "아무개", // API 응답에서 제공하지 않는 경우 수동으로 설정하십시오.
-                    date: postInfo.createdAt,
-                    commentCount: postInfo.reply_cnt,
+                    // author: postInfo.userName,
+                    author: "아무개",
+                    date: postInfo.startDate,
+                    commentCount: postInfo.commentSum,
                     category: postInfo.category
                 });
-            })
-            .catch((error) => {
+
+                if (commentsResponse.data.success) {
+                    setComments(commentsResponse.data.data);
+                }
+            } catch (error) {
                 console.error("Error fetching data:", error);
-            });
+            }
+        };
+
+        fetchData();
     }, [selectedRowId, projectId]);
     //조회하면 showViewWriting + 수정화면 showPutWriting
     return (
@@ -268,10 +273,10 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                             </AuthorAndDate>
                         </ViewTitleInput>
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
-                        <Color>
-                            <CommentForm onAddComment={addComment}/>
-                            <CommentList comments={comments} commentCount={selectedPost.commentCount}/>
-                        </Color>
+                        <CommentContainer>
+                            <CommentForm postId={selectedRowId} onAddComment={handleAddComment} />
+                            <CommentList comments={comments} commentCount={selectedPost.commentCount} setComments={setComments}/>
+                        </CommentContainer>
                     </FormContainer>
                     <PostsButtonContainer>
                         <PostsButton onClick={changePutView}>수정</PostsButton>
