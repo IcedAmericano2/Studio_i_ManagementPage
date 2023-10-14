@@ -38,7 +38,7 @@ const StyledTable = styled.table`
   }
 
   tbody tr {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
   }
 
