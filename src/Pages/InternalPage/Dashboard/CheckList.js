@@ -27,11 +27,12 @@ function CheckList({ projectId }) {
     const itemToUpdate = updatedItems.find((item) => item.todoIndex === id);
 
     try {
-      await checkTodoApi.updateCheckTodo(id, {
-        todoContent: itemToUpdate.todoContent,
-        todoEmergency: itemToUpdate.todoEmergency,
-        checked: itemToUpdate.checked,
-      });
+      await checkTodoApi.completeCheckTodo(id);
+      // await checkTodoApi.updateCheckTodo(id, {
+      //   todoContent: itemToUpdate.todoContent,
+      //   todoEmergency: itemToUpdate.todoEmergency,
+      //   checked: itemToUpdate.checked,
+      // });
     } catch (error) {
       console.error("Error updating check status", error);
     }
