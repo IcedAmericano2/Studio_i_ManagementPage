@@ -67,7 +67,7 @@ function Project() {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
-  const [teamLeader, setTeamLeader] = useState("a"); // Default value for dropdown
+  const [teamLeader, setTeamLeader] = useState("");
   const [teamMembers, setTeamMembers] = useState("");
 
   const navigate = useNavigate();
@@ -122,7 +122,16 @@ function Project() {
           <select
             value={teamLeader}
             onChange={(e) => setTeamLeader(e.target.value)}
-          ></select>
+          >
+            <option value="a">박용진</option>
+            <option value="b">문다솜</option>
+            <option value="c">류진호</option>
+            <option value="d">이승연</option>
+            <option value="e">이도언</option>
+            <option value="f">오바람</option>
+            <option value="g">박찬혁</option>
+            <option value="h">문준용</option>
+          </select>
         </div>
         <div>
           <label>팀원&nbsp;: </label>
