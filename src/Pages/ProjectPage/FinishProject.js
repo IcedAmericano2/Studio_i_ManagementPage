@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {
   media,
@@ -9,6 +9,7 @@ import {
   TextMd,
   TextSm,
 } from "../../Components/common/Font";
+import projectApi from "../../api/projectApi";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -54,11 +55,25 @@ const LabelArea = styled.div`
   text-align: center;
   color: white;
 `;
-const storedCompletedProjects = JSON.parse(
-  localStorage.getItem("completedProjects") || "[]"
-);
 
 function FinishProject() {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await projectApi.getProjectList();
+        const checkedProjects = response.data.list.filter(item => item.checked === true);
+        setProjects(checkedProjects);
+
+      } catch (error) {
+        console.error("Error fetching the projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   return (
     <AppContainer>
       <Container>
@@ -78,13 +93,13 @@ function FinishProject() {
           </tr>
         </thead>
         <tbody>
-          {projectData.concat(storedCompletedProjects).map((project, index) => (
-            <tr key={project.id}>
-              <td>{index + 1}</td>
-              <td>{project.date}</td>
+          {projects.map((project) => (
+            <tr key={project.projectIndex}>
+              {/*<td>{index + 1}</td>*/}
+              <td>{project.projectIndex}</td>
+              <td>{project.startDate}~{project.finishDate}</td>
               <td>{project.name}</td>
               <td>{project.description}</td>
-              <td>{project.etc}</td>
             </tr>
           ))}
         </tbody>
