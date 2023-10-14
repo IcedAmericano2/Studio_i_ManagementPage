@@ -78,9 +78,9 @@ const ScheduleItem = styled.p`
   padding: 0px 8px;
   border-radius: 8px;
 `;
-
-function WeekCalendar({ projectId, events, setEvents }) {
+function WeekCalendar({ projectId }) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [events, setEvents] = useState([]);
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
@@ -97,8 +97,10 @@ function WeekCalendar({ projectId, events, setEvents }) {
     };
 
     fetchEvents();
-  }, [projectId, setEvents]);
-
+  }, [projectId]); // projectId가 변경될 때마다 다시 fetch
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
   const getDayColor = (dayIndex) => {
     switch (dayIndex) {
       case 0:
@@ -136,18 +138,18 @@ function WeekCalendar({ projectId, events, setEvents }) {
 
   const findStartOfContinuousEvents = (date) => {
     const currentDateIndex = events.findIndex(
-      (event) => new Date(event.date).toDateString() === date.toDateString()
+        (event) => new Date(event.date).toDateString() === date.toDateString()
     );
 
     if (currentDateIndex === -1) return null;
 
     let startIndex = currentDateIndex;
     while (
-      startIndex > 0 &&
-      new Date(events[startIndex].date) -
+        startIndex > 0 &&
+        new Date(events[startIndex].date) -
         new Date(events[startIndex - 1].date) ===
         86400000
-    ) {
+        ) {
       startIndex--;
     }
 
@@ -155,151 +157,177 @@ function WeekCalendar({ projectId, events, setEvents }) {
   };
 
   const currentWeekDates = getWeekDates(currentDate);
-
   const findEventsForDate = (date) => {
-    const strippedDate = new Date(date.toISOString().substr(0, 10)); // 날짜 부분만 사용
-
-    return events.filter((e) => {
-      const eventStartDate = new Date(e.startDate);
-      const eventEndDate = new Date(e.endDate);
-
-      // 날짜 부분만을 사용하기 위해 시간 정보를 제거합니다.
-      const strippedStartDate = new Date(
-        eventStartDate.toISOString().substr(0, 10)
-      );
-      const strippedEndDate = new Date(
-        eventEndDate.toISOString().substr(0, 10)
-      );
-
-      return (
-        strippedDate >= strippedStartDate && strippedDate <= strippedEndDate
-      );
+    const targetDateString = date.toDateString();
+    return events.filter(e => {
+      const eventStartDateString = new Date(e.startDate).toDateString();
+      const eventEndDateString = new Date(e.endDate).toDateString();
+      return targetDateString >= eventStartDateString && targetDateString <= eventEndDateString;
     });
   };
-  const handleDeleteEvent = async (startDate) => {
-    const eventToDelete = events.find(
-      (e) => new Date(e.startDate).toDateString() === startDate.toDateString()
-    );
+
+  const handleDeleteEvent = async (date) => {
+    const targetDateString = date.toDateString();
+    const eventToDelete = events.find(e => {
+      const eventStartDateString = new Date(e.startDate).toDateString();
+      return eventStartDateString === targetDateString;
+    });
 
     if (eventToDelete && eventToDelete.scheduleId) {
       try {
         await scheduleApi.deleteSchedule(eventToDelete.scheduleId);
-        setEvents(
-          events.filter((e) => e.scheduleId !== eventToDelete.scheduleId)
+        setEvents(prevEvents =>
+            prevEvents.filter(e => e.scheduleId !== eventToDelete.scheduleId)
         );
-        setShowModal(false);
       } catch (error) {
         console.error("스케줄 삭제 중 오류 발생", error);
       }
     }
   };
 
-  const handleEditEventSave = async (startDate, newText) => {
-    const eventDate = new Date(startDate).toDateString();
-    const eventToUpdate = events.find(
-      (e) => new Date(e.startDate).toDateString() === eventDate
-    );
+  const handleEditEventSave = async (date, newText) => {
+    const targetDateString = date.toDateString();
+    const eventToUpdate = events.find(e => {
+      const eventStartDateString = new Date(e.startDate).toDateString();
+      return eventStartDateString === targetDateString;
+    });
 
     if (eventToUpdate && eventToUpdate.scheduleId) {
       try {
         const updatedData = { ...eventToUpdate, content: newText };
         await scheduleApi.updateSchedule(eventToUpdate.scheduleId, updatedData);
-        setEvents(
-          events.map((e) =>
-            e.scheduleId === eventToUpdate.scheduleId ? updatedData : e
-          )
+        setEvents(prevEvents =>
+            prevEvents.map(e =>
+                e.scheduleId === eventToUpdate.scheduleId ? updatedData : e
+            )
         );
-        setShowModal(false);
       } catch (error) {
         console.error("스케줄 업데이트 중 오류 발생", error);
       }
     }
+
   };
+  // const findEventsForDate = (date) => {
+  //   return events.filter(
+  //       (e) => new Date(e.startDate).toDateString() === date.toDateString()
+  //   );
+  // };
+  //
+  // const handleDeleteEvent = async (startDate) => {
+  //   const eventToDelete = events.find(
+  //       (e) => new Date(e.startDate).toDateString() === startDate.toDateString()
+  //   );
+  //
+  //   if (eventToDelete && eventToDelete.scheduleId) {
+  //     try {
+  //       await scheduleApi.deleteSchedule(eventToDelete.scheduleId);
+  //       setEvents(events.filter((e) => e.scheduleId !== eventToDelete.scheduleId));
+  //       setShowModal(false);
+  //     } catch (error) {
+  //       console.error("스케줄 삭제 중 오류 발생", error);
+  //     }
+  //   }
+  // };
+  //
+  // const handleEditEventSave = async (startDate, newText) => {
+  //   const eventDate = new Date(startDate).toDateString();
+  //   const eventToUpdate = events.find(
+  //       (e) => new Date(e.startDate).toDateString() === eventDate
+  //   );
+  //
+  //   if (eventToUpdate && eventToUpdate.scheduleId) {
+  //     try {
+  //       const updatedData = { ...eventToUpdate, content: newText };
+  //       await scheduleApi.updateSchedule(eventToUpdate.scheduleId, updatedData);
+  //       setEvents(
+  //           events.map((e) => (e.scheduleId === eventToUpdate.scheduleId ? updatedData : e))
+  //       );
+  //       setShowModal(false);
+  //     } catch (error) {
+  //       console.error("스케줄 업데이트 중 오류 발생", error);
+  //     }
+  //   }
+  //   setTimeout(function () {
+  //     window.location.reload();
+  //   }, 100);
+  // };
 
   const days = ["일", "월", "화", "수", "목", "금", "토"];
 
   return (
-    <div className="App">
-      <List>
-        <Title>Schedule</Title>
-        <ManageButton
-          type="button"
-          onClick={() =>
-            navigate("/manage", { state: { projectId: projectId } })
-          }
-        >
-          +
-        </ManageButton>
-      </List>
-      <Calendar>
-        {days.map((day) => (
-          <DayHeader key={day}>{day}</DayHeader>
-        ))}
-        {currentWeekDates.map((date) => {
-          const eventsForDate = findEventsForDate(date);
-          return (
-            <Day
-              key={date}
-              onClick={() => {
-                if (eventsForDate.length) {
-                  setEditingEvent({
-                    startDate: date,
-                    content: eventsForDate.map((e) => e.content).join("\n"),
-                  });
-                  setShowModal(true);
-                }
-              }}
-            >
-              <div>{date.getDate()}</div>
-              {eventsForDate.length > 0 && (
-                <ScheduleItem
-                  style={{ backgroundColor: getDayColor(date.getDay()) }}
+      <div className="App">
+        <List>
+          <Title>Schedule</Title>
+          <ManageButton
+              type="button"
+              onClick={() =>
+                  navigate("/manage", { state: { projectId: projectId } })
+              }
+          >
+            +
+          </ManageButton>
+        </List>
+        <Calendar>
+          {days.map((day) => (
+              <DayHeader key={day}>{day}</DayHeader>
+          ))}
+          {currentWeekDates.map((date) => {
+            const eventsForDate = findEventsForDate(date);
+            return (
+                <Day
+                    key={date}
+                    onClick={() => {
+                      if (eventsForDate.length) {
+                        setEditingEvent({
+                          startDate: date,
+                          content: eventsForDate.map((e) => e.content).join("\n"),
+                        });
+                        setShowModal(true);
+                      }
+                    }}
                 >
-                  {eventsForDate[0].content}
-                  {eventsForDate.length > 1 && " 더보기"}
-                </ScheduleItem>
-              )}
-            </Day>
-          );
-        })}
+                  <div>{date.getDate()}</div>
+                  {eventsForDate.map((event, index) => (
+                      <ScheduleItem
+                          key={index}
+                          style={{ backgroundColor: getDayColor(date.getDay()) }}
+                      >
+                        {event.content}
+                        {/*{eventsForDate.length > 1 && " 더보기"}*/}
+                      </ScheduleItem>
+                  ))}
+                </Day>
+            );
+          })}
 
-        {showModal && (
-          <Modal>
-            {editingEvent && (
-              <>
-                <textarea
-                  value={editingEvent.content}
-                  onChange={(e) =>
-                    setEditingEvent({
-                      ...editingEvent,
-                      content: e.target.value,
-                    })
-                  }
-                />
-                <button
-                  onClick={() =>
-                    handleEditEventSave(
-                      new Date(editingEvent.startDate),
-                      editingEvent.content
-                    )
-                  }
-                >
-                  수정 저장
-                </button>
-                <button
-                  onClick={() =>
-                    handleDeleteEvent(new Date(editingEvent.startDate))
-                  }
-                >
-                  삭제
-                </button>
-              </>
-            )}
-            <button onClick={() => setShowModal(false)}>닫기</button>
-          </Modal>
-        )}
-      </Calendar>
-    </div>
+          {showModal && (
+              <Modal>
+                {editingEvent && (
+                    <>
+                    <textarea
+                        value={editingEvent.content}
+                        onChange={(e) =>
+                            setEditingEvent({ ...editingEvent, content: e.target.value })}
+                    />
+                      <button
+                          onClick={() =>
+                              handleEditEventSave(new Date(editingEvent.startDate), editingEvent.content)
+                          }
+                      >
+                        수정 저장
+                      </button>
+                      <button
+                          onClick={() => handleDeleteEvent(new Date(editingEvent.startDate))}
+                      >
+                        삭제
+                      </button>
+                    </>
+                )}
+                <button onClick={() => setShowModal(false)}>닫기</button>
+              </Modal>
+          )}
+        </Calendar>
+      </div>
   );
 }
 
