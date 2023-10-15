@@ -2,7 +2,14 @@ import React from "react";
 import Body from "../../Components/common/Body";
 import FinishProject from "./FinishProject";
 import OngoingProject from "./OngoingProject";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #fafafa;
+    margin: 0;
+  }
+`;
 
 const MainBody = styled.div`
   /* max-width : 1184px; */
@@ -36,6 +43,7 @@ const ProjectMain = () => {
   const ProjectMainContent = () => {
     return (
       <>
+        <GlobalStyle />
         <MainBody>
           <Container>
             <OngoingProject />
