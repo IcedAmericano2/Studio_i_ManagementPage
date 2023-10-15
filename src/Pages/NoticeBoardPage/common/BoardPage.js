@@ -5,54 +5,50 @@ import {useNavigate} from "react-router-dom";
 import Table from "./Table";
 import WritingPage from "../../WritingPage/WritingPage";
 import ViewWritingPage from "../../WritingPage/ViewWritingPage";
+import {
+    media,
+    TitleLg,
+    TitleMd,
+    TitleSm,
+    TextLg,
+    TextMd,
+    TextSm,
+} from "../../../Components/common/Font";
 
 const MainBody = styled.div`
-  //max-width : 1184px; 
-  //이거 가운데로 놓기 ~
+  //max-width : 1184px;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
-  background-color: gray;
   height: 100vh;
+  margin-top: 4rem;
+  
 `;
 
 const DashboardDiv = styled.div`
-  display: flex;
   flex-direction: column;
   min-width: 80%;
-  height: 82vh;
   background-color: white;
+  border-radius: 32px;
+  padding: 32px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
 `;
 
 const BoardTitleDiv = styled.div`
   display: flex;
   text-align: center;
-  min-height: 2rem;
-  height: 4vh;
-  background-color: gray;
-  padding-bottom: 0.3rem;
+  align-items: center;
 `;
 
 const DashboardBox = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 40rem;
-  height: 80vh;
-  padding-left: 1%;
-  padding-right: 1%;
   padding-top: 1rem;
 `;
 const Title = styled.div`
-  font-weight: 600;
-  font-size: 1.5rem;
-  margin: auto 0;
   cursor: pointer;
-`;
-const SubTitle = styled.div`
-  font-size: 0.875rem;
-  margin: auto 0;
-  cursor: pointer;
+  padding-left: 4px;
+  padding-right: 4px;
 `;
 
 ////////////////버튼/////////////////////
@@ -109,18 +105,18 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId, cat
     // WritingMainPage 컴포넌트가 마운트될 때 goToWritingMainPage 함수를 자동으로 호출
     return (
         <>
-            <MainBody>
-                <DashboardDiv>
+            <MainBody class="MainBody">
+                <DashboardDiv class="DashboardDiv">
                     <BoardTitleDiv>
                         <Title onClick={goToHomePage}>
-                            HOME
+                           <TitleSm>HOME</TitleSm>
                         </Title>
-                        <SubTitle onClick={goToProjectPage}>
-                            >Project
-                        </SubTitle>
-                        <SubTitle>
-                            >{subTitle}
-                        </SubTitle>
+                        <Title onClick={goToProjectPage}>
+                            <TextMd>> Project</TextMd>
+                        </Title>
+                        <Title>
+                            <TextSm>> {subTitle}</TextSm>
+                        </Title>
                     </BoardTitleDiv>
                     <DashboardBox>
                         {showTable ? (
