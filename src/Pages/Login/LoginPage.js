@@ -176,21 +176,22 @@ function LoginPage() {
             [name]: value,
         }));
     };
-    const healthCheckTest =()=> {
-        // Axios를 사용하여 Spring Boot API에 GET 요청을 보냅니다.
-        axios.get('http://15.164.100.22:8081/user-service/login', formData)
-            .then(response => {
-                console.log({message: response.data})
 
-            })
-            .catch(error => {
-                console.error('API 요청 중 오류 발생:', error);
-            });
-    }
+    // const healthCheckTest =()=> {
+    //     // Axios를 사용하여 Spring Boot API에 GET 요청을 보냅니다.
+    //     axios.get('/user-service/login', formData)
+    //         .then(response => {
+    //             console.log({message: response.data})
+    //
+    //         })
+    //         .catch(error => {
+    //             console.error('API 요청 중 오류 발생:', error);
+    //         });
+    // }
 
     const handleLogin = () => {
 
-        axios.post('http://15.164.100.22:8081/user-service/login', formData)
+        axios.post('/user-service/login', formData)
             .then((response) => {
                 const accessToken = response.data.accessToken;
                 //console.log(accessToken);

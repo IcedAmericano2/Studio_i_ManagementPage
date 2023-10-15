@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function(app){
     app.use(
         createProxyMiddleware('/api', {
-            target: 'http://localhost:8000',
+            target: 'http://3.35.179.234:8080/',
             changeOrigin: true
         })
     )
@@ -11,8 +11,8 @@ module.exports = function(app){
     // 컨트롤러 시작 url이 뭔지 적어서 알려주면 돼!  13.125.181.139:8080/
 
     app.use(
-        createProxyMiddleware('/LoginPage', {
-            target: 'http://15.164.100.22:8081',
+        createProxyMiddleware( '/user-service',{
+            target: 'http://15.164.100.22:8081/',
             changeOrigin: true
         })
     );
