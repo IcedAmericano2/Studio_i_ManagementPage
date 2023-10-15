@@ -15,6 +15,7 @@ const DashboardBox = styled.div`
 const Title = styled.div`
   font-weight: bold;
   font-size: 23px;
+  margin-bottom: 12px;
 `;
 
 const DashboardBody = styled.div`
@@ -85,7 +86,7 @@ const NewPanel = styled.button`
 //   margin-top: 20px;
 // `;
 
-const Dashboard = ({projectId}) => {
+const Dashboard = ({ projectId }) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpansion = () => {
@@ -99,10 +100,10 @@ const Dashboard = ({projectId}) => {
       <DashboardBody>
         <Panel>
           <Left>
-            <WeekCalendar projectId={projectId}/>
+            <WeekCalendar projectId={projectId} />
             <Line />
-            <Today projectId={projectId}/>
-            <CheckList projectId={projectId}/>
+            <Today projectId={projectId} />
+            <CheckList projectId={projectId} />
           </Left>
           <Line />
           <RightDashboard projectId={projectId} />
