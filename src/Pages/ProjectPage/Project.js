@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import projectApi from "../../api/projectApi";
 
 const TotalContainer = styled.div`
   display: flex;
@@ -66,27 +67,28 @@ function Project() {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
-  const [teamLeader, setTeamLeader] = useState("a"); // Default value for dropdown
+  const [teamLeader, setTeamLeader] = useState("");
   const [teamMembers, setTeamMembers] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-    const newProject = {
-      id: storedProjects.length + 1,
-      date: `${startDate} ~ ${endDate}`,
-      name: projectName,
-      description: projectDetails,
-      leader: teamLeader,
-      members: teamMembers,
+  const handleSave = async () => {
+      const newProject = {
+        name: projectName,
+        description: projectDetails,
+        startDate: `${startDate}`,
+        finishDate: `${endDate}`
+      // leader: teamLeader,
+      // members: teamMembers,
     };
-    localStorage.setItem(
-      "projects",
-      JSON.stringify([...storedProjects, newProject])
-    );
-
-    navigate("/");
+    try {
+      await projectApi.createProject(newProject);
+      alert("프로젝트를 생성하였습니다.");
+      navigate("/");
+    } catch (error) {
+      console.error("Error: ", error);
+      alert("프로젝트 생성에 실패했습니다."); // 에러 알림 메시지
+    }
   };
 
   return (
@@ -122,7 +124,16 @@ function Project() {
           <select
             value={teamLeader}
             onChange={(e) => setTeamLeader(e.target.value)}
-          ></select>
+          >
+            <option value="a">박용진</option>
+            <option value="b">문다솜</option>
+            <option value="c">류진호</option>
+            <option value="d">이승연</option>
+            <option value="e">이도언</option>
+            <option value="f">오바람</option>
+            <option value="g">박찬혁</option>
+            <option value="h">문준용</option>
+          </select>
         </div>
         <div>
           <label>팀원&nbsp;: </label>

@@ -11,7 +11,7 @@ const MainBody = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 `;
 
 const Title = styled.text`
@@ -29,27 +29,27 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: #FAFAFA;
+  background-color: #fafafa;
 `;
 
 const ProjectMain = () => {
-    const ProjectMainContent = () => {
-        return (
-            <>
-                <MainBody>
-                    <Container>
-                        <OngoingProject/>
-                        <FinishProject/>
-                    </Container>
-                </MainBody>
-            </>
-        );
-    };
-
+  const ProjectMainContent = () => {
     return (
-        <Body>
-            <ProjectMainContent/>
-        </Body>
+      <>
+        <MainBody>
+          <Container>
+            <OngoingProject />
+            <FinishProject />
+          </Container>
+        </MainBody>
+      </>
     );
+  };
+
+  return (
+    <Body>
+      <ProjectMainContent />
+    </Body>
+  );
 };
 export default ProjectMain;

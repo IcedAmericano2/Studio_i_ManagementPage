@@ -1,49 +1,78 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import checkTodoApi from "../../../api/checkTodoApi";
 
-function CheckList() {
-  const [items, setItems] = useState([
-    { id: 1, text: "첫 번째 일정", urgent: false, completed: false },
-  ]);
+function CheckList({ projectId }) {
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const savedItems = localStorage.getItem("checklistItems");
-    if (savedItems) {
-      setItems(JSON.parse(savedItems));
-    }
+    const fetchData = async () => {
+      try {
+        const response = await checkTodoApi.getProjectTodo(projectId);
+        setItems(response.data.list);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("checklistItems", JSON.stringify(items));
-  }, [items]);
-
-  const handleCheck = (id) => {
-    const newItems = items.map((item) =>
-      item.id === id ? { ...item, completed: !item.completed } : item
+  const handleCheck = async (id) => {
+    const updatedItems = items.map((item) =>
+      item.todoIndex === id ? { ...item, checked: !item.checked } : item
     );
-    setItems(newItems);
-  };
-  const handleDelete = (id) => {
-    const newItems = items.filter((item) => item.id !== id);
-    setItems(newItems);
+    setItems(updatedItems);
+
+    const itemToUpdate = updatedItems.find((item) => item.todoIndex === id);
+
+    try {
+      await checkTodoApi.completeCheckTodo(id);
+      // await checkTodoApi.updateCheckTodo(id, {
+      //   todoContent: itemToUpdate.todoContent,
+      //   todoEmergency: itemToUpdate.todoEmergency,
+      //   checked: itemToUpdate.checked,
+      // });
+    } catch (error) {
+      console.error("Error updating check status", error);
+    }
   };
 
-  const handleAdd = () => {
+  const handleDelete = async (todoIndex) => {
+    const filteredItems = items.filter((item) => item.todoIndex !== todoIndex);
+    setItems(filteredItems);
+
+    try {
+      await checkTodoApi.deleteCheckTodo(todoIndex);
+    } catch (error) {
+      console.error("Error deleting item", error);
+    }
+  };
+
+  const handleAdd = async () => {
     const newId = items.length
-      ? Math.max(...items.map((item) => item.id)) + 1
+      ? Math.max(...items.map((item) => item.todoIndex)) + 1
       : 1;
     const finalText = isUrgent ? `${inputText}` : inputText;
     const newItem = {
-      id: newId,
-      text: finalText,
-      urgent: isUrgent,
-      completed: false,
+      todoIndex: newId,
+      todoContent: finalText,
+      todoEmergency: isUrgent,
+      checked: false,
     };
 
     if (isUrgent) {
       setItems([newItem, ...items]);
     } else {
       setItems([...items, newItem]);
+    }
+
+    try {
+      await checkTodoApi.createCheckTodo(projectId, {
+        todoContent: finalText,
+        todoEmergency: isUrgent,
+      });
+    } catch (error) {
+      console.error("Error adding new item", error);
     }
 
     setInputText("");
@@ -56,8 +85,8 @@ function CheckList() {
   const [isUrgent, setIsUrgent] = useState(false);
 
   const sortedItems = [...items].sort((a, b) => {
-    if (a.completed && !b.completed) return 1;
-    if (!a.completed && b.completed) return -1;
+    if (a.checked && !b.checked) return 1;
+    if (!a.checked && b.checked) return -1;
     return 0;
   });
 
@@ -71,15 +100,17 @@ function CheckList() {
       </List>
       <ItemsList>
         {sortedItems.map((item) => (
-          <Item key={item.id} urgent={item.urgent} completed={item.completed}>
+          <Item>
             <Checkbox
               type="checkbox"
-              checked={item.completed}
-              onChange={() => handleCheck(item.id)}
+              checked={item.checked}
+              onChange={() => handleCheck(item.todoIndex)}
             />
-            {item.urgent ? <UrgencyLabel>[긴급]</UrgencyLabel> : null}
-            {item.text}
-            <DeleteButton onClick={() => handleDelete(item.id)}>x</DeleteButton>
+            {item.todoEmergency ? <UrgencyLabel>[긴급]</UrgencyLabel> : null}
+            {item.todoContent}
+            <DeleteButton onClick={() => handleDelete(item.todoIndex)}>
+              x
+            </DeleteButton>
           </Item>
         ))}
       </ItemsList>
@@ -117,7 +148,6 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 10px;
   background-color: #ffffff;
-
   margin-left: -15px;
 `;
 

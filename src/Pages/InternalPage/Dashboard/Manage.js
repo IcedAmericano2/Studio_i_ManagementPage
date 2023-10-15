@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
+import scheduleApi from "../../../api/scheduleApi";
 
 const TotalContainer = styled.div`
   display: flex;
@@ -57,18 +59,27 @@ const StyledButton = styled.button`
     margin-right: 10px;
   }
 `;
+function toKoreanTime(date) {
+  const offset = 9; // Korea is UTC+9
+  const localDate = new Date(date.getTime() + offset * 60 * 60 * 1000);
+  return localDate.toISOString().substr(0, 10);
+}
+//프로젝트의 시작날짜와 마지막 날짜 사이에 일정이 추가되어야 함.
 function Manage() {
   const [startDate, setStartDate] = useState(
-    new Date().toISOString().substr(0, 10)
+      toKoreanTime(new Date())
   );
   const [endDate, setEndDate] = useState(
-    new Date().toISOString().substr(0, 10)
+      toKoreanTime(new Date())
   );
+
+
   const [eventText, setEventText] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
+  const location = useLocation();
+  const projectId = location.state.projectId;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
@@ -77,22 +88,20 @@ function Manage() {
       return;
     }
 
-    const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    const newEvents = [];
+    const eventData = {
+      content: eventText,
+      startDate: startDate,
+      endDate: endDate,
+    };
 
-    while (start <= end) {
-      newEvents.push({
-        date: start.toISOString().substr(0, 10),
-        event: eventText,
-      });
-      start.setDate(start.getDate() + 1);
+    try {
+      await scheduleApi.createSchedule(projectId, eventData);
+      alert("일정이 성공적으로 추가되었습니다.");
+      navigate(`/Manage/${projectId}`);
+    } catch (error) {
+      console.error("일정 추가 중 오류 발생:", error);
+      alert("일정 추가 중 오류가 발생했습니다.");
     }
-
-    localStorage.setItem(
-      "events",
-      JSON.stringify([...storedEvents, ...newEvents])
-    );
-    navigate(`/Manage/${id}`); // 경로 수정.
   };
 
   return (
@@ -124,7 +133,7 @@ function Manage() {
         </div>
         <div>
           <StyledButton onClick={handleSave}>Save</StyledButton>
-          <StyledButton onClick={() => navigate(`/Manage/${id}`)}>
+          <StyledButton onClick={() => navigate(`/Manage/${projectId}`)}>
             Cancel
           </StyledButton>
         </div>
