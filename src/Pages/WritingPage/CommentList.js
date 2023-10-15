@@ -59,7 +59,7 @@ const CommentTextarea = styled.textarea`
   }
 `;
 
-const CommentList = ({ commentCount, comments, setComments}) => {
+const CommentList = ({ commentCount, comments, setComments, onDeleteComment}) => {
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
     const deleteComment = (commentId) => {
@@ -69,6 +69,9 @@ const CommentList = ({ commentCount, comments, setComments}) => {
                 // 댓글이 성공적으로 삭제되면 해당 댓글을 상태에서 제거하거나
                 const updatedComments = comments.filter(comment => comment.id !== commentId);
                 setComments(updatedComments);
+                if (onDeleteComment) { // 추가된 코드
+                    onDeleteComment();
+                }
             })
             .catch(error => {
                 console.error('Error deleting comment:', error);

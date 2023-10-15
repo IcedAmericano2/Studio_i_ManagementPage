@@ -225,6 +225,9 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
         setComments((prevComments) => [newComment, ...prevComments]);
         setSelectedPost(prevPost => ({...prevPost, commentCount: prevPost.commentCount + 1}));
     };
+    const handleDeleteComment = () => {
+        setSelectedPost(prevPost => ({ ...prevPost, commentCount: prevPost.commentCount - 1 }));
+    };
 
     useEffect(() => {
         const intPostId = Number(selectedRowId);
@@ -275,7 +278,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
                         <CommentContainer>
                             <CommentForm postId={selectedRowId} onAddComment={handleAddComment} />
-                            <CommentList comments={comments} commentCount={selectedPost.commentCount} setComments={setComments}/>
+                            <CommentList comments={comments} commentCount={selectedPost.commentCount} setComments={setComments}  onDeleteComment={handleDeleteComment} />
                         </CommentContainer>
                     </FormContainer>
                     <PostsButtonContainer>
