@@ -33,7 +33,7 @@ function CheckList({ projectId }) {
       //   checked: itemToUpdate.checked,
       // });
     } catch (error) {
-      console.error("Error updating check status", error);
+      console.error("Error updating checak status", error);
     }
   };
 
@@ -100,7 +100,7 @@ function CheckList({ projectId }) {
       </List>
       <ItemsList>
         {sortedItems.map((item) => (
-          <Item>
+          <Item completed={item.checked}>
             <Checkbox
               type="checkbox"
               checked={item.checked}
