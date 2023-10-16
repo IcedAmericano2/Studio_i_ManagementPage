@@ -1,18 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
-import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const RightDashboardBox = styled.div`
   border-left: 1px dotted black;
   background-color: white;
   flex-basis: 50%;
+  padding-left: 1rem;
+  padding-top: 0.1rem;
 `;
 
 const RightboardBody = styled.div`
   width: 90%;
-  height: 31%;
-  margin: 0.3rem;
+  height: 33%; // 크기 변경
+  margin: 0.2rem;
   flex-direction: column;
   background-color: white;
   overflow: hidden;
@@ -41,6 +43,7 @@ const ContentDiv = styled.div`
   min-width: 8rem;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin: -10px;
 `;
 
 const SubTitle = styled.text`
@@ -63,81 +66,87 @@ const GoButton = styled.div`
   margin-left: auto;
 `;
 
-const RightDashboard = ({projectId}) => {
-    const navigate = useNavigate();
-    const [planData, setPlanData] = useState([]);
-    const [productionDate, setProductionDate] = useState([]);
-    const [editData, setEditData] = useState([]);
-    const goToPlanPage = () => {
-        navigate(`/PlanMain/${projectId}`);
+const RightDashboard = ({ projectId }) => {
+  const navigate = useNavigate();
+  const [planData, setPlanData] = useState([]);
+  const [productionDate, setProductionDate] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const goToPlanPage = () => {
+    navigate(`/PlanMain/${projectId}`);
+  };
+
+  const goToMakingPage = () => {
+    navigate(`/MakingMain/${projectId}`);
+  };
+
+  const goToEditPage = () => {
+    navigate(`/EditMain/${projectId}`);
+  };
+  useEffect(() => {
+    // 데이터를 불러오는 함수
+    const fetchPosts = async () => {
+      try {
+        const planResponse = await axios.get(
+          `/api/project/${projectId}/posts/recent?category=PLANNING`
+        );
+        setPlanData(planResponse.data.list);
+        const productionResponse = await axios.get(
+          `/api/project/${projectId}/posts/recent?category=PRODUCTION`
+        );
+        setProductionDate(productionResponse.data.list);
+        const editResponse = await axios.get(
+          `/api/project/${projectId}/posts/recent?category=EDITING`
+        );
+        setEditData(editResponse.data.list);
+      } catch (error) {
+        console.error("Error fetching recent posts:", error);
+      }
     };
 
-    const goToMakingPage = () => {
-        navigate(`/MakingMain/${projectId}`);
-    };
-
-    const goToEditPage = () => {
-        navigate(`/EditMain/${projectId}`);
-    };
-    useEffect(() => {
-        // 데이터를 불러오는 함수
-        const fetchPosts = async () => {
-            try {
-                const planResponse = await axios.get(`/api/project/${projectId}/posts/recent?category=PLANNING`);
-                setPlanData(planResponse.data.list);
-                const productionResponse = await axios.get(`/api/project/${projectId}/posts/recent?category=PRODUCTION`);
-                setProductionDate(productionResponse.data.list);
-                const editResponse = await axios.get(`/api/project/${projectId}/posts/recent?category=EDITING`);
-                setEditData(editResponse.data.list);
-            } catch (error) {
-                console.error("Error fetching recent posts:", error);
-            }
-        };
-
-        fetchPosts();
-    }, []);
-    return (
-        <RightDashboardBox>
-            <RightboardBody>
-                <BoardTitleDiv>
-                    <SubTitle>기획</SubTitle>
-                    <GoButton onClick={goToPlanPage}>+</GoButton>
-                </BoardTitleDiv>
-                <BoardContentDiv>
-                    {planData.map((plan) => (
-                        <ContentDiv key={plan.id}>
-                            <Text>{plan.title}</Text>
-                        </ContentDiv>
-                    ))}
-                </BoardContentDiv>
-            </RightboardBody>
-            <RightboardBody>
-                <BoardTitleDiv>
-                    <SubTitle>제작</SubTitle>
-                    <GoButton onClick={goToMakingPage}>+</GoButton>
-                </BoardTitleDiv>
-                <BoardContentDiv>
-                    {productionDate.map((production) => (
-                        <ContentDiv key={production.id}>
-                            <Text>{production.title}</Text>
-                        </ContentDiv>
-                    ))}
-                </BoardContentDiv>
-            </RightboardBody>
-            <RightboardBody>
-                <BoardTitleDiv>
-                    <SubTitle>편집</SubTitle>
-                    <GoButton onClick={goToEditPage}>+</GoButton>
-                </BoardTitleDiv>
-                <BoardContentDiv>
-                    {editData.map((edit) => (
-                        <ContentDiv key={edit.id}>
-                            <Text>{edit.title}</Text>
-                        </ContentDiv>
-                    ))}
-                </BoardContentDiv>
-            </RightboardBody>
-        </RightDashboardBox>
-    );
+    fetchPosts();
+  }, []);
+  return (
+    <RightDashboardBox>
+      <RightboardBody>
+        <BoardTitleDiv>
+          <SubTitle>기획</SubTitle>
+          <GoButton onClick={goToPlanPage}>+</GoButton>
+        </BoardTitleDiv>
+        <BoardContentDiv>
+          {planData.map((plan) => (
+            <ContentDiv key={plan.id}>
+              <Text>{plan.title}</Text>
+            </ContentDiv>
+          ))}
+        </BoardContentDiv>
+      </RightboardBody>
+      <RightboardBody>
+        <BoardTitleDiv>
+          <SubTitle>제작</SubTitle>
+          <GoButton onClick={goToMakingPage}>+</GoButton>
+        </BoardTitleDiv>
+        <BoardContentDiv>
+          {productionDate.map((production) => (
+            <ContentDiv key={production.id}>
+              <Text>{production.title}</Text>
+            </ContentDiv>
+          ))}
+        </BoardContentDiv>
+      </RightboardBody>
+      <RightboardBody>
+        <BoardTitleDiv>
+          <SubTitle>편집</SubTitle>
+          <GoButton onClick={goToEditPage}>+</GoButton>
+        </BoardTitleDiv>
+        <BoardContentDiv>
+          {editData.map((edit) => (
+            <ContentDiv key={edit.id}>
+              <Text>{edit.title}</Text>
+            </ContentDiv>
+          ))}
+        </BoardContentDiv>
+      </RightboardBody>
+    </RightDashboardBox>
+  );
 };
 export default RightDashboard;

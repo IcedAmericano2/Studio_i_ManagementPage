@@ -9,12 +9,14 @@ const DashboardBox = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 50px;
-  min-width: 80%;
+  min-width: 90%;
+  margin: 0 auto;
+  margin-top: 32px;
 `;
 
 const Title = styled.div`
   font-weight: bold;
-  font-size: 23px;
+  font-size: 24px;
   margin-bottom: 12px;
 `;
 
@@ -24,27 +26,30 @@ const DashboardBody = styled.div`
   flex-direction: column;
   overflow: hidden;
   transition: height 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 12px;
 `;
 
 const Panel = styled.div`
   display: flex;
   flex: 1;
-  height: ${(props) =>
-    props.expanded ? "700px" : "300px"}; /* 높이를 조절할 수 있도록 설정 */
-  transition: height 0.3s ease-in-out; /* transition 추가 */
+  height: ${(props) => (props.expanded ? "1000px" : "500px")};
+  transition: height 0.3s ease-in-out;
+`;
+const LeftComponent = styled.div`
+  height: 33.33%;
 `;
 
 const Left = styled.div`
   padding: 20px;
-
   background-color: white;
   flex-basis: 50%;
-  height: ${(props) => (props.expanded ? "700px" : "300px")};
+  height: ${(props) => (props.expanded ? "1000px" : "600px")}; // 크기 변경
   overflow-y: auto;
 `;
 
 const Line = styled.div`
-  height: 50px;
+  height: 80px;
 `;
 
 const Button = styled.button`
@@ -100,12 +105,17 @@ const Dashboard = ({ projectId }) => {
       <DashboardBody>
         <Panel>
           <Left>
-            <WeekCalendar projectId={projectId} />
-            <Line />
-            <Today projectId={projectId} />
-            <CheckList projectId={projectId} />
+            <LeftComponent>
+              <WeekCalendar projectId={projectId} />
+            </LeftComponent>
+            <LeftComponent>
+              <Line />
+              <Today projectId={projectId} />
+            </LeftComponent>
+            <LeftComponent>
+              <CheckList projectId={projectId} />
+            </LeftComponent>
           </Left>
-          <Line />
           <RightDashboard projectId={projectId} />
         </Panel>
         {expanded && <NewPanel />}
