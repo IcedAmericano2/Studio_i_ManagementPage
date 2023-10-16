@@ -1,16 +1,43 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {TextLg, TextMd} from "../../../Components/common/Font";
+import {TextLg, TextMd, TextSm} from "../../../Components/common/Font";
 
 const TableContainer = styled.div`
   width: 100%;
-  height: 28rem;
-  margin: 0 auto;
   padding-bottom: 1rem;
   overflow-y: auto;
 `;
 
+const TableStyled = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  
+  th{
+    text-align: left;
+    padding: 16px;
+    color: #DADADA;
+  }
+  
+  th:first-child {
+    width: 50%;
+  }
+  
+  tbody tr {
+    cursor: pointer;
+    border: 2px solid #F8F8F8;
+    &:hover {
+      background-color: #FAFAFA;
+    }
+  }
+  td {
+    padding: 16px;
+  }
+`;
 
+const TableCellCenter = styled.td`
+  padding: 8px;
+  text-align: center;
+`;
 
 
 const Table = ({  tableData, onRowClick }) => {
@@ -19,24 +46,22 @@ const Table = ({  tableData, onRowClick }) => {
     const sendDataBoard = (rowId) => {
         onRowClick(rowId);
     };
+
     return (
         <TableContainer>
-            <table>
+            <TableStyled>
                 <thead>
                 <tr>
-                    <th><TextMd>번호</TextMd></th>
-                    <th><TextMd>제목</TextMd></th>
-                    <th><TextMd>작성일자</TextMd></th>
-                    <th><TextMd>닉네임</TextMd></th>
+                    <th><TextLg>제목</TextLg></th>
+                    <th><TextLg>작성일자</TextLg></th>
+                    <th><TextLg>작성자</TextLg></th>
                 </tr>
                 </thead>
                 <tbody>
                 {tableData.length === 0 ? (
+
                     <tr>
-                        <td>1</td>
-                        <td>test용</td>
-                        <td>2023-01-01</td>
-                        <td>유저네임</td>
+                        <TableCellCenter colSpan="5">게시글이 존재하지 않습니다.</TableCellCenter>
                     </tr>
 
                 ) : (
@@ -46,7 +71,6 @@ const Table = ({  tableData, onRowClick }) => {
                             key={row.id}
                             onClick={() => sendDataBoard(row.id)}
                         >
-                            <td>{row.id}</td>
                             <td>{row.title}</td>
                             <td>{row.startDate}</td>
                             <td>{row.userName}</td>
@@ -54,7 +78,7 @@ const Table = ({  tableData, onRowClick }) => {
                     ))
                 )}
                 </tbody>
-            </table>
+            </TableStyled>
         </TableContainer>
     );
 };

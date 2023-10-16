@@ -103,6 +103,7 @@ function FinishProject() {
               </td>
               <td>{project.name}</td>
               <td>{project.description}</td>
+              <td></td>
             </tr>
           ))}
         </tbody>
