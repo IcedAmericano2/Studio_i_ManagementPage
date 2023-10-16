@@ -66,13 +66,8 @@ function toKoreanTime(date) {
 }
 //프로젝트의 시작날짜와 마지막 날짜 사이에 일정이 추가되어야 함.
 function Manage() {
-  const [startDate, setStartDate] = useState(
-      toKoreanTime(new Date())
-  );
-  const [endDate, setEndDate] = useState(
-      toKoreanTime(new Date())
-  );
-
+  const [startDate, setStartDate] = useState(toKoreanTime(new Date()));
+  const [endDate, setEndDate] = useState(toKoreanTime(new Date()));
 
   const [eventText, setEventText] = useState("");
   const navigate = useNavigate();
@@ -100,7 +95,9 @@ function Manage() {
       navigate(`/Manage/${projectId}`);
     } catch (error) {
       console.error("일정 추가 중 오류 발생:", error);
-      alert("일정 추가 중 오류가 발생했습니다.");
+      alert(
+        "일정 추가 중 오류가 발생했습니다. 프로젝트 시작 날짜와 끝 날짜 사이에 일정을 추가해주세요."
+      );
     }
   };
 
