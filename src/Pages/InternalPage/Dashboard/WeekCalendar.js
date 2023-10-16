@@ -53,16 +53,17 @@ const DayHeader = styled.div`
   height: 30px;
   font-size: 14px;
   color: black;
+  color: ${(props) => (props.isWeekend ? "red" : "black")};
 `;
 
 const Day = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   background-color: #ffffff;
-  height: 60px;
-  font-size: 14px;
+  height: 86px;
+  font-size: 12px;
   color: black;
   cursor: pointer;
 
@@ -72,7 +73,7 @@ const Day = styled.div`
 `;
 
 const ScheduleItem = styled.p`
-  margin-top: 4px;
+  margin-top: -2px;
   color: grey;
   background-color: red;
   padding: 0px 8px;
@@ -99,7 +100,7 @@ function WeekCalendar({ projectId }) {
     };
 
     fetchEvents();
-  }, [projectId]); // projectId가 변경될 때마다 다시 fetch
+  }, [projectId]);
   useEffect(() => {
     console.log(events);
   }, [events]);
@@ -243,8 +244,10 @@ function WeekCalendar({ projectId }) {
       </List>
       {message && <div>{message}</div>}
       <Calendar>
-        {days.map((day) => (
-          <DayHeader key={day}>{day}</DayHeader>
+        {days.map((day, index) => (
+          <DayHeader key={day} isWeekend={index === 0 || index === 6}>
+            {day}
+          </DayHeader>
         ))}
         {currentWeekDates.map((date) => {
           const eventsForDate = findEventsForDate(date);
@@ -259,14 +262,17 @@ function WeekCalendar({ projectId }) {
               }}
             >
               <div>{date.getDate()}</div>
-              {eventsForDate.map((event, index) => (
+              {eventsForDate.slice(0, 2).map((event, index) => (
                 <ScheduleItem
                   key={index}
                   style={{ backgroundColor: getDayColor(date.getDay()) }}
                 >
-                  {event.content}
+                  {event.content.length > 4
+                    ? `${event.content.slice(0, 4)}..`
+                    : event.content}
                 </ScheduleItem>
               ))}
+              {eventsForDate.length > 2 && <div>... 더 보기</div>}
             </Day>
           );
         })}
