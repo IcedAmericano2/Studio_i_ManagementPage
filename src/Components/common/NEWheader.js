@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import StudioILogo from "../../assets/logo/studioi.png";
 import Button from "./Button";
 import {Link} from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const HeaderWrapper = styled.div`
   position: fixed;
@@ -80,6 +81,7 @@ const StyledLink = styled(Link)`
 const NEWheader = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userName, setUserName] = useState("");
 
     useEffect(() => {
         // 로컬 스토리지에서 토큰을 가져옵니다.
@@ -88,12 +90,15 @@ const NEWheader = () => {
         if (token) {
             // 토큰이 존재하면 로그인 상태로 설정
             setIsLoggedIn(true);
+            const accessToken = localStorage.getItem('login-token');
+            setUserName(jwt_decode(accessToken).username);
         }
     }, []);
 
     function handleLogout() {
         localStorage.removeItem('login-token');
         setIsLoggedIn(false);
+        setUserName("");
         alert("로그아웃 완료");
     }
 
@@ -110,7 +115,7 @@ const NEWheader = () => {
                     <NEWSearchBar></NEWSearchBar>
                 </SearchBlock>
                 <NameBlock>
-                    <TextLg>UserName</TextLg>
+                    {isLoggedIn ? (<TextLg> {userName} 님</TextLg>): null}
                     {isLoggedIn ? (<StyledLink to="/"><LoginButton onClick={handleLogout}>
                         로그아웃
                     </LoginButton></StyledLink>) : (
