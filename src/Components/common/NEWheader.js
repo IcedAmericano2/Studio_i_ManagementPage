@@ -1,13 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
-import { media ,TitleLg, TitleMd, TitleSm, TextLg, TextMd, TextSm } from '../../Components/common/Font';
+import React from "react";
+import styled from "styled-components";
+import {
+  media,
+  TitleLg,
+  TitleMd,
+  TitleSm,
+  TextLg,
+  TextMd,
+  TextSm,
+} from "../../Components/common/Font";
 import { CgMenu } from "react-icons/cg";
-import NEWSearchBar from '../NEWSearchBar';
-import { useEffect, useState } from 'react';
+import NEWSearchBar from "../NEWSearchBar";
+import { useEffect, useState } from "react";
 import StudioILogo from "../../assets/logo/studioi.png";
 import Button from "./Button";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const HeaderWrapper = styled.div`
   position: fixed;
@@ -55,7 +64,7 @@ const IconBlock = styled.div`
 const LoginButton = styled.button`
   border: none;
   outline: none;
-  background: #EB3225;
+  background: #eb3225;
   color: white;
   border-radius: 16px;
   width: 88px;
@@ -77,59 +86,61 @@ const StyledLink = styled(Link)`
   display: inline-block; /* 또는 block로 설정 */
 `;
 
-
 const NEWheader = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userName, setUserName] = useState("");
+  const navigateToHome = () => {
+    navigate("/"); // 메인 페이지로 이동합니다.
+  };
 
-    useEffect(() => {
-        // 로컬 스토리지에서 토큰을 가져옵니다.
-        const token = localStorage.getItem('login-token');
+  useEffect(() => {
+    // 로컬 스토리지에서 토큰을 가져옵니다.
+    const token = localStorage.getItem("login-token");
 
-        if (token) {
-            // 토큰이 존재하면 로그인 상태로 설정
-            setIsLoggedIn(true);
-            const accessToken = localStorage.getItem('login-token');
-            setUserName(jwt_decode(accessToken).username);
-        }
-    }, []);
-
-    function handleLogout() {
-        localStorage.removeItem('login-token');
-        setIsLoggedIn(false);
-        setUserName("");
-        alert("로그아웃 완료");
+    if (token) {
+      // 토큰이 존재하면 로그인 상태로 설정
+      setIsLoggedIn(true);
+      const accessToken = localStorage.getItem("login-token");
+      setUserName(jwt_decode(accessToken).username);
     }
+  }, []);
 
-    return (
-        <HeaderWrapper>
-            <SpaceBetweenBlock>
-                <MenuBlock>
-                    <IconBlock>
-                        <CgMenu />
-                    </IconBlock>
-                </MenuBlock>
-                <SearchBlock>
-                    <LogoBox src={StudioILogo}/>
-                    <NEWSearchBar></NEWSearchBar>
-                </SearchBlock>
-                <NameBlock>
-                    {isLoggedIn ? (<TextLg> {userName} 님</TextLg>): null}
-                    {isLoggedIn ? (<StyledLink to="/"><LoginButton onClick={handleLogout}>
-                        로그아웃
-                    </LoginButton></StyledLink>) : (
-                        <StyledLink to="/LoginPage">
-                            <LoginButton>
-                                로그인
-                            </LoginButton>
-                        </StyledLink>
-                    )}
-                </NameBlock>
-            </SpaceBetweenBlock>
-        </HeaderWrapper>
-    );
+  function handleLogout() {
+    localStorage.removeItem("login-token");
+    setIsLoggedIn(false);
+    setUserName("");
+    alert("로그아웃 완료");
+  }
 
+  return (
+    <HeaderWrapper>
+      <SpaceBetweenBlock>
+        <MenuBlock>
+          <IconBlock>
+            <CgMenu />
+          </IconBlock>
+        </MenuBlock>
+        <SearchBlock>
+          <LogoBox src={StudioILogo} onClick={navigateToHome} />
+          <NEWSearchBar></NEWSearchBar>
+        </SearchBlock>
+        <NameBlock>
+          {isLoggedIn ? <TextLg> {userName} 님</TextLg> : null}
+          {isLoggedIn ? (
+            <StyledLink to="/">
+              <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
+            </StyledLink>
+          ) : (
+            <StyledLink to="/LoginPage">
+              <LoginButton>로그인</LoginButton>
+            </StyledLink>
+          )}
+        </NameBlock>
+      </SpaceBetweenBlock>
+    </HeaderWrapper>
+  );
 };
 
 export default NEWheader;
