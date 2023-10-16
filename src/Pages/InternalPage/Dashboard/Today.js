@@ -17,13 +17,24 @@ function Today({ projectId }) {
   useEffect(() => {
     const fetchTodayEvents = async () => {
       try {
-        const kstToday = new Date().toLocaleDateString('en-CA', {timeZone: 'Asia/Seoul'});
+        const kstToday = new Date().toLocaleDateString("en-CA", {
+          timeZone: "Asia/Seoul",
+        });
+        const todayTimestamp = new Date(kstToday).getTime();
 
         const response = await scheduleApi.getScheduleList(projectId);
 
-        const filteredEvents = response.data.list.filter(
-            (e) => e.startDate === kstToday
-        );
+        const filteredEvents = response.data.list.filter((e) => {
+          const eventStartDateTimestamp = new Date(e.startDate).getTime();
+          const eventEndDateTimestamp = new Date(e.endDate).getTime();
+
+          // startDate가 오늘이거나, 오늘이 startDate와 endDate 사이에 있거나, endDate가 오늘인 경우를 모두 고려
+          return (
+            todayTimestamp >= eventStartDateTimestamp &&
+            todayTimestamp <= eventEndDateTimestamp
+          );
+        });
+
         setTodayEvents(filteredEvents);
       } catch (error) {
         console.error("오늘의 일정을 가져오는 중 오류 발생", error);
@@ -31,7 +42,6 @@ function Today({ projectId }) {
     };
 
     fetchTodayEvents();
-
   }, [projectId]);
 
   return (
