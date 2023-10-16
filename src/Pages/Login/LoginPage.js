@@ -107,7 +107,7 @@ const Margin16px = styled.div`
 `;
 
 const LoginPageButton = styled.button`
-  background-color: #000AFF;
+  background-color: #EB3225;
   color: #FFFFFF;
   width: 100%;
   padding: 8px 20px;
@@ -133,7 +133,7 @@ const StyledButtonLink = styled(Link)`
 const StyledLink = styled(Link)`
   text-decoration: none; /* 밑줄 제거 */
   cursor: pointer; /* 포인터 커서 표시 */
-  color: #000AFF;
+  color: #EB3225;
 `;
 
 const WhiteBoxContainer = styled.div`
@@ -225,10 +225,12 @@ function LoginPage() {
                     <AlignLeft><TextMd>Password</TextMd></AlignLeft>
                     <InputSize name="pwd"
                                value={formData.pwd}
-                               onChange={handleChange}/>
+                               onChange={handleChange}
+                               type="password"
+                    />
                       <HorizontalBox><TextLg>Forget Password?</TextLg><StyledLink><TextLg>Here</TextLg></StyledLink></HorizontalBox>
                     <LoginPageButton onClick={() => handleLogin()}>LOGIN</LoginPageButton>
-                      <HorizontalBox><TextLg>Don't you have an account?</TextLg><StyledLink to="/SignInPage"><TextLg>Sign In</TextLg></StyledLink></HorizontalBox>
+                      <HorizontalBox><TextLg>Don't you have an account?</TextLg><StyledLink to="/SignInPage"><TextLg>Sign Up</TextLg></StyledLink></HorizontalBox>
                 </LoginForm>
                 <LoginImageBox>
                     <LoginImage src={LoginIMG}/>

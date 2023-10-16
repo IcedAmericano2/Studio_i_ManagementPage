@@ -23,11 +23,12 @@ const SignInBox = styled.div`
   align-items: center;
   background-color: #ffffff;
   margin: 10px;
-  //padding: 160px 320px;
+  width: 70%;
 
   @media ${media.mobile} {
     padding: 20px;
     display: inherit;
+    width: auto;
   }
 `;
 
@@ -79,7 +80,6 @@ const InputSizeWithBtn = styled.input`
   border: none;
   border-bottom: 1px solid #000000;
   width: 192px;
-  height: 32px;
   margin: 8px 4px 8px 0px;
 
   &:focus{
@@ -88,8 +88,7 @@ const InputSizeWithBtn = styled.input`
 `;
 
 const SignInPageButton = styled.button`
-  font-family: Georgia;
-  background-color: #000AFF;
+  background-color: #EB3225;
   color: #FFFFFF;
   width: 100%;
   padding: 8px 20px;
@@ -106,8 +105,7 @@ const SignInPageButton = styled.button`
 `;
 
 const BtnWithInput = styled.button`
-  font-family: Georgia;
-  background-color: #000AFF;
+  background-color: #EB3225;
   color: #fff;
   width: 90px;
   padding: 8px 20px;
@@ -151,14 +149,41 @@ function SignInPage(){
         verificationCode: "",
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+    const formatPhoneNumber = (value) => {
+        const numericValue = value.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+        const formattedValue = numericValue.slice(0, 11);
+
+        const parts = [];
+        if (formattedValue.length > 0) {
+            parts.push(formattedValue.slice(0, 3));
+        }
+        if (formattedValue.length > 3) {
+            parts.push(formattedValue.slice(3, 7));
+        }
+        if (formattedValue.length > 7) {
+            parts.push(formattedValue.slice(7, 11));
+        }
+
+        return parts.join('-');
     };
 
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        // phoneNumber 필드만 형식을 맞추고 나머지 필드는 그대로 유지
+        if (name === 'phoneNumber') {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: formatPhoneNumber(value),
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
+    };
     const handleSubmit = () => {
         // Send a POST request to your endpoint with formData.
         axios.post('/user-service/register', formData)
@@ -216,20 +241,25 @@ function SignInPage(){
         }
     }
 
+    //-----------------------------phoneNum--------------------------
+
     return(
         <SignInContainer>
-            <WhiteBoxContainer class="WhiteBoxContainer">
-                <TitleCenterBox class="TitleCenterBox">
+            <WhiteBoxContainer className="WhiteBoxContainer">
+                <TitleCenterBox className="TitleCenterBox">
                     <Margin16px><TitleLg>Sign In</TitleLg></Margin16px>
                 </TitleCenterBox>
             <SignInBox className="SignInBox">
                 <SignInForm className="SignInForm">
                     <SubInputForm className="SubInputFormWithButton">
                         <TextMd>Email</TextMd>
-                        <InputSizeWithBtn   name="email"
-                                            value={formData.email}
-                                            onChange={handleChange} />
-                        <BtnWithInput onClick={handleSendCode}>Send</BtnWithInput>
+                        <HorizontalBox>
+                            <InputSizeWithBtn   name="email"
+                                                value={formData.email}
+                                                onChange={handleChange} />
+                            <BtnWithInput onClick={handleSendCode}>Send</BtnWithInput>
+                        </HorizontalBox>
+
                     </SubInputForm>
                     {isCodeSent && (
                     <SubInputForm>
@@ -249,23 +279,29 @@ function SignInPage(){
                         <TextMd>Password</TextMd>
                         <InputSize   name="pwd"
                                      value={formData.pwd}
-                                     onChange={handleChange} />
+                                     onChange={handleChange}
+                                     type="password"
+                        />
                     </SubInputForm>
                     <SubInputForm className="SubInputForm">
                         <TextMd>Confirm Password</TextMd>
-                        <InputSize />
+                        <InputSize type="password" />
                     </SubInputForm>
                     <SubInputForm className="SubInputForm">
                         <TextMd>Name</TextMd>
                         <InputSize   name="name"
                                      value={formData.name}
-                                     onChange={handleChange}/>
+                                     onChange={handleChange}
+                        />
                     </SubInputForm>
                     <SubInputForm className="SubInputForm">
                         <TextMd>Phone</TextMd>
                         <InputSize   name="phoneNumber"
                                      value={formData.phoneNumber}
-                                     onChange={handleChange} />
+                                     onChange={handleChange}
+                                     type="tel"
+                                     placeholder="010-1234-5801"
+                        />
                     </SubInputForm>
                 <SignInPageButton onClick={() => handleSubmit()}>Sign In</SignInPageButton>
                 </SignInForm>
