@@ -300,7 +300,7 @@ function SignInPage(){
                                      value={formData.phoneNumber}
                                      onChange={handleChange}
                                      type="tel"
-                                     placeholder="010-1234-5801"
+                                     placeholder="010-1234-5678"
                         />
                     </SubInputForm>
                 <SignInPageButton onClick={() => handleSubmit()}>Sign In</SignInPageButton>
