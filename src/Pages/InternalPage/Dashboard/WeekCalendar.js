@@ -141,18 +141,18 @@ function WeekCalendar({ projectId }) {
 
   const findStartOfContinuousEvents = (date) => {
     const currentDateIndex = events.findIndex(
-      (event) => new Date(event.date).toDateString() === date.toDateString()
+        (event) => new Date(event.date).toDateString() === date.toDateString()
     );
 
     if (currentDateIndex === -1) return null;
 
     let startIndex = currentDateIndex;
     while (
-      startIndex > 0 &&
-      new Date(events[startIndex].date) -
+        startIndex > 0 &&
+        new Date(events[startIndex].date) -
         new Date(events[startIndex - 1].date) ===
         86400000
-    ) {
+        ) {
       startIndex--;
     }
 
@@ -162,25 +162,25 @@ function WeekCalendar({ projectId }) {
   const currentWeekDates = getWeekDates(currentDate);
   const findEventsForDate = (date) => {
     const targetDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
     ).getTime();
 
     return events.filter((e) => {
       const eventStartDate = new Date(
-        new Date(e.startDate).getFullYear(),
-        new Date(e.startDate).getMonth(),
-        new Date(e.startDate).getDate()
+          new Date(e.startDate).getFullYear(),
+          new Date(e.startDate).getMonth(),
+          new Date(e.startDate).getDate()
       ).getTime();
       const eventEndDate = new Date(
-        new Date(e.endDate).getFullYear(),
-        new Date(e.endDate).getMonth(),
-        new Date(e.endDate).getDate(),
-        23,
-        59,
-        59,
-        999
+          new Date(e.endDate).getFullYear(),
+          new Date(e.endDate).getMonth(),
+          new Date(e.endDate).getDate(),
+          23,
+          59,
+          59,
+          999
       ).getTime(); // 23시 59분 59초 999밀리초로 설정
 
       return targetDate >= eventStartDate && targetDate <= eventEndDate;
@@ -216,7 +216,7 @@ function WeekCalendar({ projectId }) {
 
         // 이벤트 목록 내의 특정 이벤트를 직접 업데이트
         setEvents((prevEvents) =>
-          prevEvents.map((e) => (e.scheduleId === scheduleId ? updatedData : e))
+            prevEvents.map((e) => (e.scheduleId === scheduleId ? updatedData : e))
         );
         setShowModal(false);
         alert("성공적으로 수정되었습니다."); // alert로 수정 성공 메시지 표시
@@ -230,83 +230,78 @@ function WeekCalendar({ projectId }) {
   const days = ["일", "월", "화", "수", "목", "금", "토"];
 
   return (
-    <div className="App">
-      <List>
-        <Title>Schedule</Title>
-        <ManageButton
-          type="button"
-          onClick={() =>
-            navigate("/manage", { state: { projectId: projectId } })
-          }
-        >
-          +
-        </ManageButton>
-      </List>
-      {message && <div>{message}</div>}
-      <Calendar>
-        {days.map((day, index) => (
-          <DayHeader key={day} isWeekend={index === 0 || index === 6}>
-            {day}
-          </DayHeader>
-        ))}
-        {currentWeekDates.map((date) => {
-          const eventsForDate = findEventsForDate(date);
-          return (
-            <Day
-              key={date}
-              onClick={() => {
-                if (eventsForDate.length) {
-                  setEditingEvent(eventsForDate);
-                  setShowModal(true);
-                }
-              }}
-            >
-              <div>{date.getDate()}</div>
-              {eventsForDate.slice(0, 2).map((event, index) => (
-                <ScheduleItem
-                  key={index}
-                  style={{ backgroundColor: getDayColor(date.getDay()) }}
-                >
-                  {event.content.length > 4
-                    ? `${event.content.slice(0, 4)}..`
-                    : event.content}
-                </ScheduleItem>
-              ))}
-              {eventsForDate.length > 2 && <div>... 더 보기</div>}
-            </Day>
-          );
-        })}
-
-        {showModal && (
-          <Modal>
-            {editingEvent &&
-              editingEvent.map((event, index) => (
-                <div key={index}>
-                  <textarea
-                    value={event.content}
-                    onChange={(e) => {
-                      const updatedEvents = [...editingEvent];
-                      updatedEvents[index].content = e.target.value;
-                      setEditingEvent(updatedEvents);
+      <div className="App">
+        <List>
+          <Title>Schedule</Title>
+          <ManageButton
+              type="button"
+              onClick={() =>
+                  navigate("/manage", { state: { projectId: projectId } })
+              }
+          >
+            +
+          </ManageButton>
+        </List>
+        {message && <div>{message}</div>}
+        <Calendar>
+          {days.map((day) => (
+              <DayHeader key={day}>{day}</DayHeader>
+          ))}
+          {currentWeekDates.map((date) => {
+            const eventsForDate = findEventsForDate(date);
+            return (
+                <Day
+                    key={date}
+                    onClick={() => {
+                      if (eventsForDate.length) {
+                        setEditingEvent(eventsForDate);
+                        setShowModal(true);
+                      }
                     }}
+                >
+                  <div>{date.getDate()}</div>
+                  {eventsForDate.map((event, index) => (
+                      <ScheduleItem
+                          key={index}
+                          style={{ backgroundColor: getDayColor(date.getDay()) }}
+                      >
+                        {event.content}
+                      </ScheduleItem>
+                  ))}
+                </Day>
+            );
+          })}
+
+          {showModal && (
+              <Modal>
+                {editingEvent &&
+                    editingEvent.map((event, index) => (
+                        <div key={index}>
+                  <textarea
+                      value={event.content}
+                      onChange={(e) => {
+                        const updatedEvents = [...editingEvent];
+                        updatedEvents[index].content = e.target.value;
+                        setEditingEvent(updatedEvents);
+                      }}
                   />
-                  <button
-                    onClick={() =>
-                      handleEditEventSave(event.scheduleId, event.content)
-                    }
-                  >
-                    수정 저장
-                  </button>
-                  <button onClick={() => handleDeleteEvent(event.scheduleId)}>
-                    삭제
-                  </button>
-                </div>
-              ))}
-            <button onClick={() => setShowModal(false)}>닫기</button>
-          </Modal>
-        )}
-      </Calendar>
-    </div>
+                          <button
+                              onClick={() =>
+                                  handleEditEventSave(event.scheduleId, event.content)
+                              }
+                          >
+                            수정 저장
+                          </button>
+                          <button onClick={() => handleDeleteEvent(event.scheduleId)}>
+                            삭제
+                          </button>
+                        </div>
+                    ))}
+                <button onClick={() => setShowModal(false)}>닫기</button>
+              </Modal>
+          )}
+        </Calendar>
+      </div>
   );
 }
 
