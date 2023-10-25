@@ -17,7 +17,7 @@ const ProjectContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 20px;
+  padding: 30px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -41,14 +41,14 @@ const StyledTextArea = styled.textarea`
 `;
 
 const StyledButton = styled.button`
-  padding: 10px 20px;
+  padding: 10px 15px;
   border: none;
   border-radius: 4px;
   background-color: #007bff;
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-right: -20px;
+  margin-left: 20px;
 
   &:hover {
     background-color: #0056b3;
@@ -67,17 +67,17 @@ function Project() {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
-  const [teamLeader, setTeamLeader] = useState("");
-  const [teamMembers, setTeamMembers] = useState("");
+  const [teamMemberCount, setTeamMemberCount] = useState(0);
+  const [teamMemberEmails, setTeamMemberEmails] = useState([]);
 
   const navigate = useNavigate();
 
   const handleSave = async () => {
-      const newProject = {
-        name: projectName,
-        description: projectDetails,
-        startDate: `${startDate}`,
-        finishDate: `${endDate}`
+    const newProject = {
+      name: projectName,
+      description: projectDetails,
+      startDate: `${startDate}`,
+      finishDate: `${endDate}`,
       // leader: teamLeader,
       // members: teamMembers,
     };
@@ -88,6 +88,22 @@ function Project() {
     } catch (error) {
       console.error("Error: ", error);
       alert("프로젝트 생성에 실패했습니다."); // 에러 알림 메시지
+    }
+  };
+  const handleTeamMemberChange = (index, email) => {
+    const updatedEmails = [...teamMemberEmails];
+    updatedEmails[index] = email;
+    setTeamMemberEmails(updatedEmails);
+  };
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailPattern.test(email);
+  };
+  const handleEmailRegistration = (email) => {
+    if (validateEmail(email)) {
+      alert("잘 등록되었습니다.");
+    } else {
+      alert("유효하지 않은 이메일입니다.");
     }
   };
 
@@ -112,36 +128,43 @@ function Project() {
           />
         </div>
         <div>
+          <label>팀원 수&nbsp;: </label>
+          <select
+            value={teamMemberCount}
+            onChange={(e) => {
+              setTeamMemberCount(Number(e.target.value));
+              setTeamMemberEmails(new Array(Number(e.target.value)).fill(""));
+            }}
+          >
+            {[...Array(10)].map((_, index) => (
+              <option key={index} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+        {Array.from({ length: teamMemberCount }).map((_, index) => (
+          <div key={index} style={{ display: "flex", alignItems: "center" }}>
+            <label>팀원 {index + 1} : &nbsp;</label>
+            <StyledInput
+              type="email"
+              value={teamMemberEmails[index] || ""}
+              placeholder="팀원 이메일"
+              onChange={(e) => handleTeamMemberChange(index, e.target.value)}
+            />
+            <StyledButton
+              onClick={() => handleEmailRegistration(teamMemberEmails[index])}
+            >
+              등록
+            </StyledButton>
+          </div>
+        ))}
+        <div>
           <label>프로젝트명&nbsp;: </label>
           <StyledInput
             type="text"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>팀장&nbsp;: </label>
-          <select
-            value={teamLeader}
-            onChange={(e) => setTeamLeader(e.target.value)}
-          >
-            <option value="a">박용진</option>
-            <option value="b">문다솜</option>
-            <option value="c">류진호</option>
-            <option value="d">이승연</option>
-            <option value="e">이도언</option>
-            <option value="f">오바람</option>
-            <option value="g">박찬혁</option>
-            <option value="h">문준용</option>
-          </select>
-        </div>
-        <div>
-          <label>팀원&nbsp;: </label>
-          <StyledInput
-            type="text"
-            value={teamMembers}
-            placeholder="팀원 입력 (comma separated)"
-            onChange={(e) => setTeamMembers(e.target.value)}
           />
         </div>
         <div>
