@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {useNavigate} from "react-router-dom";
+import boardApi from "../../api/boardApi";
 import axios from "axios";
 
 // WritingMainPage.js
@@ -82,6 +83,7 @@ const WritingPage = ({ projectId, category }) => {
         }, 100);
     };
 
+
     const addPost = async () => {
         // HTML 태그 제거하기 위한 정규식
         const strippedHtml = editorHtml.replace(/<[^>]+>/g, '');
@@ -94,6 +96,7 @@ const WritingPage = ({ projectId, category }) => {
 
         const postData = {
             projectId: projectId,
+
             title: title,
             content: editorHtml,
             category: category // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
@@ -101,9 +104,8 @@ const WritingPage = ({ projectId, category }) => {
 
         try {
             // 백엔드 API 호출하여 게시글 작성
-            const response = await axios.post('/api/posts', postData);
-            console.log('API Response:', response);
-            console.log('Sending data:', postData);
+            //
+            const response = await boardApi.postBoard(postData);
             if (response.data.success) {
                 alert('게시글이 성공적으로 작성되었습니다.');
                 setTimeout(function () {
@@ -113,7 +115,18 @@ const WritingPage = ({ projectId, category }) => {
                 setTitle('');
                 setEditorHtml('');
                 // 네비게이션 이동 또는 페이지 새로고침 로직이 필요한 경우 추가
-            } else {
+            } else if (response.data.success === false) {
+                if(response.data.code === 7000){
+                    alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
+                    navigate("/LoginPage");
+                }else if(response.data.code === 7001){
+                    alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
+                    // 토큰 제거
+                    sessionStorage.removeItem("login-token");
+                    delete axios.defaults.headers.common['Authorization'];
+                    navigate("/LoginPage");
+                }
+            }else {
                 alert('게시글 작성 중 오류가 발생했습니다.');
             }
         } catch (error) {

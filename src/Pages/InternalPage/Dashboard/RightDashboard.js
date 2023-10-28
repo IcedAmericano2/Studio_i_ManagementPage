@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import boardApi from "../../../api/boardApi";
 import axios from "axios";
 
 const RightDashboardBox = styled.div`
@@ -86,18 +87,38 @@ const RightDashboard = ({ projectId }) => {
     // 데이터를 불러오는 함수
     const fetchPosts = async () => {
       try {
-        const planResponse = await axios.get(
-          `/api/project/${projectId}/posts/recent?category=PLANNING`
-        );
-        setPlanData(planResponse.data.list);
-        const productionResponse = await axios.get(
-          `/api/project/${projectId}/posts/recent?category=PRODUCTION`
-        );
-        setProductionDate(productionResponse.data.list);
-        const editResponse = await axios.get(
-          `/api/project/${projectId}/posts/recent?category=EDITING`
-        );
-        setEditData(editResponse.data.list);
+        const planResponse = await boardApi.getPlanningDashboard(projectId);
+        if (planResponse.data && planResponse.data.success) {
+          setPlanData(planResponse.data.list);
+          return;
+        }else if(planResponse.data.code === 7001){
+          sessionStorage.removeItem("login-token");
+          delete axios.defaults.headers.common['Authorization'];
+          return;
+        }
+
+
+        const productionResponse = await boardApi.getProductionDashboard(projectId);
+        if (productionResponse.data && productionResponse.data.success) {
+          setProductionDate(productionResponse.data.list);
+          return;
+        }else if(productionResponse.data.code === 7001){
+          sessionStorage.removeItem("login-token");
+          delete axios.defaults.headers.common['Authorization'];
+          return;
+        }
+
+
+        const editResponse = await boardApi.getEditingDashboard(projectId);
+        if (editResponse.data && editResponse.data.success) {
+          setEditData(editResponse.data.list);
+          return;
+        }else if(editResponse.data.code === 7001){
+          sessionStorage.removeItem("login-token");
+          delete axios.defaults.headers.common['Authorization'];
+          return;
+        }
+
       } catch (error) {
         console.error("Error fetching recent posts:", error);
       }
@@ -105,6 +126,15 @@ const RightDashboard = ({ projectId }) => {
 
     fetchPosts();
   }, []);
+  const handlePostClick = (id, type) => {
+    if(type === "plan") {
+      navigate(`/PlanMain/${projectId}/${id}`);
+    } else if(type === "production") {
+      navigate(`/MakingMain/${projectId}/${id}`);
+    } else if(type === "edit") {
+      navigate(`/EditMain/${projectId}/${id}`);
+    }
+  };
   return (
     <RightDashboardBox>
       <RightboardBody>
@@ -113,11 +143,17 @@ const RightDashboard = ({ projectId }) => {
           <GoButton onClick={goToPlanPage}>+</GoButton>
         </BoardTitleDiv>
         <BoardContentDiv>
-          {planData.map((plan) => (
-            <ContentDiv key={plan.id}>
-              <Text>{plan.title}</Text>
-            </ContentDiv>
-          ))}
+          {
+            planData.length === 0 ? (
+                <div>게시글내용이 없습니다</div>
+            ) : (
+                planData.map(plan => (
+                    <ContentDiv key={plan.id} onClick={() => handlePostClick(plan.id, "plan")}>
+                      <Text>{plan.title}</Text>
+                    </ContentDiv>
+                ))
+            )
+          }
         </BoardContentDiv>
       </RightboardBody>
       <RightboardBody>
@@ -126,11 +162,17 @@ const RightDashboard = ({ projectId }) => {
           <GoButton onClick={goToMakingPage}>+</GoButton>
         </BoardTitleDiv>
         <BoardContentDiv>
-          {productionDate.map((production) => (
-            <ContentDiv key={production.id}>
-              <Text>{production.title}</Text>
-            </ContentDiv>
-          ))}
+          {
+            productionDate.length === 0 ? (
+                <div>게시글내용이 없습니다</div>
+            ) : (
+                productionDate.map(production => (
+                    <ContentDiv key={production.id} onClick={() => handlePostClick(production.id, "production")}>
+                      <Text>{production.title}</Text>
+                    </ContentDiv>
+                ))
+            )
+          }
         </BoardContentDiv>
       </RightboardBody>
       <RightboardBody>
@@ -139,11 +181,17 @@ const RightDashboard = ({ projectId }) => {
           <GoButton onClick={goToEditPage}>+</GoButton>
         </BoardTitleDiv>
         <BoardContentDiv>
-          {editData.map((edit) => (
-            <ContentDiv key={edit.id}>
-              <Text>{edit.title}</Text>
-            </ContentDiv>
-          ))}
+          {
+            editData.length === 0 ? (
+                <div>게시글내용이 없습니다</div>
+            ) : (
+                editData.map(edit => (
+                    <ContentDiv key={edit.id} onClick={() => handlePostClick(edit.id, "edit")}>
+                      <Text>{edit.title}</Text>
+                    </ContentDiv>
+                ))
+            )
+          }
         </BoardContentDiv>
       </RightboardBody>
     </RightDashboardBox>

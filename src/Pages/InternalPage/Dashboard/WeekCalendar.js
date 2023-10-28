@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import scheduleApi from "../../../api/scheduleApi";
+import axios from "axios";
 
 const List = styled.div`
   margin-top: -20px;
@@ -87,12 +88,22 @@ function WeekCalendar({ projectId }) {
 
   const [showModal, setShowModal] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await scheduleApi.getScheduleList(projectId);
+        if (response.data && response.data.success === false) {
+          if(response.data.code === 6001){
+            setMessage(response.data.message);// "일정 목록이 존재하지 않습니다."
+          }else if(response.data.code === 7001){
+            sessionStorage.removeItem("login-token");
+            delete axios.defaults.headers.common['Authorization'];
+            return;
+          }
+          return;
+        }
         setEvents(response.data.list);
       } catch (error) {
         console.error("Error fetching the schedules", error);
@@ -242,7 +253,6 @@ function WeekCalendar({ projectId }) {
             +
           </ManageButton>
         </List>
-        {message && <div>{message}</div>}
         <Calendar>
           {days.map((day) => (
               <DayHeader key={day}>{day}</DayHeader>

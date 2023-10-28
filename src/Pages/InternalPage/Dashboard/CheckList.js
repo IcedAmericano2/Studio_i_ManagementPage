@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import checkTodoApi from "../../../api/checkTodoApi";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 function CheckList({ projectId }) {
   const [items, setItems] = useState([]);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await checkTodoApi.getProjectTodo(projectId);
+        if (response.data && response.data.success === false) {
+          if(response.data.code === 5005){
+            setMessage(response.data.message);// "내용이 존재하지 않습니다."
+          }else if(response.data.code === 7000){
+            alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
+            navigate("/LoginPage");
+          }else if(response.data.code === 7001){
+            alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
+            // 토큰 제거
+            sessionStorage.removeItem("login-token");
+            delete axios.defaults.headers.common['Authorization'];
+            navigate("/LoginPage");
+          }
+          return;
+        }
         setItems(response.data.list);
       } catch (error) {
         console.error("Error fetching data", error);
@@ -18,20 +37,15 @@ function CheckList({ projectId }) {
   }, []);
 
   const handleCheck = async (id) => {
-    const updatedItems = items.map((item) =>
-      item.todoIndex === id ? { ...item, checked: !item.checked } : item
-    );
-    setItems(updatedItems);
-
-    const itemToUpdate = updatedItems.find((item) => item.todoIndex === id);
+    // const updatedItems = items.map((item) =>
+    //   item.todoIndex === id ? { ...item, checked: !item.checked } : item
+    // );
+    // setItems(updatedItems);
+    //
+    // const itemToUpdate = updatedItems.find((item) => item.todoIndex === id);
 
     try {
       await checkTodoApi.completeCheckTodo(id);
-      // await checkTodoApi.updateCheckTodo(id, {
-      //   todoContent: itemToUpdate.todoContent,
-      //   todoEmergency: itemToUpdate.todoEmergency,
-      //   checked: itemToUpdate.checked,
-      // });
     } catch (error) {
       console.error("Error updating checak status", error);
     }

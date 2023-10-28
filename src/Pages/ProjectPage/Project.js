@@ -82,7 +82,14 @@ function Project() {
       // members: teamMembers,
     };
     try {
-      await projectApi.createProject(newProject);
+      const response = await projectApi.createProject(newProject);
+      // 서버에서 실패 응답을 보냈는지 확인
+      if (response.data && response.data.success === false) {
+        if(response.data.code === 7000){
+          alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
+        }
+        return;
+      }
       alert("프로젝트를 생성하였습니다.");
       navigate("/");
     } catch (error) {

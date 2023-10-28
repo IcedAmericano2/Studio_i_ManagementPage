@@ -1,5 +1,8 @@
 import axios from "axios";
-
+const storedToken = sessionStorage.getItem('login-token');
+if (storedToken) {
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + storedToken;
+}
 // 체크리스트 crud api
 const checkTodoApi = {
   // 할일 선택 조회 (없애도됌)

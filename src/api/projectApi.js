@@ -1,6 +1,11 @@
 import axios from "axios";
 
+const storedToken = sessionStorage.getItem('login-token');
+if (storedToken) {
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + storedToken;
+}
 const projectApi = {
+
   // 프로젝트 완료 표시
   getProject: async (projectIndex) => {
     const response = await axios.get(`/api/projects/${projectIndex}`);

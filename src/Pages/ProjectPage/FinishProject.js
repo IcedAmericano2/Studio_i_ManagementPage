@@ -10,6 +10,7 @@ import {
   TextSm,
 } from "../../Components/common/Font";
 import projectApi from "../../api/projectApi";
+import axios from "axios";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -63,9 +64,20 @@ function FinishProject() {
     const fetchProjects = async () => {
       try {
         const response = await projectApi.getProjectList();
+        if (response.data && response.data.success === false) {
+          if(response.data.code === 7000){
+            //OngoingProject에서 해줌.
+          }else if(response.data.code === 7001){
+            sessionStorage.removeItem("login-token");
+            delete axios.defaults.headers.common['Authorization'];
+            return;
+          }
+          return;
+        }
         const checkedProjects = response.data.list.filter(
-          (item) => item.checked === true
+          (item) => item.isFinished === true
         );
+
         setProjects(checkedProjects);
       } catch (error) {
         console.error("Error fetching the projects:", error);
@@ -95,9 +107,9 @@ function FinishProject() {
         </thead>
         <tbody>
           {projects.map((project) => (
-            <tr key={project.projectIndex}>
+            <tr key={project.projectId}>
               {/*<td>{index + 1}</td>*/}
-              <td>{project.projectIndex}</td>
+              <td>{project.projectId}</td>
               <td>
                 {project.startDate}~{project.finishDate}
               </td>

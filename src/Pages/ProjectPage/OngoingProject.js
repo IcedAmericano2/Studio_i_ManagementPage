@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TitleSm, TextLg, TextMd } from "../../Components/common/Font";
 import projectApi from "../../api/projectApi";
+import axios from "axios";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -96,7 +97,19 @@ function OngoingProject() {
     const fetchProjects = async () => {
       try {
         const response = await projectApi.getProjectList();
-        const checkedProjects = response.data.list.filter(item => item.checked === false);
+        if (response.data && response.data.success === false) {
+          if(response.data.code === 7000){
+            alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
+            navigate("/LoginPage");
+          }else if(response.data.code === 7001){
+            alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
+            sessionStorage.removeItem("login-token");
+            delete axios.defaults.headers.common['Authorization'];
+            return;
+          }
+          return;
+        }
+        const checkedProjects = response.data.list.filter(item => item.isFinished === false);
         setProjects(checkedProjects);
       } catch (error) {
         console.error("Error fetching the projects:", error);
@@ -203,17 +216,17 @@ function OngoingProject() {
         </thead>
         <tbody>
           {projects.map((project) => (
-            <tr key={project.projectIndex} onClick={() => handleRowClick(project.projectIndex)}>
-              <td>{project.projectIndex}</td>
+            <tr key={project.projectId} onClick={() => handleRowClick(project.projectId)}>
+              <td>{project.projectId}</td>
               <td>{project.startDate}~{project.finishDate}</td>
               <td>{project.name}</td>
               <td>{project.description}</td>
               <td>
-                <DeleteButton onClick={(e) => handleDeleteClick(e, project.projectIndex)}>
+                <DeleteButton onClick={(e) => handleDeleteClick(e, project.projectId)}>
                   삭제
                 </DeleteButton>
                 <CompleteButton
-                  onClick={() => handleCompleteClick(project.projectIndex)}
+                  onClick={() => handleCompleteClick(project.projectId)}
                 >
                   완료
                 </CompleteButton>

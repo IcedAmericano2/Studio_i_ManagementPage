@@ -1,5 +1,8 @@
 import axios from "axios";
-
+const storedToken = sessionStorage.getItem('login-token');
+if (storedToken) {
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + storedToken;
+}
 //schedule에 관련된 crud 작업 수행
 const scheduleApi = {
   // 일정 가져오기(schedule ID를 통해 특정 일정 가져옴)

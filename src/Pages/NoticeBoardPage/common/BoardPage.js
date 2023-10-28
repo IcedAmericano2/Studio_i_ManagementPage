@@ -1,5 +1,5 @@
 // BoardPage.js
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import Table from "./Table";
@@ -14,6 +14,7 @@ import {
     TextMd,
     TextSm,
 } from "../../../Components/common/Font";
+
 
 const MainBody = styled.div`
   //max-width : 1184px;
@@ -75,12 +76,18 @@ const WritingButton = styled.button`
 
 
 
-const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId, category }) => {
+const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId,postId, category }) => {
     const navigate = useNavigate();
     const [showTable, setShowTable] = useState(true);
     const [showWritingPage, setShowWritingPage] = useState(false);
     const [showViewWritingPage, setShowViewWritingPage] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState("");
+
+    useEffect(() => {
+        if (postId) {
+            handleRecentClick(postId);
+        }
+    }, [postId]);
 
     const goToHomePage = () => {
         navigate("/");
@@ -97,6 +104,12 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId, cat
     };
     const handleRowClick = (rowId) => {
         setSelectedRowId(rowId);
+        setShowTable(false);
+        setShowWritingPage(false);
+        setShowViewWritingPage(true);
+    };
+    const handleRecentClick = (postId) => {
+        setSelectedRowId(postId);
         setShowTable(false);
         setShowWritingPage(false);
         setShowViewWritingPage(true);
@@ -128,7 +141,7 @@ const BoardPage = ({ subTitle , tableData , writingButtonContent, projectId, cat
                             <WritingPage projectId={projectId} category={category}>
                             </WritingPage>
                         ) : showViewWritingPage ? (
-                            <ViewWritingPage selectedRowId = {selectedRowId} projectId={projectId}>
+                            <ViewWritingPage selectedRowId = {selectedRowId} projectId={projectId} postId={postId}>
                             </ViewWritingPage>
                         ) : null }
                     </DashboardBox>

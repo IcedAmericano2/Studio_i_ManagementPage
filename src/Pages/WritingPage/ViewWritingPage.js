@@ -8,7 +8,7 @@ import CommentForm from "./CommentForm";
 import CommentList from "./CommentList"; // Quill Editor의 스타일을 불러옵니다.
 import axios from "axios";
 import "react-quill/dist/quill.snow.css";
-
+import boardApi from "../../api/boardApi";
 // WritingMainPage.js
 
 /////////제목,내용/////////
@@ -136,10 +136,9 @@ const CommentContainer = styled.div`
   background-color: #EEEEEE;
   min-height: 13rem;
 `;
-const ViewWritingPage = ({selectedRowId, projectId}) => {
+const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
     const [editorHtml, setEditorHtml] = useState(""); // Quill Editor의 HTML 내용을 저장하는 상태
     const [title, setTitle] = useState(""); // 제목을 저장하는 상태
-    const [savedPost, setSavedPost] = useState([]); // 저장된 게시글(post) 배열
     const [showViewWriting, setShowViewWriting] = useState(true);
     const [showPutWriting, setShowPutWriting] = useState(false);
     const [selectedPost, setSelectedPost] = useState({
@@ -152,11 +151,15 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
         category: ""
     });
     const [comments, setComments] = useState([]);
+    const navigate = useNavigate();
 
     const goToPreviousPage = () => {
         setTimeout(function () {
             window.location.reload();
         }, 100);
+    };
+    const goToHome = () => {
+        navigate(`/manage/${projectId}`);
     };
 
     // // 글쓰기 수정 함수
@@ -179,14 +182,18 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
         };
 
         // axios를 사용하여 PUT 요청 보내기
-        axios.put('/api/posts', updatedPostData)
+        boardApi.putBoard(updatedPostData)
             .then(response => {
                 console.log(response.data);
                 alert('게시글이 성공적으로 업데이트 되었습니다.');
                 setTitle(''); // 필드 초기화
                 setEditorHtml('');
 
-                goToPreviousPage();
+                if (postId) {
+                    goToHome();
+                } else {
+                    goToPreviousPage();
+                }
             })
             .catch(error => {
                 console.error('Error updating post:', error);
@@ -196,16 +203,20 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
 
     };
     const deletePost = () => {
-        axios.delete('/api/posts', {
+        boardApi.deleteBoard({
             data: {
                 projectId: projectId,
                 postId: selectedRowId
             }
         })
-            .then(response => {
+            .then(() => {
                 alert('게시글이 성공적으로 삭제되었습니다.');
                 // 게시글 삭제 후 페이지를 새로고침하거나 다른 페이지로 리다이렉트
-                goToPreviousPage();
+                if (postId) {
+                    goToHome();
+                } else {
+                    goToPreviousPage();
+                }
             })
             .catch(error => {
                 console.error('Error deleting post:', error);
@@ -230,13 +241,12 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
     };
 
     useEffect(() => {
-        const intPostId = Number(selectedRowId);
         // 병렬로 API 호출을 수행하는 함수
         const fetchData = async () => {
             try {
                 const [postResponse, commentsResponse] = await Promise.all([
-                    axios.get(`/api/posts?projectId=${projectId}&postId=${selectedRowId}`),
-                    axios.get(`/api/posts/${selectedRowId}/comments`)
+                    boardApi.getBoard({ projectId: projectId, postId: selectedRowId }),
+                    boardApi.getCommentList({ postId: selectedRowId })
                 ]);
                 // postResponse 처리
                 const postInfo = postResponse.data.data;
@@ -244,8 +254,7 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                     commentId: postInfo.id,
                     title: postInfo.title,
                     content: postInfo.content,
-                    // author: postInfo.userName,
-                    author: "아무개",
+                    author: postInfo.userName,
                     date: postInfo.startDate,
                     commentCount: postInfo.commentSum,
                     category: postInfo.category
@@ -284,7 +293,11 @@ const ViewWritingPage = ({selectedRowId, projectId}) => {
                     <PostsButtonContainer>
                         <PostsButton onClick={changePutView}>수정</PostsButton>
                         <PostsButton onClick={deletePost}>삭제</PostsButton>
-                        <PostsButton onClick={goToPreviousPage}>취소</PostsButton>
+                        {postId ?
+                            <PostsButton onClick={goToHome}>취소</PostsButton>
+                            :
+                            <PostsButton onClick={goToPreviousPage}>취소</PostsButton>
+                        }
                     </PostsButtonContainer>
 
                 </>

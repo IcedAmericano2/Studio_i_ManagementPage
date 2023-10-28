@@ -17,9 +17,9 @@ function App() {
       <Routes>
         <Route path="/" element={<ProjectMain />} />
         <Route path="/Manage/:projectId" element={<InternalMainpage />} />
-        <Route path="/EditMain/:projectId" element={<EditNoticeMainpage />} />
-        <Route path="/MakingMain/:projectId" element={<MakingNoticeMainpage />} />
-        <Route path="/PlanMain/:projectId" element={<PlanNoticeMainpage />} />
+        <Route path="/EditMain/:projectId/:postId?" element={<EditNoticeMainpage />} />
+        <Route path="/MakingMain/:projectId/:postId?" element={<MakingNoticeMainpage />} />
+        <Route path="/PlanMain/:projectId/:postId?" element={<PlanNoticeMainpage />} />
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/SignInPage" element={<SignInPage />} />
         <Route path="/manage" element={<Manage />} />
