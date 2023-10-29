@@ -51,11 +51,6 @@ const boardApi = {
     const response = await axios.get(`/api/project/${projectId}/posts/all?category=${category}`);
     return response;
   },
-  // 댓글 리스트 가져오기
-  getCommentList: async (data) => {
-    const response = await axios.get(`/api/posts/${data.postId}/comments`);
-    return response;
-  },
 };
 
 export default boardApi;

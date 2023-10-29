@@ -1,14 +1,13 @@
 import React, {useState, useEffect} from "react";
-import Body from "../../Components/common/Body";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {useNavigate} from "react-router-dom";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList"; // Quill Editor의 스타일을 불러옵니다.
-import axios from "axios";
 import "react-quill/dist/quill.snow.css";
 import boardApi from "../../api/boardApi";
+import commentApi from "../../api/commentApi";
 // WritingMainPage.js
 
 /////////제목,내용/////////
@@ -246,7 +245,7 @@ const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
             try {
                 const [postResponse, commentsResponse] = await Promise.all([
                     boardApi.getBoard({ projectId: projectId, postId: selectedRowId }),
-                    boardApi.getCommentList({ postId: selectedRowId })
+                    commentApi.getCommentList({ postId: selectedRowId })
                 ]);
                 // postResponse 처리
                 const postInfo = postResponse.data.data;
