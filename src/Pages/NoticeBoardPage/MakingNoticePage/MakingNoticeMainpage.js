@@ -7,16 +7,16 @@ import boardApi from "../../../api/boardApi";
 import axios from "axios";
 
 const MakingNoticeMainpage = () => {
-    const { projectId } = useParams();
+    const {projectId, postId} = useParams();
     const navigate = useNavigate();
     const getPostsByCategory = async (category) => {
         try {
             const response = await boardApi.getBoardList(projectId, category);
             if (response.data && response.data.success === false) {
-                if(response.data.code === 7000){
+                if (response.data.code === 7000) {
                     alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
                     navigate("/LoginPage");
-                }else if(response.data.code === 7001){
+                } else if (response.data.code === 7001) {
                     alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
                     // 토큰 제거
                     sessionStorage.removeItem("login-token");
@@ -53,7 +53,12 @@ const MakingNoticeMainpage = () => {
 
     return (
         <Body>
-            <BoardPage subTitle={subTitle} tableData={tableData} writingButtonContent={writingButtonContent} projectId={projectId} category={category}/>
+            <BoardPage subTitle={subTitle}
+                       tableData={tableData}
+                       writingButtonContent={writingButtonContent}
+                       projectId={projectId}
+                       postId={postId}
+                       category={category}/>
         </Body>
     );
 };

@@ -17,6 +17,7 @@ import Button from "./Button";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const HeaderWrapper = styled.div`
   position: fixed;
@@ -94,21 +95,21 @@ const NEWheader = () => {
   const navigateToHome = () => {
     navigate("/"); // 메인 페이지로 이동합니다.
   };
-
   useEffect(() => {
-    // 로컬 스토리지에서 토큰을 가져옵니다.
-    const token = localStorage.getItem("login-token");
+    // 세션 스토리지에서 토큰을 가져옵니다.
+    const token = sessionStorage.getItem("login-token");
 
     if (token) {
       // 토큰이 존재하면 로그인 상태로 설정
       setIsLoggedIn(true);
-      const accessToken = localStorage.getItem("login-token");
-      setUserName(jwt_decode(accessToken).username);
+      const decodedToken = jwt_decode(token);
+      setUserName(decodedToken.username);
     }
   }, []);
 
   function handleLogout() {
-    localStorage.removeItem("login-token");
+    sessionStorage.removeItem("login-token");
+    delete axios.defaults.headers.common['Authorization'];
     setIsLoggedIn(false);
     setUserName("");
     alert("로그아웃 완료");

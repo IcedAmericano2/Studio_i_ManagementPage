@@ -90,7 +90,6 @@ const RightDashboard = ({ projectId }) => {
         const planResponse = await boardApi.getPlanningDashboard(projectId);
         if (planResponse.data && planResponse.data.success) {
           setPlanData(planResponse.data.list);
-          return;
         }else if(planResponse.data.code === 7001){
           sessionStorage.removeItem("login-token");
           delete axios.defaults.headers.common['Authorization'];
@@ -101,7 +100,6 @@ const RightDashboard = ({ projectId }) => {
         const productionResponse = await boardApi.getProductionDashboard(projectId);
         if (productionResponse.data && productionResponse.data.success) {
           setProductionDate(productionResponse.data.list);
-          return;
         }else if(productionResponse.data.code === 7001){
           sessionStorage.removeItem("login-token");
           delete axios.defaults.headers.common['Authorization'];
@@ -112,7 +110,6 @@ const RightDashboard = ({ projectId }) => {
         const editResponse = await boardApi.getEditingDashboard(projectId);
         if (editResponse.data && editResponse.data.success) {
           setEditData(editResponse.data.list);
-          return;
         }else if(editResponse.data.code === 7001){
           sessionStorage.removeItem("login-token");
           delete axios.defaults.headers.common['Authorization'];

@@ -59,7 +59,7 @@ const CommentTextarea = styled.textarea`
   }
 `;
 
-const CommentList = ({ commentCount, comments, setComments, onDeleteComment}) => {
+const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) => {
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
     const deleteComment = (commentId) => {
@@ -101,10 +101,10 @@ const CommentList = ({ commentCount, comments, setComments, onDeleteComment}) =>
     };
     return (
         <>
-            <CommentTitle>댓글 {commentCount} 개</CommentTitle>
+            <CommentTitle>댓글 {selectedPost.commentCount} 개</CommentTitle>
             {comments.map((comment, index) => (
                 <FormContainer key={index}>
-                    <Author>작성자</Author>
+                    <Author>{selectedPost.author}</Author>
                     {editingCommentId === comment.id ? (
                         <CommentTextarea
                             value={editedContent}

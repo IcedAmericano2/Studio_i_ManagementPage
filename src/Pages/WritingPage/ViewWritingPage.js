@@ -233,7 +233,7 @@ const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
     };
     // 게시글 내용을 담을 객체 나중에 DB연결하면 내용 set해주기
     const handleAddComment = (newComment) => {
-        setComments((prevComments) => [newComment, ...prevComments]);
+        setComments((prevComments) => [newComment, ...prevComments]);//우선 상태 보여주기
         setSelectedPost(prevPost => ({...prevPost, commentCount: prevPost.commentCount + 1}));
     };
     const handleDeleteComment = () => {
@@ -251,7 +251,7 @@ const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
                 // postResponse 처리
                 const postInfo = postResponse.data.data;
                 setSelectedPost({
-                    commentId: postInfo.id,
+                    postId: postInfo.id,
                     title: postInfo.title,
                     content: postInfo.content,
                     author: postInfo.userName,
@@ -287,7 +287,7 @@ const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
                         <CommentContainer>
                             <CommentForm postId={selectedRowId} onAddComment={handleAddComment} />
-                            <CommentList comments={comments} commentCount={selectedPost.commentCount} setComments={setComments}  onDeleteComment={handleDeleteComment} />
+                            <CommentList comments={comments} selectedPost= {selectedPost} setComments={setComments}  onDeleteComment={handleDeleteComment} />
                         </CommentContainer>
                     </FormContainer>
                     <PostsButtonContainer>
