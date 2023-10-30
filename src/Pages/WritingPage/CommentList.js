@@ -104,7 +104,7 @@ const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) =>
             <CommentTitle>댓글 {selectedPost.commentCount} 개</CommentTitle>
             {comments.map((comment, index) => (
                 <FormContainer key={index}>
-                    <Author>{selectedPost.author}</Author>
+                    <Author>{comment.userName}</Author>
                     {editingCommentId === comment.id ? (
                         <CommentTextarea
                             value={editedContent}

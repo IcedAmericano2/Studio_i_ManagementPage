@@ -3,8 +3,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function(app){
     app.use(
         createProxyMiddleware('/api', {
-            target: 'http://13.125.181.139:8000',
-            // target: 'http://localhost:8000/',
+            // target: 'http://13.125.181.139:8000',
+            target: 'http://localhost:8000/',
             changeOrigin: true
         })
     )
@@ -13,8 +13,8 @@ module.exports = function(app){
 
     app.use(
         createProxyMiddleware( '/user-service',{
-            target: 'http://13.125.181.139:8000',
-            // target: 'http://localhost:8000/',
+            // target: 'http://13.125.181.139:8000',
+            target: 'http://localhost:8000/',
             changeOrigin: true
         })
     );

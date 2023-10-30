@@ -25,6 +25,9 @@ function CheckList({ projectId }) {
             sessionStorage.removeItem("login-token");
             delete axios.defaults.headers.common['Authorization'];
             navigate("/LoginPage");
+          }else if(response.data.code === 8000){
+            alert("해당 사용자는 권한이 없어 프로젝트 내용을 볼 수 없습니다.");
+            navigate("/");
           }
           return;
         }

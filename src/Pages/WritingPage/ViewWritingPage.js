@@ -285,7 +285,7 @@ const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
                         </ViewTitleInput>
                         <Content dangerouslySetInnerHTML={{__html: selectedPost.content}}/>
                         <CommentContainer>
-                            <CommentForm postId={selectedRowId} onAddComment={handleAddComment} />
+                            <CommentForm postId={selectedRowId} onAddComment={handleAddComment} selectedPost= {selectedPost}/>
                             <CommentList comments={comments} selectedPost= {selectedPost} setComments={setComments}  onDeleteComment={handleDeleteComment} />
                         </CommentContainer>
                     </FormContainer>

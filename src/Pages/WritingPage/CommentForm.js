@@ -51,7 +51,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-const CommentForm = ({onAddComment, postId}) => {
+const CommentForm = ({onAddComment, postId, selectedPost}) => {
     const [content, setContent] = useState("");
 
     const handleSubmit = async () => {
@@ -74,6 +74,7 @@ const CommentForm = ({onAddComment, postId}) => {
             const newComment = {
                 id: response.data.id,  // 서버에서 반환된 ID
                 content: content,
+                userName: selectedPost.author,  // 현재 로그인한 사용자 정보
                 createdAt: formatDate(),  // 현재 시간
                 isNew: true
             };

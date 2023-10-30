@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import scheduleApi from "../../../api/scheduleApi";
+import axios from "axios";
 
 const TotalContainer = styled.div`
   display: flex;
@@ -90,9 +91,27 @@ function Manage() {
     };
 
     try {
-      await scheduleApi.createSchedule(projectId, eventData);
-      alert("일정이 성공적으로 추가되었습니다.");
-      navigate(`/Manage/${projectId}`);
+      const response = await scheduleApi.createSchedule(projectId, eventData);
+      if (response.data.success) {
+        alert("일정이 성공적으로 추가되었습니다.");
+        navigate(`/Manage/${projectId}`);
+      }else if (response.data.success === false) {
+        if(response.data.code === 7000){
+          alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
+          navigate("/LoginPage");
+        }else if(response.data.code === 7001){
+          alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
+          // 토큰 제거
+          sessionStorage.removeItem("login-token");
+          delete axios.defaults.headers.common['Authorization'];
+          navigate("/LoginPage");
+        }else if(response.data.code === 8000){
+          alert("해당 사용자는"+response.data.message); // "접근 권한이 없습니다."
+        }
+      }else {
+        alert('일정 작성 중 오류가 발생했습니다.');
+      }
+
     } catch (error) {
       console.error("일정 추가 중 오류 발생:", error);
       alert(

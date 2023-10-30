@@ -96,7 +96,6 @@ const WritingPage = ({ projectId, category }) => {
 
         const postData = {
             projectId: projectId,
-
             title: title,
             content: editorHtml,
             category: category // 임시로 PLANNING으로 설정. 필요에 따라 변경하세요.
@@ -125,6 +124,8 @@ const WritingPage = ({ projectId, category }) => {
                     sessionStorage.removeItem("login-token");
                     delete axios.defaults.headers.common['Authorization'];
                     navigate("/LoginPage");
+                }else if(response.data.code === 8000){
+                    alert("해당 사용자는"+response.data.message); // "접근 권한이 없습니다."
                 }
             }else {
                 alert('게시글 작성 중 오류가 발생했습니다.');
