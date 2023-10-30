@@ -130,7 +130,7 @@ const NEWheader = () => {
         <NameBlock>
           {isLoggedIn ? <TextLg> {userName} 님</TextLg> : null}
           {isLoggedIn ? (
-            <StyledLink to="/">
+            <StyledLink to="/LoginPage">
               <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
             </StyledLink>
           ) : (
