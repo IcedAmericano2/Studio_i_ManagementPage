@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import projectApi from "../../api/projectApi";
+import axios from "axios";
 
 const TotalContainer = styled.div`
   display: flex;
@@ -87,6 +88,12 @@ function Project() {
       if (response.data && response.data.success === false) {
         if(response.data.code === 7000){
           alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
+          navigate("/LoginPage");
+        }else if(response.data.code === 7001){
+          alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
+          sessionStorage.removeItem("login-token");
+          delete axios.defaults.headers.common['Authorization'];
+          navigate("/LoginPage");
         }
         return;
       }

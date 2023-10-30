@@ -70,7 +70,6 @@ function FinishProject() {
           }else if(response.data.code === 7001){
             sessionStorage.removeItem("login-token");
             delete axios.defaults.headers.common['Authorization'];
-            return;
           }
           return;
         }
