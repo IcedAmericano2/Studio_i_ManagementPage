@@ -68,21 +68,51 @@ function Project() {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
-  const [teamMemberCount, setTeamMemberCount] = useState(0);
+  const [teamMemberCount, setTeamMemberCount] = useState("");
   const [teamMemberEmails, setTeamMemberEmails] = useState([]);
+  const [emailsRegisteredCheck, setEmailsRegisteredCheck] = useState([]);
 
   const navigate = useNavigate();
 
   const handleSave = async () => {
-    const newProject = {
-      name: projectName,
-      description: projectDetails,
-      startDate: `${startDate}`,
-      finishDate: `${endDate}`,
-      // leader: teamLeader,
-      // members: teamMembers,
-    };
     try {
+      const notRegistered = emailsRegisteredCheck.filter(check => !check);
+      if (notRegistered.length > 0) {
+        alert("인증되지 않은 팀원이 있습니다.\n모든 팀원의 이메일을 인증해주세요.");
+        return;
+      }
+      // 유효성 검사
+      if (!projectName.trim()) {
+        alert("프로젝트명을 입력해주세요.");
+        return;
+      }
+
+      if (!projectDetails.trim()) {
+        alert("프로젝트 세부 내용을 입력해주세요.");
+        return;
+      }
+
+      const emptyEmails = teamMemberEmails.filter(email => !email.trim());
+      if (emptyEmails.length > 0) {
+        alert("모든 팀원의 이메일을 입력해주세요.");
+        return;
+      }
+      // 1. 각 이메일 주소에 해당하는 유저 ID를 가져옵니다.
+      const userIdsPromises = teamMemberEmails.map(async (email) => {
+        const response = await axios.get(`/user-service/response_userByEmail/${email}`);
+        console.log(response.data);
+        return response.data.id; // UserResponse 객체에서 id를 가져옵니다.
+      });
+
+      const memberIdList = await Promise.all(userIdsPromises);
+      console.log(memberIdList);
+      const newProject = {
+        name: projectName,
+        description: projectDetails,
+        startDate: `${startDate}`,
+        finishDate: `${endDate}`,
+        memberIdList: memberIdList,
+      };
       const response = await projectApi.createProject(newProject);
       // 서버에서 실패 응답을 보냈는지 확인
       if (response.data && response.data.success === false) {
@@ -113,9 +143,12 @@ function Project() {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailPattern.test(email);
   };
-  const handleEmailRegistration = (email) => {
+  const handleEmailRegistration = (index, email) => {
     if (validateEmail(email)) {
       alert("잘 등록되었습니다.");
+      const updatedRegistered = [...emailsRegisteredCheck];
+      updatedRegistered[index] = true;
+      setEmailsRegisteredCheck(updatedRegistered);
     } else {
       alert("유효하지 않은 이메일입니다.");
     }
@@ -148,8 +181,10 @@ function Project() {
             onChange={(e) => {
               setTeamMemberCount(Number(e.target.value));
               setTeamMemberEmails(new Array(Number(e.target.value)).fill(""));
+              setEmailsRegisteredCheck(new Array(Number(e.target.value)).fill(false));
             }}
           >
+            <option value="" disabled>선택</option>
             {[...Array(10)].map((_, index) => (
               <option key={index} value={index + 1}>
                 {index + 1}
@@ -166,11 +201,15 @@ function Project() {
               placeholder="팀원 이메일"
               onChange={(e) => handleTeamMemberChange(index, e.target.value)}
             />
-            <StyledButton
-              onClick={() => handleEmailRegistration(teamMemberEmails[index])}
-            >
-              등록
-            </StyledButton>
+            {emailsRegisteredCheck[index] ? (
+                <span style={{ color: "red", marginLeft: '10px', fontWeight: 'bold' }}>인증 완료</span>
+            ) : (
+                <StyledButton
+                    onClick={() => handleEmailRegistration(index, teamMemberEmails[index])}
+                >
+                  인증
+                </StyledButton>
+            )}
           </div>
         ))}
         <div>
