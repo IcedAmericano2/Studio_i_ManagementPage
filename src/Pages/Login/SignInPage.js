@@ -206,8 +206,22 @@ function SignInPage(){
     const [isVerified, setIsVerified] = useState(false);
 
     const handleSendCode = () => {
-        setIsCodeSent(true);
-        startTimer();
+        const params = {
+            email: formData.email // 실제 이메일 값을 사용
+        };
+
+        axios.post('/user-service/emails/verification-requests', null,{
+            params: params,
+        })
+            .then((response) => {
+                console.log({ message: response.data });
+                alert("입력하신 이메일로 인증코드가 전송되었습니다.");
+                setIsCodeSent(true);
+                startTimer();
+            })
+            .catch((error) => {
+                console.error('API 요청 중 오류 발생:', error);
+            });
     }
 
     const startTimer = () => {
@@ -232,13 +246,17 @@ function SignInPage(){
     }, [isTimerRunning, timeLeft]);
 
     const handleVerifiyCode = () => {
-        if (formData.verificationCode === '올바른인증코드') {
-            console.log("일치");
-            setIsVerified(true);
-        } else {
-            setIsVerified(false);
-            console.log("불일치");
-        }
+        axios.get('/emails/verification')
+            .then((response) => {
+                console.log({ message: response.data });
+                alert("인증 완료");
+                setIsCodeSent(false);
+                setIsVerified(true);
+            })
+            .catch((error) => {
+                console.error('API 요청 중 오류 발생:', error);
+                setIsVerified(false);
+            });
     }
 
     //-----------------------------phoneNum--------------------------
