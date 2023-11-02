@@ -7,8 +7,8 @@ if (storedToken) {
 const projectApi = {
 
   // 프로젝트 완료 표시
-  getProject: async (projectIndex) => {
-    const response = await axios.get(`/api/projects/${projectIndex}`);
+  putProject: async (projectIndex) => {
+    const response = await axios.put(`/api/projects/${projectIndex}/finish`);
     return response;
   },
   // 프로젝트 수정 (사용 안함)

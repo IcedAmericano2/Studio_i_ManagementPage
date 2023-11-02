@@ -112,9 +112,6 @@ function WeekCalendar({ projectId }) {
 
     fetchEvents();
   }, [projectId]);
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
   const getDayColor = (dayIndex) => {
     switch (dayIndex) {
       case 0:

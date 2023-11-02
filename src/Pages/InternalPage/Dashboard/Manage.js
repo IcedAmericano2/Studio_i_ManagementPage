@@ -107,15 +107,16 @@ function Manage() {
           navigate("/LoginPage");
         }else if(response.data.code === 8000){
           alert("해당 사용자는"+response.data.message); // "접근 권한이 없습니다."
+        }else if(response.data.code === 6004){
+          alert(response.data.message+"\n프로젝트 기간 내의 일정을 입력해주세요."); // "프로젝트의 일정 범위를 벗어났습니다."
         }
       }else {
         alert('일정 작성 중 오류가 발생했습니다.');
       }
 
     } catch (error) {
-      console.error("일정 추가 중 오류 발생:", error);
       alert(
-        "일정 추가 중 오류가 발생했습니다. 프로젝트 시작 날짜와 끝 날짜 사이에 일정을 추가해주세요."
+        "프로젝트 일정 내용을 입력해주세요."
       );
     }
   };

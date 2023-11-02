@@ -100,12 +100,10 @@ function Project() {
       // 1. 각 이메일 주소에 해당하는 유저 ID를 가져옵니다.
       const userIdsPromises = teamMemberEmails.map(async (email) => {
         const response = await axios.get(`/user-service/response_userByEmail/${email}`);
-        console.log(response.data);
         return response.data.id; // UserResponse 객체에서 id를 가져옵니다.
       });
 
       const memberIdList = await Promise.all(userIdsPromises);
-      console.log(memberIdList);
       const newProject = {
         name: projectName,
         description: projectDetails,
@@ -143,14 +141,29 @@ function Project() {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailPattern.test(email);
   };
-  const handleEmailRegistration = (index, email) => {
-    if (validateEmail(email)) {
+  const handleEmailRegistration  = async(index, email) => {
+    if (!validateEmail(email)) {
+      alert("이메일 형식이 올바르지 않습니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`/user-service/response_userByEmail/${email}`);
+      console.log(response);
+      console.log(response.data);
+      //이 api 지금 아무것도 안뱉어내서 에러처리 못함. 등록되지않은 email도 잘 등록되었습니다. 라는 문구가 뜰수밖에없음.
       alert("잘 등록되었습니다.");
       const updatedRegistered = [...emailsRegisteredCheck];
       updatedRegistered[index] = true;
       setEmailsRegisteredCheck(updatedRegistered);
-    } else {
-      alert("유효하지 않은 이메일입니다.");
+    } catch (error) {
+      console.error("Error during email registration: ", error);
+      if (error.response && error.response.status === 500) {
+        alert("존재하지 않는 이메일입니다.");
+      } else {
+        // 다른 종류의 오류가 발생한 경우
+        alert("이메일 인증에 실패했습니다.");
+      }
     }
   };
 

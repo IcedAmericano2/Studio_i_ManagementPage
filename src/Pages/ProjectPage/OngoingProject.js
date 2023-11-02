@@ -151,31 +151,47 @@ function OngoingProject() {
     if (!isConfirmed) return;
 
     try {
-      await projectApi.deleteProject(projectId);
+      const response = await projectApi.deleteProject(projectId);
+      if (response.data && response.data.success === false) {
+        if(response.data.code === 8000){
+          alert("해당 사용자는 프로젝트를 생성한 '팀장'이 아닙니다.\n따라서 해당 프로젝트에 대한 권한이 없어 삭제가 불가능합니다.");
+        }
+      }else if(response.data && response.data.success === true){
+        alert("프로젝트가 삭제 처리 되었습니다.");
+        refresh();
+      }
       // const updatedProjects = projects.filter(
       //   (project) => project.projectIndex !== projectId
       // );
       // setProjects(updatedProjects);
-      alert("프로젝트가 삭제 처리 되었습니다.");
-      refresh();
+
     } catch (error) {
       console.error("Error deleting the project:", error);
       alert("프로젝트 삭제에 실패했습니다."); // 에러 알림 메시지 추가
     }
   };
 
-  const handleCompleteClick = async (projectId) => {
+  const handleCompleteClick = async (e, projectId) => {
+    e.stopPropagation();
+    const isConfirmed = window.confirm("프로젝트를 완료하시겠습니까?");
+    if (!isConfirmed) return;
     try {
       // const updatedProject = projects.find(
       //   (project) => project.projectIndex === projectId
       // );
       // updatedProject.status = "Completed";
-      await projectApi.getProject(projectId);
+      const response = await projectApi.putProject(projectId);
+      if (response.data && response.data.success === false) {
+        if(response.data.code === 8000){
+          alert("해당 사용자는 프로젝트를 생성한 '팀장'이 아닙니다.\n따라서 해당 프로젝트에 대한 권한이 없어 프로젝트 완료가 불가능합니다.");
+        }
+      }else if(response.data && response.data.success === true){
+        alert("프로젝트가 완료 처리 되었습니다.");
+        refresh();
+      }
       // const updatedProjects = projects.map((project) =>
       //   project.projectIndex === projectId ? updatedProject : project
       // );
-      alert("프로젝트가 완료 처리 되었습니다.");
-      goToHome();
       // setProjects(updatedProjects);
 
     } catch (error) {
@@ -226,7 +242,7 @@ function OngoingProject() {
                   삭제
                 </DeleteButton>
                 <CompleteButton
-                  onClick={() => handleCompleteClick(project.projectId)}
+                  onClick={(e) => handleCompleteClick(e, project.projectId)}
                 >
                   완료
                 </CompleteButton>
