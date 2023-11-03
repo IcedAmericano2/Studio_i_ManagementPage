@@ -246,12 +246,17 @@ function SignInPage(){
     }, [isTimerRunning, timeLeft]);
 
     const handleVerifiyCode = () => {
-        axios.get('/emails/verification')
+
+        const email = formData.email;
+        const authCode = formData.verificationCode;
+
+        axios.get(`/user-service/emails/verifications?email=${email}&code=${authCode}`)
             .then((response) => {
                 console.log({ message: response.data });
-                alert("인증 완료");
-                setIsCodeSent(false);
-                setIsVerified(true);
+                    alert("인증 완료")
+                    setIsCodeSent(false);
+                    setIsVerified(true);
+
             })
             .catch((error) => {
                 console.error('API 요청 중 오류 발생:', error);
