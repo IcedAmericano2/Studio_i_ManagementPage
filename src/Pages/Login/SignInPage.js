@@ -253,10 +253,14 @@ function SignInPage(){
         axios.get(`/user-service/emails/verifications?email=${email}&code=${authCode}`)
             .then((response) => {
                 console.log({ message: response.data });
-                    alert("인증 완료")
-                    setIsCodeSent(false);
-                    setIsVerified(true);
-
+                    alert(response.data.message);
+                    if(response.data.verificationStatus){
+                        setIsCodeSent(false);
+                        setIsVerified(true);
+                    }else{
+                        setIsCodeSent(true);
+                        setIsVerified(false);
+                    }
             })
             .catch((error) => {
                 console.error('API 요청 중 오류 발생:', error);
