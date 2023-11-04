@@ -1,11 +1,10 @@
 import axios from "axios";
 
-const storedToken = sessionStorage.getItem('login-token');
+const storedToken = sessionStorage.getItem("login-token");
 if (storedToken) {
-  axios.defaults.headers.common['Authorization'] = 'Bearer ' + storedToken;
+  axios.defaults.headers.common["Authorization"] = "Bearer " + storedToken;
 }
 const projectApi = {
-
   // 프로젝트 완료 표시
   putProject: async (projectIndex) => {
     const response = await axios.put(`/api/projects/${projectIndex}/finish`);
@@ -31,6 +30,10 @@ const projectApi = {
   // data안에는 프로젝트 생성 관련 정보가 들어있어야 함.
   createProject: async (data) => {
     const response = await axios.post(`/api/projects`, data);
+    return response;
+  },
+  getMyProjects: async () => {
+    const response = await axios.get(`/api/projects/me`);
     return response;
   },
   // 핑 테스트
