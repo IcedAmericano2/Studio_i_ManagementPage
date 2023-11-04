@@ -17,6 +17,8 @@ import Button from "./Button";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import projectApi from "../../api/projectApi";
+import Modal from "react-modal";
 import axios from "axios";
 
 const HeaderWrapper = styled.div`
@@ -87,33 +89,61 @@ const StyledLink = styled(Link)`
   display: inline-block; /* 또는 block로 설정 */
 `;
 
+Modal.setAppElement("#root"); // 모달을 렌더링할 때 root 요소 설정
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
 const NEWheader = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [myProjects, setMyProjects] = useState([]);
 
-  const navigateToHome = () => {
-    navigate("/"); // 메인 페이지로 이동합니다.
+  const openModal = () => {
+    setIsOpen(true);
+    fetchMyProjects();
   };
-  useEffect(() => {
-    // 세션 스토리지에서 토큰을 가져옵니다.
-    const token = sessionStorage.getItem("login-token");
 
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const fetchMyProjects = async () => {
+    try {
+      const response = await projectApi.getMyProjects();
+      setMyProjects(response.data.list);
+    } catch (error) {
+      console.error("프로젝트를 가져오는 중 에러가 발생했습니다.", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("login-token");
     if (token) {
-      // 토큰이 존재하면 로그인 상태로 설정
       setIsLoggedIn(true);
       const decodedToken = jwt_decode(token);
       setUserName(decodedToken.username);
     }
   }, []);
 
-  function handleLogout() {
+  const handleLogout = () => {
     sessionStorage.removeItem("login-token");
-    delete axios.defaults.headers.common['Authorization'];
+    delete axios.defaults.headers.common["Authorization"];
     setIsLoggedIn(false);
     setUserName("");
     alert("로그아웃 완료");
-  }
+    navigate("/");
+  };
 
   return (
     <HeaderWrapper>
@@ -124,11 +154,13 @@ const NEWheader = () => {
           </IconBlock>
         </MenuBlock>
         <SearchBlock>
-          <LogoBox src={StudioILogo} onClick={navigateToHome} />
-          <NEWSearchBar></NEWSearchBar>
+          <LogoBox src={StudioILogo} onClick={() => navigate("/")} />
+          <NEWSearchBar />
         </SearchBlock>
         <NameBlock>
-          {isLoggedIn ? <TextLg> {userName} 님</TextLg> : null}
+          {isLoggedIn ? (
+            <TextLg onClick={openModal}>{userName}님</TextLg>
+          ) : null}
           {isLoggedIn ? (
             <StyledLink to="/LoginPage">
               <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
@@ -140,6 +172,22 @@ const NEWheader = () => {
           )}
         </NameBlock>
       </SpaceBetweenBlock>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="My Projects Modal"
+      >
+        <h2>내 프로젝트</h2>
+        {myProjects.length ? (
+          myProjects.map((project, index) => (
+            <div key={index}>{project.name}</div>
+          ))
+        ) : (
+          <p>프로젝트가 없습니다.</p>
+        )}
+        <button onClick={closeModal}>닫기</button>
+      </Modal>
     </HeaderWrapper>
   );
 };
