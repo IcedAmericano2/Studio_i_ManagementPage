@@ -6,23 +6,18 @@ if (storedToken) {
 // 댓글 crud api
 const commentApi = {
   // 댓글 작성
-  postComment: async (data) => {
-    const response = await axios.post('/api/posts', data);
+  postComment: async (postId, data) => {
+    const response = await axios.post(`/api/posts/${postId}/comment`, data);
     return response;
   },
   // 댓글 수정
-  putComment: async (data) => {
-    const response = await axios.put('/api/posts', data);
+  putComment: async (commentId, data) => {
+    const response =  await axios.put(`/api/comment/${commentId}`, data)
     return response;
   },
   // 댓글 삭제
-  deleteComment: async (data) => {
-    const response = await axios.delete('/api/posts', data);
-    return response;
-  },
-  // 댓글 상세보기
-  getBoard: async (data) => {
-    const response = await axios.get(`/api/posts?projectId=${data.projectId}&postId=${data.postId}`);
+  deleteComment: async (commentId) => {
+    const response = await axios.delete(`/api/comment/${commentId}`)
     return response;
   },
   // 댓글 리스트 가져오기

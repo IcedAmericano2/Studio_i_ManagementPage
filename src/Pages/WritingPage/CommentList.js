@@ -1,6 +1,6 @@
 import React , { useState, useEffect }from "react";
 import styled from "styled-components";
-import axios from 'axios';
+import commentApi from "../../api/commentApi";
 
 const FormContainer = styled.div`
   border-radius: 5px;
@@ -63,7 +63,7 @@ const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) =>
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
     const deleteComment = (commentId) => {
-        axios.delete(`/api/comment/${commentId}`)
+        commentApi.deleteComment(commentId)
             .then(response => {
                 alert('댓글이 성공적으로 삭제되었습니다.');
                 // 댓글이 성공적으로 삭제되면 해당 댓글을 상태에서 제거하거나
@@ -85,7 +85,7 @@ const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) =>
     };
 
     const finishEditing = (commentId) => {
-        axios.put(`/api/comment/${commentId}`, { content: editedContent })
+        commentApi.putComment(commentId, { content: editedContent })
             .then(response => {
                 alert('댓글이 성공적으로 수정되었습니다.');
                 const updatedComments = comments.map(comment =>

@@ -232,7 +232,7 @@ const ViewWritingPage = ({selectedRowId, projectId, postId}) => {
     };
     // 게시글 내용을 담을 객체 나중에 DB연결하면 내용 set해주기
     const handleAddComment = (newComment) => {
-        setComments((prevComments) => [newComment, ...prevComments]);//우선 상태 보여주기
+        setComments((prevComments) => [ ...prevComments, newComment]);//댓글 최신게 나중에 보여주기
         setSelectedPost(prevPost => ({...prevPost, commentCount: prevPost.commentCount + 1}));
     };
     const handleDeleteComment = () => {

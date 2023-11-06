@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import CommentIMG from './CommentButton.png';
 import CommentHoverIMG from './CommentButtonHover.png';
-import axios from 'axios';
+import commentApi from "../../api/commentApi";
 
 const FormContainer = styled.div`
   align-items: center; /* 요소를 세로 가운데 정렬 */
@@ -57,9 +57,7 @@ const CommentForm = ({onAddComment, postId, selectedPost}) => {
     const handleSubmit = async () => {
         try {
             // 서버에 댓글 추가 요청
-            const response = await axios.post(`/api/posts/${postId}/comment`, {
-                content: content
-            });
+            const response = await commentApi.postComment(postId, { content: content });
             const formatDate = () => {
                 const date = new Date();
                 const year = date.getFullYear();
