@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import checkTodoApi from "../../../api/checkTodoApi";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function CheckList({ projectId }) {
@@ -14,18 +14,18 @@ function CheckList({ projectId }) {
       try {
         const response = await checkTodoApi.getProjectTodo(projectId);
         if (response.data && response.data.success === false) {
-          if(response.data.code === 5005){
-            setMessage(response.data.message);// "내용이 존재하지 않습니다."
-          }else if(response.data.code === 7000){
+          if (response.data.code === 5005) {
+            setMessage(response.data.message); // "내용이 존재하지 않습니다."
+          } else if (response.data.code === 7000) {
             alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
             navigate("/LoginPage");
-          }else if(response.data.code === 7001){
+          } else if (response.data.code === 7001) {
             alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
             // 토큰 제거
             sessionStorage.removeItem("login-token");
-            delete axios.defaults.headers.common['Authorization'];
+            delete axios.defaults.headers.common["Authorization"];
             navigate("/LoginPage");
-          }else if(response.data.code === 8000){
+          } else if (response.data.code === 8000) {
             alert("해당 사용자는 권한이 없어 프로젝트 내용을 볼 수 없습니다.");
             navigate("/");
           }
@@ -40,17 +40,21 @@ function CheckList({ projectId }) {
   }, []);
 
   const handleCheck = async (id) => {
-    // const updatedItems = items.map((item) =>
-    //   item.todoIndex === id ? { ...item, checked: !item.checked } : item
-    // );
-    // setItems(updatedItems);
-    //
-    // const itemToUpdate = updatedItems.find((item) => item.todoIndex === id);
-
     try {
-      await checkTodoApi.completeCheckTodo(id);
+      const response = await checkTodoApi.completeCheckTodo(id);
+      if (response.status === 200) {
+        // 상태를 불변하게 유지하며 변경
+        setItems(
+          items.map((item) =>
+            item.todoIndex === id ? { ...item, checked: !item.checked } : item
+          )
+        );
+      } else {
+        // 여기서는 오류 처리를 하면 됩니다. 예를 들어:
+        console.error("Something error");
+      }
     } catch (error) {
-      console.error("Error updating checak status", error);
+      console.error("Error updating check status", error);
     }
   };
 
