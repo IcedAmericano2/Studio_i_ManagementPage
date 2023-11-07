@@ -42,6 +42,19 @@ const CompleteButton = styled.button`
     background-color: black;
   }
 `;
+const ModifyButton = styled.button`
+  background-color: #363636;
+  border-radius: 32px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 2px 16px;
+  margin: 4px;
+
+  &:hover {
+    background-color: black;
+  }
+`;
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: separate;
@@ -98,18 +111,20 @@ function OngoingProject() {
       try {
         const response = await projectApi.getProjectList();
         if (response.data && response.data.success === false) {
-          if(response.data.code === 7000){
+          if (response.data.code === 7000) {
             alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
             navigate("/LoginPage");
-          }else if(response.data.code === 7001){
+          } else if (response.data.code === 7001) {
             alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
             sessionStorage.removeItem("login-token");
-            delete axios.defaults.headers.common['Authorization'];
+            delete axios.defaults.headers.common["Authorization"];
             navigate("/LoginPage");
           }
           return;
         }
-        const checkedProjects = response.data.list.filter(item => item.isFinished === false);
+        const checkedProjects = response.data.list.filter(
+          (item) => item.isFinished === false
+        );
         setProjects(checkedProjects);
       } catch (error) {
         console.error("Error fetching the projects:", error);
@@ -153,10 +168,12 @@ function OngoingProject() {
     try {
       const response = await projectApi.deleteProject(projectId);
       if (response.data && response.data.success === false) {
-        if(response.data.code === 8000){
-          alert("해당 사용자는 프로젝트를 생성한 '팀장'이 아닙니다.\n따라서 해당 프로젝트에 대한 권한이 없어 삭제가 불가능합니다.");
+        if (response.data.code === 8000) {
+          alert(
+            "해당 사용자는 프로젝트를 생성한 '팀장'이 아닙니다.\n따라서 해당 프로젝트에 대한 권한이 없어 삭제가 불가능합니다."
+          );
         }
-      }else if(response.data && response.data.success === true){
+      } else if (response.data && response.data.success === true) {
         alert("프로젝트가 삭제 처리 되었습니다.");
         refresh();
       }
@@ -164,7 +181,6 @@ function OngoingProject() {
       //   (project) => project.projectIndex !== projectId
       // );
       // setProjects(updatedProjects);
-
     } catch (error) {
       console.error("Error deleting the project:", error);
       alert("프로젝트 삭제에 실패했습니다."); // 에러 알림 메시지 추가
@@ -182,10 +198,12 @@ function OngoingProject() {
       // updatedProject.status = "Completed";
       const response = await projectApi.putProject(projectId);
       if (response.data && response.data.success === false) {
-        if(response.data.code === 8000){
-          alert("해당 사용자는 프로젝트를 생성한 '팀장'이 아닙니다.\n따라서 해당 프로젝트에 대한 권한이 없어 프로젝트 완료가 불가능합니다.");
+        if (response.data.code === 8000) {
+          alert(
+            "해당 사용자는 프로젝트를 생성한 '팀장'이 아닙니다.\n따라서 해당 프로젝트에 대한 권한이 없어 프로젝트 완료가 불가능합니다."
+          );
         }
-      }else if(response.data && response.data.success === true){
+      } else if (response.data && response.data.success === true) {
         alert("프로젝트가 완료 처리 되었습니다.");
         refresh();
       }
@@ -193,7 +211,6 @@ function OngoingProject() {
       //   project.projectIndex === projectId ? updatedProject : project
       // );
       // setProjects(updatedProjects);
-
     } catch (error) {
       console.error("Error marking the project as complete:", error);
       alert("프로젝트 완료 처리에 실패했습니다."); // 에러 알림 메시지 추가
@@ -232,13 +249,20 @@ function OngoingProject() {
         </thead>
         <tbody>
           {projects.map((project) => (
-            <tr key={project.projectId} onClick={() => handleRowClick(project.projectId)}>
+            <tr
+              key={project.projectId}
+              onClick={() => handleRowClick(project.projectId)}
+            >
               <td>{project.projectId}</td>
-              <td>{project.startDate}~{project.finishDate}</td>
+              <td>
+                {project.startDate}~{project.finishDate}
+              </td>
               <td>{project.name}</td>
               <td>{project.description}</td>
               <td>
-                <DeleteButton onClick={(e) => handleDeleteClick(e, project.projectId)}>
+                <DeleteButton
+                  onClick={(e) => handleDeleteClick(e, project.projectId)}
+                >
                   삭제
                 </DeleteButton>
                 <CompleteButton
@@ -246,6 +270,14 @@ function OngoingProject() {
                 >
                   완료
                 </CompleteButton>
+                <ModifyButton
+                  onClick={(e) => {
+                    e.stopPropagation(); // 이벤트 버블링을 방지.
+                    navigate(`/modify/${project.projectId}`);
+                  }}
+                >
+                  수정
+                </ModifyButton>
               </td>
             </tr>
           ))}
