@@ -101,10 +101,81 @@ const CreateButton = styled.button`
     background-color: #363636;
   }
 `;
+const PaginationContainer = styled.div`
+  .pagination {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .page-item {
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  .page-link {
+    color: black;
+    text-decoration: none;
+  }
+
+  .active .page-link {
+    font-weight: bold;
+  }
+`;
 
 function OngoingProject() {
   const [projects, setProjects] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 10;
   const navigate = useNavigate();
+
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  );
+  // 페이지 번호를 렌더링하기 위한 컴포넌트
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const PageNumbers = () => {
+    const totalPages = Math.ceil(projects.length / projectsPerPage);
+
+    return (
+      <PaginationContainer>
+        <nav>
+          <ul className="pagination">
+            {currentPage > 1 && (
+              <li className="page-item">
+                <a
+                  onClick={() => paginate(currentPage - 1)}
+                  className="page-link"
+                >
+                  &laquo;
+                </a>
+              </li>
+            )}
+
+            <li className="page-item active">
+              <a className="page-link">{currentPage}</a>
+            </li>
+
+            {currentPage < totalPages && (
+              <li className="page-item">
+                <a
+                  onClick={() => paginate(currentPage + 1)}
+                  className="page-link"
+                >
+                  &raquo;
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+      </PaginationContainer>
+    );
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -248,7 +319,7 @@ function OngoingProject() {
           </tr>
         </thead>
         <tbody>
-          {projects.map((project) => (
+          {currentProjects.map((project) => (
             <tr
               key={project.projectId}
               onClick={() => handleRowClick(project.projectId)}
@@ -272,7 +343,7 @@ function OngoingProject() {
                 </CompleteButton>
                 <ModifyButton
                   onClick={(e) => {
-                    e.stopPropagation(); // 이벤트 버블링을 방지.
+                    e.stopPropagation();
                     navigate(`/modify/${project.projectId}`);
                   }}
                 >
@@ -283,6 +354,8 @@ function OngoingProject() {
           ))}
         </tbody>
       </StyledTable>
+      {/* 페이지 번호를 렌더링 */}
+      <PageNumbers />
     </AppContainer>
   );
 }
