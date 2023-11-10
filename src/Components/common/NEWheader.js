@@ -73,6 +73,9 @@ const LoginButton = styled.button`
   width: 88px;
   padding: 4px;
   margin: 4px;
+  &:hover {
+    background-color: black;
+  }
 `;
 
 const LogoBox = styled.img`
