@@ -69,9 +69,81 @@ const DeleteButton = styled.button`
     background-color: black;
   }
 `;
+const PaginationContainer = styled.div`
+  .pagination {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .page-item {
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  .page-link {
+    color: black;
+    text-decoration: none;
+  }
+
+  .active .page-link {
+    font-weight: bold;
+  }
+`;
 
 function FinishProject() {
   const [projects, setProjects] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 10;
+
+  // ...기존 함수들...
+
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const PageNumbers = () => {
+    const totalPages = Math.ceil(projects.length / projectsPerPage);
+
+    return (
+      <PaginationContainer>
+        <nav>
+          <ul className="pagination">
+            {currentPage > 1 && (
+              <li className="page-item">
+                <a
+                  onClick={() => paginate(currentPage - 1)}
+                  className="page-link"
+                >
+                  &laquo;
+                </a>
+              </li>
+            )}
+
+            <li className="page-item active">
+              <a className="page-link">{currentPage}</a>
+            </li>
+
+            {currentPage < totalPages && (
+              <li className="page-item">
+                <a
+                  onClick={() => paginate(currentPage + 1)}
+                  className="page-link"
+                >
+                  &raquo;
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+      </PaginationContainer>
+    );
+  };
 
   const refresh = () => {
     // Use setTimeout for a simple refresh delay, could be replaced with state-based re-rendering if needed
@@ -169,6 +241,7 @@ function FinishProject() {
           ))}
         </tbody>
       </StyledTable>
+      <PageNumbers />
     </AppContainer>
   );
 }
