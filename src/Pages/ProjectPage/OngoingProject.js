@@ -196,7 +196,7 @@ function OngoingProject() {
         const checkedProjects = response.data.list.filter(
           (item) => item.isFinished === false
         );
-        setProjects(checkedProjects);
+        setProjects(checkedProjects.reverse());
       } catch (error) {
         console.error("Error fetching the projects:", error);
       }
