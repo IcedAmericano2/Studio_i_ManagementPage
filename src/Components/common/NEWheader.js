@@ -19,6 +19,7 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import projectApi from "../../api/projectApi";
 import Modal from "react-modal";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const HeaderWrapper = styled.div`
@@ -112,6 +113,13 @@ const NEWheader = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [myProjects, setMyProjects] = useState([]);
 
+  const location = useLocation();
+  const { projectId } = location.state || {};
+
+  const handleProjectClick = (projectId) => {
+    navigate(`/manage/${projectId}`);
+  };
+
   const openModal = () => {
     setIsOpen(true);
     fetchMyProjects();
@@ -184,7 +192,13 @@ const NEWheader = () => {
         <h2>내 프로젝트</h2>
         {myProjects.length ? (
           myProjects.map((project, index) => (
-            <div key={index}>{project.name}</div>
+            <div
+              key={index}
+              onClick={() => handleProjectClick(project.projectId)}
+              style={{ cursor: "pointer" }}
+            >
+              {project.projectId}. {project.name}
+            </div>
           ))
         ) : (
           <p>프로젝트가 없습니다.</p>
