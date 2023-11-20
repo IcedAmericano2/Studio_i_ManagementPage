@@ -97,8 +97,8 @@ Modal.setAppElement("#root"); // 모달을 렌더링할 때 root 요소 설정
 
 const customStyles = {
   content: {
-    top: "50%",
-    left: "50%",
+    top: "20%",
+    left: "83%",
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
