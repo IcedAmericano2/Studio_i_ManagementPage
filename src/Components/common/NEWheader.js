@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+
+import { FaRegComments } from "react-icons/fa";
 import {
   media,
   TitleLg,
@@ -19,6 +21,7 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import projectApi from "../../api/projectApi";
 import Modal from "react-modal";
+import ChatModal from "./ChatModal";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -63,6 +66,20 @@ const IconBlock = styled.div`
   height: 100%;
   font-size: 2rem;
   margin-right: 0.5rem;
+`;
+
+const ChatButton = styled.button`
+  border: none;
+  outline: none;
+  background: transparent;
+  color: black;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 8px;
+
+  &:hover {
+    color: #eb3225;
+  }
 `;
 
 const LoginButton = styled.button`
@@ -114,6 +131,7 @@ const NEWheader = () => {
   const [myProjects, setMyProjects] = useState([]);
 
   const location = useLocation();
+  const [chatIsOpen, setChatIsOpen] = useState(false);
   const { projectId } = location.state || {};
 
   const handleProjectClick = (projectId) => {
@@ -127,6 +145,12 @@ const NEWheader = () => {
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+  const openChat = () => {
+    setChatIsOpen(true);
+  };
+  const closeChat = () => {
+    setChatIsOpen(false);
   };
 
   const fetchMyProjects = async () => {
@@ -157,55 +181,61 @@ const NEWheader = () => {
   };
 
   return (
-    <HeaderWrapper>
-      <SpaceBetweenBlock>
-        <MenuBlock>
-          <IconBlock>
-            <CgMenu />
-          </IconBlock>
-        </MenuBlock>
-        <SearchBlock>
-          <LogoBox src={StudioILogo} onClick={() => navigate("/")} />
-          <NEWSearchBar />
-        </SearchBlock>
-        <NameBlock>
-          {isLoggedIn ? (
-            <TextLg onClick={openModal}>{userName}님</TextLg>
-          ) : null}
-          {isLoggedIn ? (
-            <StyledLink to="/LoginPage">
-              <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
-            </StyledLink>
+    <>
+      <HeaderWrapper>
+        <SpaceBetweenBlock>
+          <MenuBlock>
+            <IconBlock>
+              <CgMenu />
+            </IconBlock>
+          </MenuBlock>
+          <SearchBlock>
+            <LogoBox src={StudioILogo} onClick={() => navigate("/")} />
+            <NEWSearchBar />
+          </SearchBlock>
+          <NameBlock>
+            {isLoggedIn ? (
+              <>
+                <TextLg onClick={openModal}>{userName}님</TextLg>
+                <StyledLink to="/LoginPage">
+                  <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
+                </StyledLink>
+                <ChatButton onClick={openChat}>
+                  <FaRegComments />
+                </ChatButton>
+              </>
+            ) : (
+              <StyledLink to="/LoginPage">
+                <LoginButton>로그인</LoginButton>
+              </StyledLink>
+            )}
+          </NameBlock>
+        </SpaceBetweenBlock>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="My Projects Modal"
+        >
+          <h2>내 프로젝트</h2>
+          {myProjects.length ? (
+            myProjects.map((project, index) => (
+              <div
+                key={index}
+                onClick={() => handleProjectClick(project.projectId)}
+                style={{ cursor: "pointer" }}
+              >
+                {project.projectId}. {project.name}
+              </div>
+            ))
           ) : (
-            <StyledLink to="/LoginPage">
-              <LoginButton>로그인</LoginButton>
-            </StyledLink>
+            <p>프로젝트가 없습니다.</p>
           )}
-        </NameBlock>
-      </SpaceBetweenBlock>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="My Projects Modal"
-      >
-        <h2>내 프로젝트</h2>
-        {myProjects.length ? (
-          myProjects.map((project, index) => (
-            <div
-              key={index}
-              onClick={() => handleProjectClick(project.projectId)}
-              style={{ cursor: "pointer" }}
-            >
-              {project.projectId}. {project.name}
-            </div>
-          ))
-        ) : (
-          <p>프로젝트가 없습니다.</p>
-        )}
-        <button onClick={closeModal}>닫기</button>
-      </Modal>
-    </HeaderWrapper>
+          <button onClick={closeModal}>닫기</button>
+        </Modal>
+      </HeaderWrapper>
+      <ChatModal isOpen={chatIsOpen} onRequestClose={closeChat} />
+    </>
   );
 };
 
