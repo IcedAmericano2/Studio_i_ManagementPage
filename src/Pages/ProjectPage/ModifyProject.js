@@ -5,6 +5,7 @@ import styled from "styled-components";
 import projectApi from "../../api/projectApi";
 
 const Container = styled.div`
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,6 +17,8 @@ const Form = styled.form`
   flex-direction: column;
   max-width: 500px;
   width: 100%;
+  border: 1px solid black;
+  padding: 20px;
 `;
 
 const Input = styled.input`
@@ -31,9 +34,27 @@ const TextArea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
+const ButtonContainer = styled.div`
+  display: grid;
+  justify-content: center;
+`;
 
 const Button = styled.button`
-  padding: 10px 15px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+const Button2 = styled.button`
+  width: 160px;
+  height: 30px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -148,7 +169,7 @@ function ModifyProject() {
       }
     } catch (error) {
       console.error("Error updating project:", error);
-      alert("프로젝트 수정에 실패했습니다.");
+      alert("프로젝트 수정 권한이 없습니다.");
     }
   };
 
@@ -240,10 +261,12 @@ function ModifyProject() {
             </Button>
           </div>
         ))}
-        <Button type="button" onClick={addTeamMemberEmail}>
-          팀원 추가
-        </Button>
-        <Button type="submit">수정</Button>
+        <ButtonContainer>
+          <Button2 type="button" onClick={addTeamMemberEmail}>
+            팀원 추가
+          </Button2>
+          <Button2 type="submit">수정</Button2>
+        </ButtonContainer>
       </Form>
     </Container>
   );
