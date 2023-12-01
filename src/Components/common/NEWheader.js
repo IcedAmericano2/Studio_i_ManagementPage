@@ -14,7 +14,7 @@ import {
 import { CgMenu } from "react-icons/cg";
 import NEWSearchBar from "../NEWSearchBar";
 import { useEffect, useState } from "react";
-import StudioILogo from "../../assets/logo/studioi.png";
+import StudioeyeLogo from "../../assets/logo/studioeye.png";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -30,7 +30,8 @@ const HeaderWrapper = styled.div`
   height: 4rem;
   width: 100%;
   background: white;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08); */
+  border-bottom: 1px solid rgba(200,200, 200, 0.6);
 `;
 
 const SpaceBetweenBlock = styled.div`
@@ -40,26 +41,15 @@ const SpaceBetweenBlock = styled.div`
   height: 100%;
 `;
 
-const MenuBlock = styled.div`
+const RightBlock = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  width: 100%;
-  justify-content: center;
+  margin-right: 60px;
 `;
-
-const SearchBlock = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-`;
-
 const NameBlock = styled.div`
   display: flex;
-  width: 100%;
   justify-content: center;
   align-items: center;
+  margin-right: 10px;
 `;
 
 const IconBlock = styled.div`
@@ -81,26 +71,32 @@ const ChatButton = styled.button`
     color: #eb3225;
   }
 `;
+const TextLgButton = styled(TextLg)`
+  cursor: pointer;
+  margin-right: 20px;
 
+`;
 const LoginButton = styled.button`
   border: none;
   outline: none;
-  background: #ff530e;
+  background-color: black;
   color: white;
-  border-radius: 16px;
+  border-radius: 20px;
   width: 88px;
-  padding: 4px;
-  margin: 4px;
+  height: 28px;
+  /* padding: 4px; */
+  /* margin: 10px; */
+  cursor: pointer;
   &:hover {
-    background-color: black;
+    background-color:#FFA900;
   }
 `;
 
 const LogoBox = styled.img`
-  margin-left: 16px;
+  margin-left: 60px;
   margin-right: 16px;
   max-width: 100%;
-  width: 128px;
+  width: 170px;
 `;
 
 const StyledLink = styled(Link)`
@@ -184,32 +180,28 @@ const NEWheader = () => {
     <>
       <HeaderWrapper>
         <SpaceBetweenBlock>
-          <MenuBlock>
-            <IconBlock>
-              <CgMenu />
-            </IconBlock>
-          </MenuBlock>
-          <SearchBlock>
-            <LogoBox src={StudioILogo} onClick={() => navigate("/")} />
-            <NEWSearchBar />
-          </SearchBlock>
-          <NameBlock>
-            {isLoggedIn ? (
-              <>
-                <TextLg onClick={openModal}>{userName}님</TextLg>
+          <LogoBox src={StudioeyeLogo} onClick={() => navigate("/")} />
+          <RightBlock>
+            <NameBlock>
+              {isLoggedIn ? (
+                <>
+                  <TextLgButton onClick={openModal}>{userName} 님</TextLgButton>
+                  <StyledLink to="/LoginPage">
+                    <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
+                  </StyledLink>
+
+                </>
+              ) : (
                 <StyledLink to="/LoginPage">
-                  <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
+                  <LoginButton>로그인</LoginButton>
                 </StyledLink>
-                <ChatButton onClick={openChat}>
-                  <FaRegComments />
-                </ChatButton>
-              </>
-            ) : (
-              <StyledLink to="/LoginPage">
-                <LoginButton>로그인</LoginButton>
-              </StyledLink>
-            )}
-          </NameBlock>
+              )}
+            </NameBlock>
+            <ChatButton onClick={openChat}>
+              <FaRegComments />
+            </ChatButton>
+          </RightBlock>
+
         </SpaceBetweenBlock>
         <Modal
           isOpen={modalIsOpen}
@@ -218,7 +210,7 @@ const NEWheader = () => {
           contentLabel="My Projects Modal"
         >
           <h2>내 프로젝트</h2>
-          {myProjects.length ? (
+          {myProjects && myProjects.length ? (
             myProjects.map((project, index) => (
               <div
                 key={index}
