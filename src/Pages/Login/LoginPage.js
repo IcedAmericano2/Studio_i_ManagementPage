@@ -113,7 +113,7 @@ const Margin16px = styled.div`
 `;
 
 const LoginPageButton = styled.button`
-  background-color: #eb3225;
+  background-color: #ff530e;
   color: #ffffff;
   width: 100%;
   padding: 8px 20px;

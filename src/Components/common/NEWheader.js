@@ -85,7 +85,7 @@ const ChatButton = styled.button`
 const LoginButton = styled.button`
   border: none;
   outline: none;
-  background: #eb3225;
+  background: #ff530e;
   color: white;
   border-radius: 16px;
   width: 88px;
