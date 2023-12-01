@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { FaTrash } from "react-icons/fa";
 import {
   media,
   TitleLg,
@@ -57,12 +58,11 @@ const LabelArea = styled.div`
   color: white;
 `;
 const DeleteButton = styled.button`
-  background-color: #363636;
+  background-color: white;
   border-radius: 32px;
   border: none;
   outline: none;
-  color: white;
-  padding: 2px 16px;
+  color: grey;
   margin: 4px;
 
   &:hover {
@@ -234,7 +234,7 @@ function FinishProject() {
                 <DeleteButton
                   onClick={(e) => handleDeleteClick(e, project.projectId)}
                 >
-                  삭제
+                  <FaTrash />
                 </DeleteButton>
               </td>
             </tr>
