@@ -217,7 +217,6 @@ function FinishProject() {
             <th>기한</th>
             <th>프로젝트명</th>
             <th>프로젝트 소개</th>
-            <th>기타 정보</th>
           </tr>
         </thead>
         <tbody>
