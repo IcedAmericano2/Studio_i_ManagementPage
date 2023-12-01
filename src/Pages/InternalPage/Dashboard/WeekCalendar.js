@@ -187,6 +187,20 @@ function WeekCalendar({ projectId }) {
     newDate.setDate(newDate.getDate() + 7);
     setCurrentDate(newDate);
   };
+  const goToNewDate = () => {
+    const newDateString = window.prompt(
+      "궁금한 일정을 YYYY-MM-DD 형식으로 입력하세요:",
+      currentDate.toISOString().split("T")[0]
+    );
+    if (newDateString) {
+      const newDate = new Date(newDateString);
+      if (!isNaN(newDate)) {
+        setCurrentDate(newDate);
+      } else {
+        alert("유효한 날짜 형식이 아닙니다.");
+      }
+    }
+  };
 
   const findStartOfContinuousEvents = (date) => {
     const currentDateIndex = events.findIndex(
@@ -287,7 +301,7 @@ function WeekCalendar({ projectId }) {
         <ArrowButton onClick={goToPreviousWeek}>
           <FaArrowLeft />
         </ArrowButton>
-        <span>{currentDate.toDateString()}</span> {/* 현재 주의 날짜 표시 */}
+        <span onClick={goToNewDate}>{currentDate.toDateString()}</span>
         <ArrowButton onClick={goToNextWeek}>
           <FaArrowRight />
         </ArrowButton>
