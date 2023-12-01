@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import checkTodoApi from "../../../api/checkTodoApi";
 import { useNavigate } from "react-router-dom";
+import { FaPen } from "react-icons/fa";
 import axios from "axios";
 
 function CheckList({ projectId }) {
@@ -116,7 +117,7 @@ function CheckList({ projectId }) {
       <List>
         <Title>CheckList</Title>
         <AddButton type="button" onClick={() => setShowModal(true)}>
-          +
+          <FaPen />
         </AddButton>
       </List>
       <ItemsList>
@@ -186,13 +187,14 @@ const Title = styled.text`
 
 const AddButton = styled.button`
   background-color: white;
-  color: black;
+  color: #a9a9a9;
   border: none;
   padding: 8px 16px;
-  font-size: 24px;
+  font-size: 20px;
   text-align: left;
   cursor: pointer;
   border-radius: 5px;
+  margin-right: -24px;
   transition: background-color 0.3s;
 
   &:hover {
