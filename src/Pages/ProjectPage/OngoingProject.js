@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TitleSm, TextLg, TextMd } from "../../Components/common/Font";
 import projectApi from "../../api/projectApi";
+import { FaTrash, FaCheck, FaEdit } from "react-icons/fa";
 import axios from "axios";
 
 const AppContainer = styled.div`
@@ -17,12 +18,11 @@ const Container = styled.div`
 `;
 
 const DeleteButton = styled.button`
-  background-color: #363636;
+  background-color: white;
   border-radius: 32px;
   border: none;
   outline: none;
-  color: white;
-  padding: 2px 16px;
+  color: grey;
   margin: 4px;
 
   &:hover {
@@ -30,12 +30,11 @@ const DeleteButton = styled.button`
   }
 `;
 const CompleteButton = styled.button`
-  background-color: #363636;
+  background-color: white;
   border-radius: 32px;
   border: none;
   outline: none;
-  color: white;
-  padding: 2px 16px;
+  color: grey;
   margin: 4px;
 
   &:hover {
@@ -43,12 +42,11 @@ const CompleteButton = styled.button`
   }
 `;
 const ModifyButton = styled.button`
-  background-color: #363636;
+  background-color: white;
   border-radius: 32px;
   border: none;
   outline: none;
-  color: white;
-  padding: 2px 16px;
+  color: grey;
   margin: 4px;
 
   &:hover {
@@ -82,14 +80,14 @@ const StyledTable = styled.table`
 
 const LabelArea = styled.div`
   width: 128px;
-  background: #eb3225;
+  background: #ff530e;
   border-radius: 32px;
   text-align: center;
   color: white;
 `;
 
 const CreateButton = styled.button`
-  background-color: #eb3225;
+  background-color: #ff530e;
   border-radius: 32px;
   border: none;
   outline: none;
@@ -331,24 +329,25 @@ function OngoingProject() {
               <td>{project.name}</td>
               <td>{project.description}</td>
               <td>
-                <DeleteButton
-                  onClick={(e) => handleDeleteClick(e, project.projectId)}
-                >
-                  삭제
-                </DeleteButton>
-                <CompleteButton
-                  onClick={(e) => handleCompleteClick(e, project.projectId)}
-                >
-                  완료
-                </CompleteButton>
                 <ModifyButton
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/modify/${project.projectId}`);
                   }}
                 >
-                  수정
+                  <FaEdit />
                 </ModifyButton>
+                <CompleteButton
+                  onClick={(e) => handleCompleteClick(e, project.projectId)}
+                >
+                  <FaCheck />
+                </CompleteButton>
+
+                <DeleteButton
+                  onClick={(e) => handleDeleteClick(e, project.projectId)}
+                >
+                  <FaTrash />
+                </DeleteButton>
               </td>
             </tr>
           ))}
