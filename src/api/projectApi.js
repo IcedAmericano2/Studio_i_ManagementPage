@@ -43,4 +43,13 @@ const projectApi = {
   },
 };
 
+projectApi.getProjectDetails = async (projectId) => {
+  const response = await axios.get(`/api/projects/${projectId}`);
+  return response;
+};
+projectApi.getProjectById = async (projectId) => {
+  const response = await axios.get(`/api/projects/${projectId}`);
+  return response;
+};
+
 export default projectApi;
