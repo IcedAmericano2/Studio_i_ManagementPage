@@ -1,234 +1,251 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 import projectApi from "../../api/projectApi";
-import axios from "axios";
 
-// Styled components 정의
-const TotalContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-  background-color: #f7f7f7;
-`;
-
-const ProjectContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 `;
 
-const StyledInput = styled.input`
-  padding: 10px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const StyledTextArea = styled.textarea`
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
   width: 100%;
-  min-height: 100px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
 
-const StyledButton = styled.button`
+const TextArea = styled.textarea`
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const Button = styled.button`
   padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
-  color: #ffffff;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-left: 20px;
+  margin-top: 10px;
 
   &:hover {
     background-color: #0056b3;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
   }
 `;
 
 function ModifyProject() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-
-  // 프로젝트 정보와 팀원 이메일 상태를 선언합니다.
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [projectName, setProjectName] = useState("");
-  const [projectDetails, setProjectDetails] = useState("");
-  const [teamMemberEmails, setTeamMemberEmails] = useState([]);
+  const [projectData, setProjectData] = useState({
+    name: "",
+    description: "",
+    startDate: "",
+    finishDate: "",
+    teamMemberEmails: [],
+  });
   const [emailsRegisteredCheck, setEmailsRegisteredCheck] = useState([]);
 
-  // 프로젝트 상세 정보를 가져오는 함수
   useEffect(() => {
-    const fetchProject = async () => {
+    const fetchProjectDetails = async () => {
       try {
-        const response = await projectApi.getProjectDetails(projectId);
-        const project = response.data;
-        setStartDate(project.startDate);
-        setEndDate(project.finishDate);
-        setProjectName(project.name);
-        setProjectDetails(project.description);
-        // TODO: 프로젝트의 팀원 ID를 이용하여 이메일을 가져오는 로직 구현 필요
+        const response = await projectApi.getProjectById(projectId);
+        if (response.data.code === 200 && response.data.data) {
+          const {
+            name,
+            description,
+            startDate,
+            finishDate,
+            leaderAndMemberList,
+          } = response.data.data;
+          const teamMemberEmails = leaderAndMemberList.map(
+            (member) => member.email
+          );
+
+          setProjectData({
+            name,
+            description,
+            startDate,
+            finishDate,
+            teamMemberEmails,
+          });
+          setEmailsRegisteredCheck(
+            new Array(teamMemberEmails.length).fill(true)
+          );
+        }
       } catch (error) {
-        console.error(
-          "프로젝트 정보를 불러오는 중 오류가 발생했습니다:",
-          error
-        );
+        console.error("Error fetching project details:", error);
       }
     };
 
-    fetchProject();
+    fetchProjectDetails();
   }, [projectId]);
+
+  const handleChange = (e) => {
+    setProjectData({ ...projectData, [e.target.name]: e.target.value });
+  };
+
   const handleEmailRegistration = async (index, email) => {
     if (!validateEmail(email)) {
       alert("이메일 형식이 올바르지 않습니다.");
       return;
     }
-
     try {
-      // 서버에 이메일 인증 요청을 보내고, 응답을 처리합니다.
       const response = await axios.get(
         `/user-service/response_userByEmail/${email}`
       );
-      if (response.data) {
-        const updatedRegistered = [...emailsRegisteredCheck];
-        updatedRegistered[index] = true;
-        setEmailsRegisteredCheck(updatedRegistered);
-        alert("이메일이 인증되었습니다.");
-      } else {
-        alert("이메일 인증에 실패했습니다.");
-      }
+      const updatedRegistered = [...emailsRegisteredCheck];
+      updatedRegistered[index] = true;
+      setEmailsRegisteredCheck(updatedRegistered);
+      alert("이메일이 인증되었습니다.");
     } catch (error) {
-      alert("이메일 인증 중 오류가 발생했습니다.");
+      console.error("Error during email registration:", error);
+      alert("이메일 인증에 실패했습니다.");
     }
   };
 
-  // 프로젝트 정보를 저장하는 함수
-  const handleSaveChanges = async () => {
-    try {
-      // 여기서는 예시로 teamMemberEmails 자체를 memberIdList로 사용합니다.
-      // 실제로는 이메일을 통해 사용자 ID를 조회하는 로직이 필요합니다.
-      const updatedProject = {
-        name: projectName,
-        description: projectDetails,
-        startDate: startDate,
-        finishDate: endDate,
-        memberIdList: teamMemberEmails,
-      };
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const notRegistered = emailsRegisteredCheck.includes(false);
+    if (notRegistered) {
+      alert("모든 팀원의 이메일을 인증해주세요.");
+      return;
+    }
+    const memberIdList = await Promise.all(
+      projectData.teamMemberEmails.map(async (email) => {
+        const response = await axios.get(
+          `/user-service/response_userByEmail/${email}`
+        );
+        return response.data.id;
+      })
+    );
+    const updateData = {
+      ...projectData,
+      memberIdList: memberIdList,
+    };
 
-      const response = await projectApi.updateProject(
-        projectId,
-        updatedProject
-      );
+    console.log("Updating project with data:", projectData); // 데이터 로그 출력
+
+    try {
+      const response = await projectApi.updateProject(projectId, updateData);
       if (response.data.success) {
         alert("프로젝트가 성공적으로 수정되었습니다.");
-        navigate("/"); // 변경사항을 보기 위해 메인 페이지로 이동
+        navigate("/");
       } else {
-        throw new Error(response.data.message || "프로젝트 수정 실패");
+        alert("프로젝트 수정에 문제가 발생했습니다: " + response.data.message);
       }
     } catch (error) {
-      console.error("프로젝트 수정 중 오류가 발생했습니다:", error);
-      alert(error.message || "프로젝트 수정 중 오류가 발생했습니다.");
+      console.error("Error updating project:", error);
+      alert("프로젝트 수정에 실패했습니다.");
     }
   };
 
-  // 이메일 유효성 검사 함수
+  const addTeamMemberEmail = () => {
+    setProjectData({
+      ...projectData,
+      teamMemberEmails: [...projectData.teamMemberEmails, ""],
+    });
+    setEmailsRegisteredCheck([...emailsRegisteredCheck, false]);
+  };
+
+  const removeTeamMemberEmail = (index) => {
+    const updatedEmails = projectData.teamMemberEmails.filter(
+      (_, idx) => idx !== index
+    );
+    const updatedChecks = emailsRegisteredCheck.filter(
+      (_, idx) => idx !== index
+    );
+    setProjectData({
+      ...projectData,
+      teamMemberEmails: updatedEmails,
+    });
+    setEmailsRegisteredCheck(updatedChecks);
+  };
+
   const validateEmail = (email) => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailPattern.test(email);
   };
 
-  // 팀원 이메일 변경 핸들러
-  const handleTeamMemberChange = (index, email) => {
-    const updatedEmails = [...teamMemberEmails];
-    updatedEmails[index] = email;
-    setTeamMemberEmails(updatedEmails);
-
-    // 이메일을 변경할 때마다 인증 상태를 초기화합니다.
-    const updatedRegistered = [...emailsRegisteredCheck];
-    updatedRegistered[index] = false;
-    setEmailsRegisteredCheck(updatedRegistered);
-  };
-
   return (
-    <TotalContainer>
-      <h2>프로젝트 수정</h2>
-      <ProjectContainer>
-        <div>
-          <label>시작 날짜 : </label>
-          <StyledInput
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>종료 날짜 : </label>
-          <StyledInput
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>프로젝트명 : </label>
-          <StyledInput
-            type="text"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>프로젝트 세부 내용:</label>
-          <StyledTextArea
-            value={projectDetails}
-            onChange={(e) => setProjectDetails(e.target.value)}
-          />
-        </div>
-        {teamMemberEmails.map((email, index) => (
-          <div key={index} style={{ display: "flex", alignItems: "center" }}>
-            <label>팀원 {index + 1} 이메일: </label>
-            <StyledInput
+    <Container>
+      <Form onSubmit={handleUpdate}>
+        <h2>프로젝트 수정</h2>
+        <Input
+          name="name"
+          placeholder="프로젝트 이름"
+          value={projectData.name}
+          onChange={handleChange}
+        />
+        <TextArea
+          name="description"
+          placeholder="프로젝트 설명"
+          value={projectData.description}
+          onChange={handleChange}
+        />
+        <Input
+          type="date"
+          name="startDate"
+          value={projectData.startDate}
+          onChange={handleChange}
+        />
+        <Input
+          type="date"
+          name="finishDate"
+          value={projectData.finishDate}
+          onChange={handleChange}
+        />
+        {projectData.teamMemberEmails.map((email, index) => (
+          <div key={`email-${index}`}>
+            <Input
               type="email"
+              placeholder={`팀원 ${index + 1} 이메일`}
               value={email}
-              onChange={(e) => handleTeamMemberChange(index, e.target.value)}
+              onChange={(e) => {
+                const updatedEmails = [...projectData.teamMemberEmails];
+                updatedEmails[index] = e.target.value;
+                setProjectData({
+                  ...projectData,
+                  teamMemberEmails: updatedEmails,
+                });
+                const updatedChecks = [...emailsRegisteredCheck];
+                updatedChecks[index] = false;
+                setEmailsRegisteredCheck(updatedChecks);
+              }}
             />
             {emailsRegisteredCheck[index] ? (
-              <span style={{ color: "green", marginLeft: "10px" }}>
-                인증 완료
-              </span>
+              <span style={{ color: "green", marginLeft: "10px" }}>인증됨</span>
             ) : (
-              <StyledButton
+              <Button
+                type="button"
                 onClick={() => handleEmailRegistration(index, email)}
               >
                 인증
-              </StyledButton>
+              </Button>
             )}
+            <Button type="button" onClick={() => removeTeamMemberEmail(index)}>
+              삭제
+            </Button>
           </div>
         ))}
-        <div>
-          <StyledButton onClick={handleSaveChanges}>
-            변경 사항 저장
-          </StyledButton>
-          <StyledButton onClick={() => navigate("/")}>취소</StyledButton>
-        </div>
-      </ProjectContainer>
-    </TotalContainer>
+        <Button type="button" onClick={addTeamMemberEmail}>
+          팀원 추가
+        </Button>
+        <Button type="submit">수정</Button>
+      </Form>
+    </Container>
   );
 }
 
