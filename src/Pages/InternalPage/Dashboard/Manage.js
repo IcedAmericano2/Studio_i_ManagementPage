@@ -18,8 +18,8 @@ const ManageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
+  gap: 40px;
+  padding: 100px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -27,13 +27,15 @@ const ManageContainer = styled.div`
 
 const StyledInput = styled.input`
   padding: 10px;
-  width: 200px;
+  width: 240px;
+  margin-top: -32px;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
 
 const StyledTextArea = styled.textarea`
-  width: 120%;
+  width: 260px;
+  margin-left: 40px;
   min-height: 100px;
   text-align: center;
   justify-content: center;
@@ -46,6 +48,7 @@ const StyledButton = styled.button`
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
+  margin-top: 20px;
   background-color: #007bff;
   color: #ffffff;
   cursor: pointer;
@@ -95,29 +98,28 @@ function Manage() {
       if (response.data.success) {
         alert("일정이 성공적으로 추가되었습니다.");
         navigate(`/Manage/${projectId}`);
-      }else if (response.data.success === false) {
-        if(response.data.code === 7000){
+      } else if (response.data.success === false) {
+        if (response.data.code === 7000) {
           alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
           navigate("/LoginPage");
-        }else if(response.data.code === 7001){
+        } else if (response.data.code === 7001) {
           alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
           // 토큰 제거
           sessionStorage.removeItem("login-token");
-          delete axios.defaults.headers.common['Authorization'];
+          delete axios.defaults.headers.common["Authorization"];
           navigate("/LoginPage");
-        }else if(response.data.code === 8000){
-          alert("해당 사용자는"+response.data.message); // "접근 권한이 없습니다."
-        }else if(response.data.code === 6004){
-          alert(response.data.message+"\n프로젝트 기간 내의 일정을 입력해주세요."); // "프로젝트의 일정 범위를 벗어났습니다."
+        } else if (response.data.code === 8000) {
+          alert("해당 사용자는" + response.data.message); // "접근 권한이 없습니다."
+        } else if (response.data.code === 6004) {
+          alert(
+            response.data.message + "\n프로젝트 기간 내의 일정을 입력해주세요."
+          ); // "프로젝트의 일정 범위를 벗어났습니다."
         }
-      }else {
-        alert('일정 작성 중 오류가 발생했습니다.');
+      } else {
+        alert("일정 작성 중 오류가 발생했습니다.");
       }
-
     } catch (error) {
-      alert(
-        "프로젝트 일정 내용을 입력해주세요."
-      );
+      alert("프로젝트 일정 내용을 입력해주세요.");
     }
   };
 
