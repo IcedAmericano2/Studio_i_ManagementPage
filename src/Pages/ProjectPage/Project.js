@@ -11,6 +11,15 @@ const TotalContainer = styled.div`
   height: 100vh;
   flex-direction: column;
   background-color: #f7f7f7;
+  background-image: linear-gradient(
+    to right top,
+    #f7f7f7,
+    #f9f9f9,
+    #fbfbfb,
+    #fdfdfd,
+    #ffffff
+  );
+  margin: 10px;
 `;
 
 const ProjectContainer = styled.div`
@@ -18,7 +27,7 @@ const ProjectContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 30px;
+  padding: 100px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -26,13 +35,16 @@ const ProjectContainer = styled.div`
 
 const StyledInput = styled.input`
   padding: 10px;
-  width: 200px;
+  width: 240px;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
+const TextContainer = styled.div`
+  display: flex;
+`;
 
 const StyledTextArea = styled.textarea`
-  width: 120%;
+  width: 220px;
   min-height: 100px;
   text-align: center;
   justify-content: center;
@@ -42,17 +54,19 @@ const StyledTextArea = styled.textarea`
 `;
 
 const StyledButton = styled.button`
-  padding: 10px 15px;
+  padding: 12px 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   background-color: #007bff;
   color: #ffffff;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-left: 20px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   &:not(:last-child) {
@@ -76,9 +90,11 @@ function Project() {
 
   const handleSave = async () => {
     try {
-      const notRegistered = emailsRegisteredCheck.filter(check => !check);
+      const notRegistered = emailsRegisteredCheck.filter((check) => !check);
       if (notRegistered.length > 0) {
-        alert("인증되지 않은 팀원이 있습니다.\n모든 팀원의 이메일을 인증해주세요.");
+        alert(
+          "인증되지 않은 팀원이 있습니다.\n모든 팀원의 이메일을 인증해주세요."
+        );
         return;
       }
       // 유효성 검사
@@ -92,14 +108,16 @@ function Project() {
         return;
       }
 
-      const emptyEmails = teamMemberEmails.filter(email => !email.trim());
+      const emptyEmails = teamMemberEmails.filter((email) => !email.trim());
       if (emptyEmails.length > 0) {
         alert("모든 팀원의 이메일을 입력해주세요.");
         return;
       }
       // 1. 각 이메일 주소에 해당하는 유저 ID를 가져옵니다.
       const userIdsPromises = teamMemberEmails.map(async (email) => {
-        const response = await axios.get(`/user-service/response_userByEmail/${email}`);
+        const response = await axios.get(
+          `/user-service/response_userByEmail/${email}`
+        );
         return response.data.id; // UserResponse 객체에서 id를 가져옵니다.
       });
 
@@ -114,13 +132,13 @@ function Project() {
       const response = await projectApi.createProject(newProject);
       // 서버에서 실패 응답을 보냈는지 확인
       if (response.data && response.data.success === false) {
-        if(response.data.code === 7000){
+        if (response.data.code === 7000) {
           alert("로그인을 먼저 진행시켜 주시길 바랍니다.");
           navigate("/LoginPage");
-        }else if(response.data.code === 7001){
+        } else if (response.data.code === 7001) {
           alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
           sessionStorage.removeItem("login-token");
-          delete axios.defaults.headers.common['Authorization'];
+          delete axios.defaults.headers.common["Authorization"];
           navigate("/LoginPage");
         }
         return;
@@ -141,14 +159,16 @@ function Project() {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailPattern.test(email);
   };
-  const handleEmailRegistration  = async(index, email) => {
+  const handleEmailRegistration = async (index, email) => {
     if (!validateEmail(email)) {
       alert("이메일 형식이 올바르지 않습니다.");
       return;
     }
 
     try {
-      const response = await axios.get(`/user-service/response_userByEmail/${email}`);
+      const response = await axios.get(
+        `/user-service/response_userByEmail/${email}`
+      );
       console.log(response);
       console.log(response.data);
       //이 api 지금 아무것도 안뱉어내서 에러처리 못함. 등록되지않은 email도 잘 등록되었습니다. 라는 문구가 뜰수밖에없음.
@@ -194,10 +214,14 @@ function Project() {
             onChange={(e) => {
               setTeamMemberCount(Number(e.target.value));
               setTeamMemberEmails(new Array(Number(e.target.value)).fill(""));
-              setEmailsRegisteredCheck(new Array(Number(e.target.value)).fill(false));
+              setEmailsRegisteredCheck(
+                new Array(Number(e.target.value)).fill(false)
+              );
             }}
           >
-            <option value="" disabled>선택</option>
+            <option value="" disabled>
+              선택
+            </option>
             {[...Array(10)].map((_, index) => (
               <option key={index} value={index + 1}>
                 {index + 1}
@@ -215,13 +239,19 @@ function Project() {
               onChange={(e) => handleTeamMemberChange(index, e.target.value)}
             />
             {emailsRegisteredCheck[index] ? (
-                <span style={{ color: "red", marginLeft: '10px', fontWeight: 'bold' }}>인증 완료</span>
+              <span
+                style={{ color: "red", marginLeft: "10px", fontWeight: "bold" }}
+              >
+                인증 완료
+              </span>
             ) : (
-                <StyledButton
-                    onClick={() => handleEmailRegistration(index, teamMemberEmails[index])}
-                >
-                  인증
-                </StyledButton>
+              <StyledButton
+                onClick={() =>
+                  handleEmailRegistration(index, teamMemberEmails[index])
+                }
+              >
+                인증
+              </StyledButton>
             )}
           </div>
         ))}
@@ -233,15 +263,15 @@ function Project() {
             onChange={(e) => setProjectName(e.target.value)}
           />
         </div>
-        <div>
-          <div>
-            <label className="details">프로젝트 세부 내용:</label>
-          </div>
+        <TextContainer>
+          <span>
+            <label className="details">프로젝트 상세정보:</label>
+          </span>
           <StyledTextArea
             value={projectDetails}
             onChange={(e) => setProjectDetails(e.target.value)}
           ></StyledTextArea>
-        </div>
+        </TextContainer>
         <div>
           <StyledButton className="check" onClick={handleSave}>
             Save
