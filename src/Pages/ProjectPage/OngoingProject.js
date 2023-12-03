@@ -98,7 +98,7 @@ const CreateButton = styled.button`
   margin: 4px;
 
   &:hover {
-    background-color: #363636;
+    background-color: #ffe9d2;
   }
 `;
 const PaginationContainer = styled.div`
