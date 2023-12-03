@@ -22,11 +22,11 @@ const DeleteButton = styled.button`
   border-radius: 32px;
   border: none;
   outline: none;
-  color: grey;
+  color: black;
   margin: 4px;
 
   &:hover {
-    background-color: black;
+    background-color: grey;
   }
 `;
 const CompleteButton = styled.button`
@@ -34,23 +34,23 @@ const CompleteButton = styled.button`
   border-radius: 32px;
   border: none;
   outline: none;
-  color: grey;
+  color: green;
   margin: 4px;
 
   &:hover {
-    background-color: black;
+    background-color: grey;
   }
 `;
 const ModifyButton = styled.button`
-  background-color: white;
+  background-color: transparent;
   border-radius: 32px;
   border: none;
   outline: none;
-  color: grey;
+  color: #ffa900;
   margin: 4px;
 
   &:hover {
-    background-color: black;
+    background-color: grey;
   }
 `;
 const StyledTable = styled.table`
@@ -80,19 +80,21 @@ const StyledTable = styled.table`
 
 const LabelArea = styled.div`
   width: 128px;
-  background: #ff530e;
+  background: transparent;
+  border: 2px solid #ffa900;
   border-radius: 32px;
   text-align: center;
-  color: white;
+  color: #ffa900;
 `;
 
 const CreateButton = styled.button`
-  background-color: #ff530e;
-  border-radius: 32px;
-  border: none;
+  background-color: transparent;
+  border-radius: 64px;
+  border: 4px solid #ffa900;
   outline: none;
-  color: white;
-  padding: 2px 16px;
+
+  color: #ffa900;
+  padding: 8px 16px;
   margin: 4px;
 
   &:hover {
@@ -311,7 +313,7 @@ function OngoingProject() {
             </th>
             <th>
               <CreateButton type="button" onClick={handleAddProject}>
-                <TextLg>생성</TextLg>
+                <TextLg>+</TextLg>
               </CreateButton>
             </th>
           </tr>
