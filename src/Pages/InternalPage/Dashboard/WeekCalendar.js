@@ -108,8 +108,12 @@ const ScheduleItem = styled.p`
   background-color: red;
   padding: 0px 8px;
   border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; // 또는 적절한 크기로 조정
+  cursor: pointer;
 `;
-
 function WeekCalendar({ projectId }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
@@ -326,9 +330,16 @@ function WeekCalendar({ projectId }) {
               {eventsForDate.map((event, index) => (
                 <ScheduleItem
                   key={index}
+                  title={event.content}
+                  onClick={() => {
+                    setEditingEvent(eventsForDate);
+                    setShowModal(true);
+                  }}
                   style={{ backgroundColor: getDayColor(date.getDay()) }}
                 >
-                  {event.content}
+                  {event.content.length > 5
+                    ? `${event.content.substring(0, 5)}...`
+                    : event.content}
                 </ScheduleItem>
               ))}
             </Day>
