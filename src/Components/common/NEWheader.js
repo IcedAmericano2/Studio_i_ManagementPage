@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { FaRegComments } from "react-icons/fa";
+import { FaProjectDiagram, FaFolderOpen } from "react-icons/fa";
 import {
   media,
   TitleLg,
@@ -43,7 +43,7 @@ const SpaceBetweenBlock = styled.div`
 
 const RightBlock = styled.div`
   display: flex;
-  margin-right: 60px;
+  margin-right: 120px;
 `;
 const NameBlock = styled.div`
   display: flex;
@@ -58,14 +58,16 @@ const IconBlock = styled.div`
   margin-right: 0.5rem;
 `;
 
-const ChatButton = styled.button`
+const ProjectButton = styled.button`
   border: none;
   outline: none;
   background: transparent;
   color: black;
   font-size: 1.5rem;
   cursor: pointer;
-  margin-left: 8px;
+  margin-right: 16px;
+  margin-left: -8px;
+  margin-top: 4px;
 
   &:hover {
     color: #eb3225;
@@ -182,7 +184,10 @@ const NEWheader = () => {
             <NameBlock>
               {isLoggedIn ? (
                 <>
-                  <TextLgButton onClick={openModal}>{userName} 님</TextLgButton>
+                  <TextLgButton>{userName} 님</TextLgButton>
+                  <ProjectButton onClick={openModal}>
+                    <FaFolderOpen />
+                  </ProjectButton>
                   <StyledLink to="/LoginPage">
                     <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
                   </StyledLink>
@@ -193,9 +198,6 @@ const NEWheader = () => {
                 </StyledLink>
               )}
             </NameBlock>
-            <ChatButton onClick={openChat}>
-              <FaRegComments />
-            </ChatButton>
           </RightBlock>
         </SpaceBetweenBlock>
         <Modal
@@ -221,7 +223,6 @@ const NEWheader = () => {
           <button onClick={closeModal}>닫기</button>
         </Modal>
       </HeaderWrapper>
-      <ChatModal isOpen={chatIsOpen} onRequestClose={closeChat} />
     </>
   );
 };
