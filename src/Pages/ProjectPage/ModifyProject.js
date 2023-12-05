@@ -41,7 +41,7 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 5px 10px;
-  background-color: #007bff;
+  background-color: #ff530e;
   color: white;
   border: none;
   border-radius: 4px;
@@ -49,13 +49,13 @@ const Button = styled.button`
   margin-top: 10px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: red;
   }
 `;
 const Button2 = styled.button`
   width: 160px;
   height: 30px;
-  background-color: #007bff;
+  background-color: #ff530e;
   color: white;
   border: none;
   border-radius: 4px;
@@ -63,7 +63,7 @@ const Button2 = styled.button`
   margin-top: 10px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: red;
   }
 `;
 
@@ -265,7 +265,7 @@ function ModifyProject() {
           <Button2 type="button" onClick={addTeamMemberEmail}>
             팀원 추가
           </Button2>
-          <Button2 type="submit">수정</Button2>
+          <Button2 type="submit">수정 완료</Button2>
         </ButtonContainer>
       </Form>
     </Container>
