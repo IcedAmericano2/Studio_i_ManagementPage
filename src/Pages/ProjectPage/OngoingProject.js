@@ -293,7 +293,7 @@ function OngoingProject() {
         alert("프로젝트가 삭제 처리 되었습니다.");
         refresh();
       }
-      
+
       // const updatedProjects = projects.filter(
       //   (project) => project.projectIndex !== projectId
       // );
