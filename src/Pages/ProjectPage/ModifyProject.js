@@ -17,8 +17,8 @@ const Form = styled.form`
   flex-direction: column;
   max-width: 500px;
   width: 100%;
-  border: 1px solid black;
   padding: 20px;
+  background-color: #f7f7f7;
 `;
 
 const Input = styled.input`
@@ -37,6 +37,12 @@ const TextArea = styled.textarea`
 const ButtonContainer = styled.div`
   display: grid;
   justify-content: center;
+`;
+const EmailContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
@@ -65,6 +71,27 @@ const Button2 = styled.button`
   &:hover {
     background-color: red;
   }
+`;
+const ModifyButton = styled.button`
+  width: 160px;
+  height: 30px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: deeppink;
+  }
+`;
+
+const TextMd = styled.p`
+  font-family: "Roboto", sans-serif; // Apply the Roboto font
+  font-weight: bold; // Make the text bold
+  font-size: 16px; // Optionally, adjust the font size
+  // Add any other styles you want here
 `;
 
 function ModifyProject() {
@@ -203,69 +230,84 @@ function ModifyProject() {
   return (
     <Container>
       <Form onSubmit={handleUpdate}>
-        <h2>프로젝트 수정</h2>
+        <h2>Modify Project</h2>
+        <TextMd>프로젝트 이름</TextMd>
         <Input
           name="name"
           placeholder="프로젝트 이름"
           value={projectData.name}
           onChange={handleChange}
         />
+        <TextMd>프로젝트 상세 정보</TextMd>
         <TextArea
           name="description"
           placeholder="프로젝트 설명"
           value={projectData.description}
           onChange={handleChange}
         />
+        <TextMd>프로젝트 시작 날짜</TextMd>
         <Input
           type="date"
           name="startDate"
           value={projectData.startDate}
           onChange={handleChange}
         />
+        <TextMd>프로젝트 종료 날짜</TextMd>
         <Input
           type="date"
           name="finishDate"
           value={projectData.finishDate}
           onChange={handleChange}
         />
+        <TextMd>등록된 팀원</TextMd>
         {projectData.teamMemberEmails.map((email, index) => (
-          <div key={`email-${index}`}>
-            <Input
-              type="email"
-              placeholder={`팀원 ${index + 1} 이메일`}
-              value={email}
-              onChange={(e) => {
-                const updatedEmails = [...projectData.teamMemberEmails];
-                updatedEmails[index] = e.target.value;
-                setProjectData({
-                  ...projectData,
-                  teamMemberEmails: updatedEmails,
-                });
-                const updatedChecks = [...emailsRegisteredCheck];
-                updatedChecks[index] = false;
-                setEmailsRegisteredCheck(updatedChecks);
-              }}
-            />
-            {emailsRegisteredCheck[index] ? (
-              <span style={{ color: "green", marginLeft: "10px" }}>인증됨</span>
-            ) : (
+          <EmailContainer key={`email-${index}`}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Input
+                type="email"
+                placeholder={`팀원 ${index + 1} 이메일`}
+                value={email}
+                onChange={(e) => {
+                  const updatedEmails = [...projectData.teamMemberEmails];
+                  updatedEmails[index] = e.target.value;
+                  setProjectData({
+                    ...projectData,
+                    teamMemberEmails: updatedEmails,
+                  });
+                  const updatedChecks = [...emailsRegisteredCheck];
+                  updatedChecks[index] = false;
+                  setEmailsRegisteredCheck(updatedChecks);
+                }}
+              />
+              {emailsRegisteredCheck[index] && (
+                <span style={{ color: "green", marginLeft: "10px" }}>
+                  인증됨
+                </span>
+              )}
+            </div>
+            <div>
+              {!emailsRegisteredCheck[index] && (
+                <Button
+                  type="button"
+                  onClick={() => handleEmailRegistration(index, email)}
+                >
+                  인증
+                </Button>
+              )}
               <Button
                 type="button"
-                onClick={() => handleEmailRegistration(index, email)}
+                onClick={() => removeTeamMemberEmail(index)}
               >
-                인증
+                삭제
               </Button>
-            )}
-            <Button type="button" onClick={() => removeTeamMemberEmail(index)}>
-              삭제
-            </Button>
-          </div>
+            </div>
+          </EmailContainer>
         ))}
         <ButtonContainer>
           <Button2 type="button" onClick={addTeamMemberEmail}>
             팀원 추가
           </Button2>
-          <Button2 type="submit">수정 완료</Button2>
+          <ModifyButton type="submit">수정 완료</ModifyButton>
         </ButtonContainer>
       </Form>
     </Container>
