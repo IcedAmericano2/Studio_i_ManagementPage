@@ -125,13 +125,15 @@ const CancelButton = styled.button`
     margin-right: 10px;
   }
 `;
+function toKoreanTime(date) {
+  const offset = 9; // Korea is UTC+9
+  const localDate = new Date(date.getTime() + offset * 60 * 60 * 1000);
+  return localDate.toISOString().substr(0, 10);
+}
 function Project() {
-  const [startDate, setStartDate] = useState(
-    new Date().toISOString().substr(0, 10)
-  );
-  const [endDate, setEndDate] = useState(
-    new Date().toISOString().substr(0, 10)
-  );
+  const [startDate, setStartDate] = useState(toKoreanTime(new Date()));
+  const [endDate, setEndDate] = useState(toKoreanTime(new Date()));
+
   const [projectName, setProjectName] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
   const [teamMemberCount, setTeamMemberCount] = useState("");
