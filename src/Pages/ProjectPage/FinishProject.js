@@ -34,16 +34,17 @@ const StyledTable = styled.table`
     text-align: center;
   }
 
-  th:last-child {
-    display: flex;
-  }
-
   tbody tr {
     background-color: #ffffff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
   }
   tbody tr td {
     padding: 20px 64px;
+  }
+
+  thead tr th:nth-child(3),
+  thead tr th:nth-child(4) {
+    margin-left: 10px !important;
   }
 
   tbody tr:hover {
