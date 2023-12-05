@@ -11,7 +11,9 @@ const Subtitle = styled.text`
   font-weight: 600;
 `;
 
-const ListItem = styled.div``;
+const ListItem = styled.div`
+  margin-top: 5px;
+`;
 function Today({ projectId }) {
   const [todayEvents, setTodayEvents] = useState([]);
   const [message, setMessage] = useState("");
@@ -26,11 +28,11 @@ function Today({ projectId }) {
 
         const response = await scheduleApi.getScheduleList(projectId);
         if (response.data && response.data.success === false) {
-          if(response.data.code === 6001){
-            setMessage(response.data.message);// "일정 목록이 존재하지 않습니다."
-          }else if(response.data.code === 7001){
+          if (response.data.code === 6001) {
+            setMessage(response.data.message); // "일정 목록이 존재하지 않습니다."
+          } else if (response.data.code === 7001) {
             sessionStorage.removeItem("login-token");
-            delete axios.defaults.headers.common['Authorization'];
+            delete axios.defaults.headers.common["Authorization"];
             return;
           }
           return;
@@ -59,11 +61,12 @@ function Today({ projectId }) {
     <Container>
       <Subtitle>Today</Subtitle>
       {todayEvents.length === 0 ? (
-
         <p>오늘의 일정이 없습니다.</p>
       ) : (
         todayEvents.map((event) => (
-          <ListItem key={event.startDate}>{event.content}</ListItem>
+          <ListItem key={event.startDate}>
+            <li>{event.content}</li>
+          </ListItem>
         ))
       )}
     </Container>
