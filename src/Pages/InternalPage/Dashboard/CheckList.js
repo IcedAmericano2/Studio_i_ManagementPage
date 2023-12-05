@@ -206,6 +206,7 @@ const AddButton = styled.button`
 const ItemsList = styled.ul`
   list-style-type: none;
   padding: 0;
+  margin-top: 24px;
 `;
 
 const Item = styled.li`
@@ -214,6 +215,7 @@ const Item = styled.li`
   align-items: center;
   padding: 10px;
   border-radius: 5px;
+
   margin-bottom: 10px;
   background-color: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -260,6 +262,9 @@ const Modal = styled.div`
 
   h2 {
     margin-top: 0;
+  }
+  input {
+    font-size: 1.3rem;
   }
 `;
 
