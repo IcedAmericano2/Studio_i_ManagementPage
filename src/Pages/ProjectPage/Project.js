@@ -4,6 +4,27 @@ import styled from "styled-components";
 import projectApi from "../../api/projectApi";
 import axios from "axios";
 
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 370px;
+`;
+// const StyledOption = styled.option`
+//   width: 300px;
+// `;
+const StyledSelect = styled.select`
+  width: 230px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+`;
+const EmailContainer = styled.div``;
+const Label = styled.div`
+  /* float: left; */
+  margin-bottom: 10px;
+`;
 const TotalContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -34,38 +55,37 @@ const ProjectContainer = styled.div`
 `;
 const InputMember = styled.input`
   padding: 10px;
-  width: 140px;
+  /* margin-left: 30px; */
+  width: 130px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-right: 20px;
 `;
 
 const StyledInput = styled.input`
   padding: 10px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-const StyledProject = styled.input`
-  padding: 10px;
-  margin-left: 30px;
   width: 210px;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  float: left;
+`;
 
 const StyledTextArea = styled.textarea`
-  width: 220px;
+  width: 360px;
   min-height: 100px;
   text-align: center;
   justify-content: center;
-  margin-left: 30px;
   align-items: center;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
 
 const StyledButton = styled.button`
-  padding: 12px 18px;
+  padding: 10px 18px;
   border: none;
   border-radius: 5px;
   background-color: #ff530e;
@@ -221,27 +241,27 @@ function Project() {
 
   return (
     <TotalContainer>
-      <h2>Create Project</h2>
+      <h2>CREATE PROJECT</h2>
       <ProjectContainer>
-        <div>
-          <label>시작일 : </label>
+        <FormContainer>
+          <Label>시작&nbsp;&nbsp;날짜&nbsp;&nbsp;:&nbsp; </Label>
           <StyledInput
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
-        </div>
-        <div>
-          <label>종료일 : </label>
+        </FormContainer>
+        <FormContainer>
+          <Label>종료&nbsp;&nbsp;날짜&nbsp;&nbsp;:&nbsp; </Label>
           <StyledInput
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
-        </div>
-        <div>
-          <label>팀원 수&nbsp;: </label>
-          <select
+        </FormContainer>
+        <FormContainer>
+          <Label>팀원 수&nbsp;: </Label>
+          <StyledSelect
             value={teamMemberCount}
             onChange={(e) => {
               setTeamMemberCount(Number(e.target.value));
@@ -259,49 +279,58 @@ function Project() {
                 {index + 1}
               </option>
             ))}
-          </select>
-        </div>
+          </StyledSelect>
+        </FormContainer>
         {Array.from({ length: teamMemberCount }).map((_, index) => (
-          <div key={index} style={{ display: "flex", alignItems: "center" }}>
-            <label>팀원{index + 1} : &nbsp;</label>
-            <InputMember
-              type="email"
-              value={teamMemberEmails[index] || ""}
-              placeholder="팀원 이메일"
-              onChange={(e) => handleTeamMemberChange(index, e.target.value)}
-            />
-            {emailsRegisteredCheck[index] ? (
-              <span
-                style={{ color: "red", marginLeft: "10px", fontWeight: "bold" }}
-              >
-                인증 완료
-              </span>
-            ) : (
-              <StyledButton
-                onClick={() =>
-                  handleEmailRegistration(index, teamMemberEmails[index])
-                }
-              >
-                인증
-              </StyledButton>
-            )}
-          </div>
+          <FormContainer
+            key={index}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <Label>팀원{index + 1} : &nbsp;</Label>
+            <EmailContainer>
+              <InputMember
+                type="email"
+                value={teamMemberEmails[index] || ""}
+                placeholder="팀원 이메일"
+                onChange={(e) => handleTeamMemberChange(index, e.target.value)}
+              />
+              {emailsRegisteredCheck[index] ? (
+                <span
+                  style={{
+                    color: "red",
+                    marginLeft: "10px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  인증 완료
+                </span>
+              ) : (
+                <StyledButton
+                  onClick={() =>
+                    handleEmailRegistration(index, teamMemberEmails[index])
+                  }
+                >
+                  인증
+                </StyledButton>
+              )}
+            </EmailContainer>
+          </FormContainer>
         ))}
-
-        <label>프로젝트 이름&nbsp;: </label>
-        <StyledProject
-          type="text"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-        />
-
-        <span>
-          <label className="details">프로젝트 상세정보&nbsp;:&nbsp;</label>
-        </span>
-        <StyledTextArea
-          value={projectDetails}
-          onChange={(e) => setProjectDetails(e.target.value)}
-        ></StyledTextArea>
+        <FormContainer>
+          <Label>프로젝트 이름&nbsp;: </Label>
+          <StyledInput
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+          />
+        </FormContainer>
+        <TextContainer>
+          <Label>프로젝트 상세정보&nbsp;:&nbsp;</Label>
+          <StyledTextArea
+            value={projectDetails}
+            onChange={(e) => setProjectDetails(e.target.value)}
+          ></StyledTextArea>
+        </TextContainer>
         <div>
           <StyledButton className="check" onClick={handleSave}>
             Save
