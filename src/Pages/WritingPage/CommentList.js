@@ -1,6 +1,7 @@
 import React , { useState, useEffect }from "react";
 import styled from "styled-components";
 import commentApi from "../../api/commentApi";
+import jwt_decode from "jwt-decode";
 
 const FormContainer = styled.div`
   border-radius: 5px;
@@ -62,6 +63,10 @@ const CommentTextarea = styled.textarea`
 const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) => {
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
+    const [tokenUserName, setTokenUserName] = useState("");
+    const [tokenUserId, setTokenUserId] = useState("");
+    const [tokenUserEmail, setTokenUserEmail] = useState("");
+
     const deleteComment = (commentId) => {
         commentApi.deleteComment(commentId)
             .then(response => {
@@ -83,6 +88,18 @@ const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) =>
         setEditingCommentId(commentId);
         setEditedContent(content);
     };
+
+    useEffect(() => {
+        const token = sessionStorage.getItem("login-token");
+        if (token) {
+            const decodedToken = jwt_decode(token);
+            setTokenUserName(decodedToken.username);
+            setTokenUserId(decodedToken.userId);
+            setTokenUserEmail(decodedToken.sub);
+        }
+    }, []);
+
+
 
     const finishEditing = (commentId) => {
         commentApi.putComment(commentId, { content: editedContent })
@@ -119,11 +136,15 @@ const CommentList = ({ selectedPost, comments, setComments, onDeleteComment}) =>
                     }</Date>
                     {!comment.isNew && (
                         <ButtonContainer>
-                            <CommentButton onClick={() => deleteComment(comment.id)}>삭제</CommentButton>
-                            {editingCommentId === comment.id ? (
-                                <CommentButton onClick={() => finishEditing(comment.id)}>완료</CommentButton>
-                            ) : (
-                                <CommentButton onClick={() => startEditing(comment.id, comment.content)}>수정</CommentButton>
+                            {tokenUserName === comment.userName && (
+                                <>
+                                    <CommentButton onClick={() => deleteComment(comment.id)}>삭제</CommentButton>
+                                    {editingCommentId === comment.id ? (
+                                    <CommentButton onClick={() => finishEditing(comment.id)}>완료</CommentButton>
+                                    ) : (
+                                    <CommentButton onClick={() => startEditing(comment.id, comment.content)}>수정</CommentButton>
+                                    )}
+                                </>
                             )}
                         </ButtonContainer>
                     )}

@@ -70,7 +70,6 @@ const CommentForm = ({onAddComment, postId, selectedPost}) => {
                 return `${year}년 ${month}월 ${day}일 ${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
             };
             const newComment = {
-                id: response.data.id,  // 서버에서 반환된 ID
                 content: content,
                 userName: selectedPost.author,  // 현재 로그인한 사용자 정보
                 createdAt: formatDate(),  // 현재 시간

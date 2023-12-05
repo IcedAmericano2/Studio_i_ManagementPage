@@ -5,6 +5,7 @@ import { TitleSm, TextLg, TextMd } from "../../Components/common/Font";
 import projectApi from "../../api/projectApi";
 import { FaTrash, FaCheck, FaEdit } from "react-icons/fa";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const AppContainer = styled.div`
   text-align: center;
@@ -127,6 +128,8 @@ const PaginationContainer = styled.div`
 function OngoingProject() {
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentDetailsProjects, setCurrentDetailsProjects] = useState([]);
+
   const projectsPerPage = 10;
   const navigate = useNavigate();
 
@@ -136,6 +139,8 @@ function OngoingProject() {
     indexOfFirstProject,
     indexOfLastProject
   );
+  //토큰 정보 저장
+  const [tokenUserId, setTokenUserId] = useState("");
   // 페이지 번호를 렌더링하기 위한 컴포넌트
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -197,6 +202,23 @@ function OngoingProject() {
           (item) => item.isFinished === false
         );
         setProjects(checkedProjects.reverse());
+
+        // 각 프로젝트에 대한 정보를 가져와서 저장
+        const projectDetails = await Promise.all(
+            checkedProjects.map((project) =>
+                projectApi.getProjectDetails(project.projectId)
+            )
+        );
+        // console.log(projectDetails[index].data.success); 이걸 전부 돌려서 true인것 중에 현재 나의 토큰유저ID와 같은 맴버의 유저ID의 role이 팀장인 프로젝트만 수정 삭제 완료 버튼이 보이도록.
+        // console.log(projectDetails[index].data.data.leaderAndMemberList[index].role); //역할 경로
+        // console.log(projectDetails[index].data.data.leaderAndMemberList[index].userId); //유저 경로
+        const token = sessionStorage.getItem("login-token");
+        if (token) {
+          const decodedToken = jwt_decode(token);
+          setTokenUserId(decodedToken.userId);
+        }
+        setCurrentDetailsProjects(projectDetails);
+
       } catch (error) {
         console.error("Error fetching the projects:", error);
       }
@@ -204,6 +226,19 @@ function OngoingProject() {
 
     fetchProjects();
   }, []);
+  const isTeamLeader = (currentDetailsProjects) => {
+    if (!currentDetailsProjects.data.success) {
+
+      return false;
+    }
+    const leaderAndMemberList = currentDetailsProjects.data.data.leaderAndMemberList;
+    const teamLeader = leaderAndMemberList.find(
+        (member) => member.userId === tokenUserId && member.role === '팀장'
+    );
+
+    return !!teamLeader;
+  };
+
 
   const handleAddProject = () => {
     navigate("/Project");
@@ -319,7 +354,8 @@ function OngoingProject() {
           </tr>
         </thead>
         <tbody>
-          {currentProjects.map((project) => (
+        {currentDetailsProjects.length > 0 && (
+          currentProjects.map((project, index) => (
             <tr
               key={project.projectId}
               onClick={() => handleRowClick(project.projectId)}
@@ -331,28 +367,33 @@ function OngoingProject() {
               <td>{project.name}</td>
               <td>{project.description}</td>
               <td>
-                <ModifyButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/modify/${project.projectId}`);
-                  }}
-                >
-                  <FaEdit />
-                </ModifyButton>
-                <CompleteButton
-                  onClick={(e) => handleCompleteClick(e, project.projectId)}
-                >
-                  <FaCheck />
-                </CompleteButton>
+                {isTeamLeader(currentDetailsProjects[index]) && ( // 팀장 여부 확인
+                  <>
+                    <ModifyButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/modify/${project.projectId}`);
+                      }}
+                    >
+                      <FaEdit />
+                    </ModifyButton>
+                    <CompleteButton
+                      onClick={(e) => handleCompleteClick(e, project.projectId)}
+                    >
+                      <FaCheck />
+                    </CompleteButton>
 
-                <DeleteButton
-                  onClick={(e) => handleDeleteClick(e, project.projectId)}
-                >
-                  <FaTrash />
-                </DeleteButton>
+                    <DeleteButton
+                      onClick={(e) => handleDeleteClick(e, project.projectId)}
+                    >
+                      <FaTrash />
+                    </DeleteButton>
+                  </>
+                )}
               </td>
             </tr>
-          ))}
+          ))
+        )}
         </tbody>
       </StyledTable>
       {/* 페이지 번호를 렌더링 */}

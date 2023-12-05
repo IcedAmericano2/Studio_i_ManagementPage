@@ -125,10 +125,7 @@ const NEWheader = () => {
   const [userName, setUserName] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
   const [myProjects, setMyProjects] = useState([]);
-
-  const location = useLocation();
   const [chatIsOpen, setChatIsOpen] = useState(false);
-  const { projectId } = location.state || {};
 
   const handleProjectClick = (projectId) => {
     navigate(`/manage/${projectId}`);
