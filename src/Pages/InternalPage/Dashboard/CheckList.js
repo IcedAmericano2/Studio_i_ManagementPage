@@ -183,6 +183,7 @@ const List = styled.div`
 const Title = styled.text`
   font-size: 1.5rem;
   font-weight: 600;
+  margin-top: 15px;
 `;
 
 const AddButton = styled.button`
