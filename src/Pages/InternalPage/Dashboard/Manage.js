@@ -27,40 +27,51 @@ const ManageContainer = styled.div`
 
 const StyledInput = styled.input`
   padding: 10px;
-  width: 240px;
-  margin-top: -32px;
+  width: 300px; // Adjusted width
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
 
 const StyledTextArea = styled.textarea`
-  width: 260px;
+  width: 320px;
   margin-left: 40px;
   min-height: 100px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
   border: 1px solid #ccc;
   border-radius: 4px;
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  margin-left: 20px;
+  gap: 30px;
 `;
 
 const StyledButton = styled.button`
   padding: 10px 20px;
+  width: 100px;
   border: none;
   border-radius: 4px;
-  margin-top: 20px;
-  background-color: #007bff;
+  background-color: #ff530e;
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-right: -20px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: red;
   }
+`;
 
-  &:not(:last-child) {
-    margin-right: 10px;
+const CancelButton = styled.button`
+  padding: 10px 20px;
+  width: 100px;
+  border: none;
+  border-radius: 4px;
+  background-color: grey;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: black;
   }
 `;
 function toKoreanTime(date) {
@@ -151,10 +162,12 @@ function Manage() {
           />
         </div>
         <div>
-          <StyledButton onClick={handleSave}>Save</StyledButton>
-          <StyledButton onClick={() => navigate(`/Manage/${projectId}`)}>
-            Cancel
-          </StyledButton>
+          <ButtonContainer>
+            <StyledButton onClick={handleSave}>Save</StyledButton>
+            <CancelButton onClick={() => navigate(`/Manage/${projectId}`)}>
+              Cancel
+            </CancelButton>
+          </ButtonContainer>
         </div>
       </ManageContainer>
     </TotalContainer>

@@ -31,7 +31,7 @@ const HeaderWrapper = styled.div`
   width: 100%;
   background: white;
   /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08); */
-  border-bottom: 1px solid rgba(200,200, 200, 0.6);
+  border-bottom: 1px solid rgba(200, 200, 200, 0.6);
 `;
 
 const SpaceBetweenBlock = styled.div`
@@ -74,12 +74,11 @@ const ChatButton = styled.button`
 const TextLgButton = styled(TextLg)`
   cursor: pointer;
   margin-right: 20px;
-
 `;
 const LoginButton = styled.button`
   border: none;
   outline: none;
-  background-color: black;
+  background-color: #ffa900;
   color: white;
   border-radius: 20px;
   width: 88px;
@@ -88,7 +87,7 @@ const LoginButton = styled.button`
   /* margin: 10px; */
   cursor: pointer;
   &:hover {
-    background-color:#FFA900;
+    background-color: #ffa900;
   }
 `;
 
@@ -97,6 +96,7 @@ const LogoBox = styled.img`
   margin-right: 16px;
   max-width: 100%;
   width: 170px;
+  cursor: pointer;
 `;
 
 const StyledLink = styled(Link)`
@@ -186,7 +186,6 @@ const NEWheader = () => {
                   <StyledLink to="/LoginPage">
                     <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
                   </StyledLink>
-
                 </>
               ) : (
                 <StyledLink to="/LoginPage">
@@ -198,7 +197,6 @@ const NEWheader = () => {
               <FaRegComments />
             </ChatButton>
           </RightBlock>
-
         </SpaceBetweenBlock>
         <Modal
           isOpen={modalIsOpen}

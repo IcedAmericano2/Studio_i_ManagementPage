@@ -27,15 +27,21 @@ const ProjectContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 100px;
+  padding: 80px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
+const InputMember = styled.input`
+  padding: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
 
 const StyledInput = styled.input`
   padding: 10px;
-  width: 240px;
+  width: 210px;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
@@ -44,7 +50,7 @@ const TextContainer = styled.div`
 `;
 
 const StyledTextArea = styled.textarea`
-  width: 220px;
+  width: 200px;
   min-height: 100px;
   text-align: center;
   justify-content: center;
@@ -57,7 +63,7 @@ const StyledButton = styled.button`
   padding: 12px 18px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
+  background-color: #ff530e;
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s;
@@ -65,7 +71,28 @@ const StyledButton = styled.button`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background-color: #0056b3;
+    background-color: red;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+`;
+
+const CancelButton = styled.button`
+  padding: 12px 18px;
+  border: none;
+  border-radius: 5px;
+  background-color: grey;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: black;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
@@ -192,7 +219,7 @@ function Project() {
       <h2>Create Project</h2>
       <ProjectContainer>
         <div>
-          <label>시작&nbsp;&nbsp;날짜&nbsp;&nbsp;: </label>
+          <label>시작&nbsp;&nbsp;날짜&nbsp;&nbsp;:&nbsp; </label>
           <StyledInput
             type="date"
             value={startDate}
@@ -200,7 +227,7 @@ function Project() {
           />
         </div>
         <div>
-          <label>종료&nbsp;&nbsp;날짜&nbsp;&nbsp;: </label>
+          <label>종료&nbsp;&nbsp;날짜&nbsp;&nbsp;:&nbsp; </label>
           <StyledInput
             type="date"
             value={endDate}
@@ -231,8 +258,8 @@ function Project() {
         </div>
         {Array.from({ length: teamMemberCount }).map((_, index) => (
           <div key={index} style={{ display: "flex", alignItems: "center" }}>
-            <label>팀원 {index + 1} : &nbsp;</label>
-            <StyledInput
+            <label>팀원{index + 1} : &nbsp;</label>
+            <InputMember
               type="email"
               value={teamMemberEmails[index] || ""}
               placeholder="팀원 이메일"
@@ -256,7 +283,7 @@ function Project() {
           </div>
         ))}
         <div>
-          <label>프로젝트명&nbsp;: </label>
+          <label>프로젝트 이름&nbsp;: </label>
           <StyledInput
             type="text"
             value={projectName}
@@ -265,7 +292,7 @@ function Project() {
         </div>
         <TextContainer>
           <span>
-            <label className="details">프로젝트 상세정보:</label>
+            <label className="details">프로젝트 상세정보&nbsp;:&nbsp;</label>
           </span>
           <StyledTextArea
             value={projectDetails}
@@ -276,9 +303,9 @@ function Project() {
           <StyledButton className="check" onClick={handleSave}>
             Save
           </StyledButton>
-          <StyledButton className="check" onClick={() => navigate("/")}>
+          <CancelButton className="check" onClick={() => navigate("/")}>
             Cancel
-          </StyledButton>
+          </CancelButton>
         </div>
       </ProjectContainer>
     </TotalContainer>

@@ -6,7 +6,7 @@ import scheduleApi from "../../../api/scheduleApi";
 import axios from "axios";
 
 const List = styled.div`
-  margin-top: -20px;
+  margin-top: -15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,6 +27,7 @@ const ArrowButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  font-size: 20px;
 `;
 
 const Calendar = styled.div`
@@ -55,12 +56,18 @@ const ManageButton = styled.button`
   align-items: flex-end;
   cursor: pointer;
   border-radius: 5px;
+  margin-top: -20px;
 
   transition: background-color 0.3s;
 
   &:hover {
     background-color: whitesmoke;
   }
+`;
+const MoreButton = styled.button`
+  background-color: transparent;
+  border: transparent;
+  font-size: 12px;
 `;
 
 const Modal = styled.div`
@@ -104,6 +111,7 @@ const Day = styled.div`
 
 const ScheduleItem = styled.p`
   margin-top: -2px;
+  margin-bottom: 6px;
   color: grey;
   background-color: red;
   padding: 0px 8px;
@@ -314,8 +322,10 @@ function WeekCalendar({ projectId }) {
         {days.map((day) => (
           <DayHeader key={day}>{day}</DayHeader>
         ))}
+
         {currentWeekDates.map((date) => {
           const eventsForDate = findEventsForDate(date);
+          const hasMoreEvents = eventsForDate.length > 3;
           return (
             <Day
               key={date}
@@ -327,7 +337,7 @@ function WeekCalendar({ projectId }) {
               }}
             >
               <div>{date.getDate()}</div>
-              {eventsForDate.map((event, index) => (
+              {eventsForDate.slice(0, 3).map((event, index) => (
                 <ScheduleItem
                   key={index}
                   title={event.content}
@@ -342,6 +352,16 @@ function WeekCalendar({ projectId }) {
                     : event.content}
                 </ScheduleItem>
               ))}
+              {hasMoreEvents && (
+                <MoreButton
+                  onClick={() => {
+                    setEditingEvent(eventsForDate);
+                    setShowModal(true);
+                  }}
+                >
+                  더보기..
+                </MoreButton>
+              )}
             </Day>
           );
         })}

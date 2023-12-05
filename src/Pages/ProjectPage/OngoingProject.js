@@ -73,9 +73,19 @@ const StyledTable = styled.table`
     background-color: #ffffff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
   }
+  tbody tr td {
+    padding: 20px 64px;
+  }
 
   tbody tr:hover {
     background-color: #f5f5f5;
+  }
+  tbody tr td:nth-child(3),
+  tbody tr td:nth-child(4) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
   }
 `;
 
@@ -334,18 +344,10 @@ function OngoingProject() {
       <StyledTable>
         <thead>
           <tr>
-            <th>
-              <TextMd>번호</TextMd>
-            </th>
-            <th>
-              <TextMd>기한</TextMd>
-            </th>
-            <th>
-              <TextMd>프로젝트명</TextMd>
-            </th>
-            <th>
-              <TextMd>프로젝트 소개</TextMd>
-            </th>
+            <th>번호</th>
+            <th>기한</th>
+            <th>프로젝트명</th>
+            <th>프로젝트 소개</th>
             <th>
               <CreateButton type="button" onClick={handleAddProject}>
                 <TextLg>+</TextLg>

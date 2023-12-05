@@ -23,10 +23,8 @@ const AppContainer = styled.div`
 const Container = styled.div`
   text-align: left;
 `;
-
 const StyledTable = styled.table`
   width: 100%;
-  margin-top: 20px;
   border-collapse: separate;
   border-spacing: 0 16px;
 
@@ -36,25 +34,35 @@ const StyledTable = styled.table`
     text-align: center;
   }
 
-  th:last-child {
-    display: flex;
-  }
-
   tbody tr {
     background-color: #ffffff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  }
+  tbody tr td {
+    padding: 20px 64px;
+  }
+
+  thead tr th:nth-child(3),
+  thead tr th:nth-child(4) {
+    margin-left: 10px !important;
   }
 
   tbody tr:hover {
     background-color: #f5f5f5;
   }
+  tbody tr td:nth-child(3),
+  tbody tr td:nth-child(4) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
 `;
-
 const LabelArea = styled.div`
-  background-color: transparent;
-  border-radius: 32px;
-  border: 2px solid #ff530e;
   width: 128px;
+  background: transparent;
+  border: 2px solid #ff530e;
+  border-radius: 32px;
   text-align: center;
   color: #ff530e;
 `;
@@ -70,6 +78,7 @@ const DeleteButton = styled.button`
     background-color: black;
   }
 `;
+
 const PaginationContainer = styled.div`
   .pagination {
     list-style-type: none;
