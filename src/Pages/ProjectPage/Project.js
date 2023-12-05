@@ -34,26 +34,31 @@ const ProjectContainer = styled.div`
 `;
 const InputMember = styled.input`
   padding: 10px;
-  width: 200px;
+  width: 140px;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
 
 const StyledInput = styled.input`
   padding: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+const StyledProject = styled.input`
+  padding: 10px;
+  margin-left: 30px;
   width: 210px;
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
-const TextContainer = styled.div`
-  display: flex;
-`;
 
 const StyledTextArea = styled.textarea`
-  width: 200px;
+  width: 220px;
   min-height: 100px;
   text-align: center;
   justify-content: center;
+  margin-left: 30px;
   align-items: center;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -219,7 +224,7 @@ function Project() {
       <h2>Create Project</h2>
       <ProjectContainer>
         <div>
-          <label>시작&nbsp;&nbsp;날짜&nbsp;&nbsp;:&nbsp; </label>
+          <label>시작일 : </label>
           <StyledInput
             type="date"
             value={startDate}
@@ -227,7 +232,7 @@ function Project() {
           />
         </div>
         <div>
-          <label>종료&nbsp;&nbsp;날짜&nbsp;&nbsp;:&nbsp; </label>
+          <label>종료일 : </label>
           <StyledInput
             type="date"
             value={endDate}
@@ -282,23 +287,21 @@ function Project() {
             )}
           </div>
         ))}
-        <div>
-          <label>프로젝트 이름&nbsp;: </label>
-          <StyledInput
-            type="text"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-          />
-        </div>
-        <TextContainer>
-          <span>
-            <label className="details">프로젝트 상세정보&nbsp;:&nbsp;</label>
-          </span>
-          <StyledTextArea
-            value={projectDetails}
-            onChange={(e) => setProjectDetails(e.target.value)}
-          ></StyledTextArea>
-        </TextContainer>
+
+        <label>프로젝트 이름&nbsp;: </label>
+        <StyledProject
+          type="text"
+          value={projectName}
+          onChange={(e) => setProjectName(e.target.value)}
+        />
+
+        <span>
+          <label className="details">프로젝트 상세정보&nbsp;:&nbsp;</label>
+        </span>
+        <StyledTextArea
+          value={projectDetails}
+          onChange={(e) => setProjectDetails(e.target.value)}
+        ></StyledTextArea>
         <div>
           <StyledButton className="check" onClick={handleSave}>
             Save
