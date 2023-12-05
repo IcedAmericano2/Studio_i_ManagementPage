@@ -51,11 +51,12 @@ const StyledTable = styled.table`
 `;
 
 const LabelArea = styled.div`
-  background-color: #363636;
+  background-color: transparent;
   border-radius: 32px;
+  border: 2px solid #ff530e;
   width: 128px;
   text-align: center;
-  color: white;
+  color: #ff530e;
 `;
 const DeleteButton = styled.button`
   background-color: white;
