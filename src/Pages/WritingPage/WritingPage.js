@@ -56,7 +56,7 @@ const PostsButton = styled.button`
   margin: 1%;
   font-size: 1rem;
   border-radius: 1rem;
-  background-color: #ff1e1e;
+  background-color: #ff530e;
   color: white;
   font-weight: bold;
   border: none;
